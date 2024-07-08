@@ -1,0 +1,11 @@
+
+.szczegoly-main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.image-to-show{
+    width: 300px;
+}

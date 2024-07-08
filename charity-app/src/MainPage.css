@@ -1,0 +1,54 @@
+.main-page-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 items per row */
+    gap: 20px; /* Space between grid items */
+    margin-top: 20px;
+  }
+  
+  .main-page-content {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .collection-frame {
+    background-color: hsl(0, 16%, 94%);
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    width: 100%; /* Take full width of grid cell */
+    /* max-width: 300px;  */
+    text-align: justify;
+  }
+  
+  .collection-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .collection-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .collection-description {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .collection-funds {
+    font-size: 18px;
+    font-weight: bold;
+    color: green;
+  }
+  
+  .collection-bank {
+    font-size: 18px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+  }
+  
