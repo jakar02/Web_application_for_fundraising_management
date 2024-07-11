@@ -1,5 +1,4 @@
-.stworz-zbiorke-all,
-.szukaj-zbiorke-all {
+.stworz-zbiorke-all{
   max-width: 400px;
   margin: 20px auto;
   padding: 20px;
@@ -9,6 +8,8 @@
   display: flex;
   flex-direction: column;
 }
+
+
 
 .cel-input,
 .kwota-input,

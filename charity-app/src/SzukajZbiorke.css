@@ -1,0 +1,122 @@
+.page-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 20px;
+  }
+  
+  .left-column {
+    flex: 2;
+    margin-right: 20px;
+  }
+  
+  .right-column {
+    flex: 1;
+    max-width: 400px;
+  }
+  
+  .main-page-grid2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 items per row */
+    gap: 20px; /* Space between grid items */
+  }
+  
+  .main-page-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .collection-frame {
+    background-color: hsl(0, 16%, 94%);
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    width: 100%; /* Take full width of grid cell */
+    text-align: justify;
+  }
+  
+  .collection-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .collection-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .collection-description {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .collection-funds {
+    font-size: 18px;
+    font-weight: bold;
+    color: green;
+  }
+  
+  .collection-bank {
+    font-size: 18px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+  }
+  
+  .szukaj-zbiorke-all {
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .szukaj-font,
+  .lokalizacja-font {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .szukaj-input,
+  .lokalizacja-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .form-input {
+    margin-bottom: 20px;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .button-anuluj,
+  .button-szukaj-po-celu {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .button-anuluj {
+    background-color: hsl(0, 100%, 35%);
+    color: white;
+  }
+
+  .button-anuluj:hover {
+    background-color: hsl(0, 100%, 25%);
+  }
+  
+  .button-szukaj-po-celu {
+    background-color: hsl(222, 51%, 56%);
+    color: white;
+  }
+  

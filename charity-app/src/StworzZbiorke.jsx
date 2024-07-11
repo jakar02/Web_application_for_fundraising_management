@@ -1,14 +1,20 @@
 import "./StworzSzukajZbiorke.css";
+import { useNavigate } from "react-router-dom";
 
 function StworzZbiorke() {
-  
+  const navigate = useNavigate();
+
   function handleAnulujClick() {
-    window.location.href = "./";
+    navigate("/");
+    // window.location.href = "./";
   }
 
   function handleDalejClick() {
-    window.location.href = "./StworzZbiorkeNext.jsx";
+    navigate("/StworzZbiorkeNext.jsx");
+    // window.location.href = "./StworzZbiorkeNext.jsx";
   }
+
+
 
   return (
     <div className="stworz-zbiorke-all">

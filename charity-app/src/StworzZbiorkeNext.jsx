@@ -1,11 +1,14 @@
 import "./StworzSzukajZbiorke.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function StworzZbiorkeNext() {
+  const navigate = useNavigate();
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   function handleCofnijClick() {
-    window.location.href = "./StworzZbiorke.jsx";
+    navigate("/StworzZbiorke.jsx");
+    // window.location.href = "./StworzZbiorke.jsx";
   }
 
   function handleFileChange(event) {

@@ -8,24 +8,34 @@ import joker from "./assets/joker.jpg";
 
 function MainPage() {
   const [showModal, setShowModal] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, areYouLoggingIn] = useState(true);
   const navigate = useNavigate();
 
-  const handleTworzClick = () => {
-    window.location.href = "./StworzZbiorke.jsx";
-  };
+  const[isLogged, setIsLogged] = useState(false);
 
   const handleSzukajClick = () => {
-    window.location.href = "./SzukajZbiorke.jsx";
+    navigate("/SzukajZbiorke.jsx");
+    // window.location.href = "./SzukajZbiorke.jsx";
   };
 
-  const handleLogujClick = () => {
-    setIsLogin(true);
-    setShowModal(true);
+  const handleLogujWylogujClick = () => {
+    if(isLogged){
+      setIsLogged(false);
+    }
+    else{
+      areYouLoggingIn(true);
+      setShowModal(true);      
+    }
+
+  };
+
+  const handleLogujZalogujClick = () => {
+    setIsLogged(true);
+    setShowModal(false);
   };
 
   const handleRejestrujClick = () => {
-    setIsLogin(false);
+    areYouLoggingIn(false);
     setShowModal(true);
   };
 
@@ -39,10 +49,17 @@ function MainPage() {
     }
   };
 
-
-
   const handleZbiorkaClick = (collection) => {
-    navigate("./ZbiorkaSzczegoly.jsx", { state: { collection } });
+    navigate("/ZbiorkaSzczegoly.jsx", { state: { collection } });
+  };
+
+  const handleTworzClick = () => {
+    if(isLogged) {
+      navigate("/StworzZbiorke.jsx");
+    }
+    else{
+      handleRejestrujClick();
+    }
   };
 
   const collections = [
@@ -81,8 +98,8 @@ function MainPage() {
           </button>
         </div>
         <div className="button-loguj-rejestruj">
-          <button className="button-loguj" onClick={handleLogujClick}>
-            Zaloguj się
+          <button className="button-loguj" onClick={handleLogujWylogujClick}>
+            {!isLogged ? "Zaloguj się" : "Wyloguj się"}
           </button>
           <button className="button-rejestruj" onClick={handleRejestrujClick}>
             Zarejestruj się
@@ -111,7 +128,10 @@ function MainPage() {
             <input type="text" placeholder="Nazwa użytkownika" />
             <input type="password" placeholder="Hasło" />
             {!isLogin && <input type="password" placeholder="Powtórz hasło" />}
-            <button>{isLogin ? "Zaloguj się" : "Zarejestruj się"}</button>
+            {isLogin && <button onClick={handleLogujZalogujClick}> Zaloguj się </button>}
+            {!isLogin && <button> Zarejestruj się </button>}
+
+            
           </div>
         </div>
       )}
