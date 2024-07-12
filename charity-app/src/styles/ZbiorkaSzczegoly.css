@@ -10,6 +10,21 @@
     align-items: flex-start;
   }
   
+  @keyframes pulsate {
+    0% {
+      transform: scale(1);
+      background-color: hsl(222, 51%, 56%);
+    }
+    50% {
+      transform: scale(1.06);
+      background-color: hsl(222, 51%, 66%);
+    }
+    100% {
+      transform: scale(1);
+      background-color: hsl(222, 51%, 56%);
+    }
+  }
+
   .left-container {
     flex: 3;
     display: flex;
@@ -111,16 +126,23 @@
     margin-bottom: 10px;
   }
 
+  .wesprzyj-teraz-button{
+    animation: pulsate 1.5s infinite;
+  }
+
   .wroc-button{
     background-color: hsla(167, 59%, 35%, 0.888);
   }
   
   .wesprzyj-teraz-button:hover,
-  .udostpnij:hover,
-  .wroc-button:hover {
+  .udostpnij:hover{
     background-color: hsl(222, 51%, 46%);
   }
   
+  .wroc-button:hover{
+    background-color: hsla(167, 59%, 25%, 0.888);
+  }
+
   .collection-bank-x {
     font-size: 1.2em;
     color: #555;

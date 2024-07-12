@@ -1,0 +1,197 @@
+.page-container2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0; /* Remove margin */
+  padding: 20px;
+  /* width: 100%; */
+}
+
+/* Content container styles */
+.content-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+/* Left column styles */
+.left-column2 {
+  flex: 3;
+  margin-right: 20px;
+}
+
+/* Right column styles */
+.right-column2 {
+  margin-top: 50px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: justify;
+  margin-left: 20px;
+  border-radius: 5px;
+  background-color: hsl(0, 16%, 94%);
+  /* Usunięto padding: 20px; */
+}
+
+.main-page-grid3 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 items per row */
+  gap: 20px;
+}
+
+.main-page-content2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.collection-frame2 {
+  background-color: hsl(0, 16%, 94%);
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 10px;
+  width: 100%; /* Take full width of grid cell */
+  height: 450px; /* Adjust as needed to make all frames equal height */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: justify;
+}
+
+.collection-frame2-selected {
+  background-color: hsl(0, 16%, 94%);
+  border: 3px solid #888787;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 10px;
+  width: 100%; /* Take full width of grid cell */
+  height: 450px; /* Adjust as needed to make all frames equal height */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: justify;
+}
+
+.collection-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.collection-title2 {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  background-color: hsl(0, 3%, 79%);
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  width: 100%;
+  padding: 10px 0px;
+  margin-top: 0; 
+  margin-left: 0;
+}
+
+.collection-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.collection-description2 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis */
+  flex-grow: 1; /* Allow the description to take up remaining space */
+}
+
+
+
+.collection-funds {
+  font-size: 18px;
+  font-weight: bold;
+  color: green;
+  margin-top: 10px; /* Space between the description and funds */
+}
+
+.collection-bank {
+  font-size: 18px;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+}
+
+/* Button container styles */
+.button-container-3 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* Individual button styles */
+.button-edytuj3,
+.button-zakoncz3,
+.button-raport3,
+.button-anuluj3 {
+  padding: 10px 60px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+}
+
+.button-edytuj3 {
+  background-color: hsl(222, 51%, 56%); /* Blue */
+  color: white;
+}
+
+.button-zakoncz3 {
+  background-color: hsl(232, 64%, 35%); /* Red */
+  color: white;
+}
+
+.button-raport3 {
+  background-color: hsl(222, 51%, 56%); /* Blue */
+  color: white;
+}
+
+.button-anuluj3 {
+  background-color: hsla(167, 59%, 35%, 0.888); /* Grey */
+  color: white;
+}
+
+.button-edytuj3:hover,
+.button-raport3:hover {
+  background-color: hsl(222, 51%, 46%);
+}
+
+.button-zakoncz3:hover {
+  background-color: hsl(232, 64%, 25%);
+}
+
+.button-anuluj3:hover {
+  background-color: hsla(167, 59%, 25%, 0.888);
+}
+
+.title-of-the-page {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the text horizontally */
+  z-index: -1;
+  padding: 20px;
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0px 4px 2px -2px gray;
+  /* background-image: linear-gradient(to right, hsl(222, 51%, 82%), rgb(255, 255, 255)); */
+  background-color: hsl(222, 51%, 66%);
+  box-sizing: border-box;
+  margin: 0;
+}

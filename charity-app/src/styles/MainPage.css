@@ -1,7 +1,7 @@
 .main-page-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3 items per row */
-  gap: 20px; /* Space between grid items */
+  gap: 20px;
   margin-top: 20px;
 }
 
@@ -19,8 +19,21 @@
   margin: 10px;
   border-radius: 10px;
   width: 100%; /* Take full width of grid cell */
-  /* max-width: 300px;  */
   text-align: justify;
+  height: 420px; /* Adjust as needed to make all frames equal height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.collection-description {
+  font-size: 16px;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis */
 }
 
 .collection-title {
@@ -33,17 +46,14 @@
   width: 100%;
   height: auto;
   margin-bottom: 10px;
-}
-
-.collection-description {
-  font-size: 16px;
-  margin-bottom: 10px;
+  flex-shrink: 0; /* Prevent image from shrinking */
 }
 
 .collection-funds {
   font-size: 18px;
   font-weight: bold;
   color: green;
+  margin-top: auto; /* Pushes this element to the bottom */
 }
 
 .collection-bank {

@@ -4,6 +4,7 @@ import StworzZbiorke from "./StworzZbiorke";
 import SzukajZbiorke from "./SzukajZbiorke";
 import StworzZbiorkeNext from "./StworzZbiorkeNext";
 import ZbiorkaSzczegoly from "./ZbiorkaSzczegoly";
+import ZarzadzajZbiorkami from "./ZarzadzajZbiorkami";
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/SzukajZbiorke.jsx" element={<SzukajZbiorke />} />
         <Route path="/StworzZbiorkeNext.jsx" element={<StworzZbiorkeNext />} />
         <Route path="/ZbiorkaSzczegoly.jsx" element={<ZbiorkaSzczegoly />} />
+        <Route path="/ZarzadzajZbiorkami.jsx" element={<ZarzadzajZbiorkami />} />
       </Routes>
     </Router>
   );

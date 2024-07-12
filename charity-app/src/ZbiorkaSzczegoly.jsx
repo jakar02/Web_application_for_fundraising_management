@@ -54,7 +54,7 @@ function ZbiorkaSzczegoly() {
           Wesprzyj teraz 
         </button>
         <button className="udostpnij" onClick={() => handleUdostepnnijClick()}>
-          Udostępnij 
+          Udostępnij 🔗
         </button>
         <button className="wroc-button" onClick={() => handlePowrotClick()}>
           Powrót

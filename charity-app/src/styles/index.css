@@ -1,0 +1,220 @@
+@keyframes pulsate {
+  0% {
+    transform: scale(1);
+    background-color: hsl(222, 51%, 56%);
+  }
+  50% {
+    transform: scale(1.06);
+    background-color: hsl(222, 51%, 66%);
+  }
+  100% {
+    transform: scale(1);
+    background-color: hsl(222, 51%, 56%);
+  }
+}
+
+body {
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  background-color: rgb(255, 255, 255);
+}
+
+.gorne-buttony {
+  display: flex;
+  align-items: center;
+  /* margin-top: 20px; */
+  /* justify-content: space-between; */
+  padding: 10px;
+  /* border-bottom: 2px solid rgba(0, 0, 0, 0.1); */
+  box-shadow: 0px 4px 2px -2px gray;
+  background-image: linear-gradient(
+    to right,
+    hsl(222, 51%, 82%),
+    rgb(255, 255, 255)
+  );
+  background-color: rgb(245, 245, 245);
+  box-sizing: border-box;
+}
+
+.button-tworz-szukaj {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin-left: 200px;
+}
+
+.button-loguj-rejestruj {
+  display: flex;
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.button-tworz,
+.button-twoje {
+  margin: 5px;
+  padding: 15px;
+  border: none;
+  background-color: hsl(222, 51%, 56%);
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.button-tworz:hover,
+.button-twoje:hover {
+  margin: 5px;
+  padding: 15px;
+  border: none;
+  background-color: hsl(222, 51%, 46%);
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.button-szukaj {
+  margin: 5px;
+  padding: 15px;
+  border: none;
+  background-color: hsl(222, 51%, 56%);
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+  animation: pulsate 1.5s infinite;
+}
+
+.button-szukaj:hover {
+  margin: 5px;
+  padding: 15px;
+  border: none;
+  background-color: hsl(222, 51%, 66%);
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.button-loguj {
+  margin-left: 5px;
+}
+
+.button-rejestruj {
+  margin-left: 5px;
+}
+
+.button-loguj {
+  margin: 5px;
+  padding: 10px;
+  border: none;
+  background-color: hsl(163, 52%, 73%);
+  color: black;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.button-rejestruj {
+  margin: 5px;
+  padding: 10px;
+  border: none;
+  background-color: hsl(163, 52%, 63%);
+  color: black;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.button-loguj:hover {
+  margin: 5px;
+  padding: 10px;
+  border: none;
+  background-color: hsl(163, 52%, 63%);
+  color: black;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.button-rejestruj:hover {
+  margin: 5px;
+  padding: 10px;
+  border: none;
+  background-color: hsl(163, 52%, 53%);
+  color: black;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+/* logowanie i rejestracja */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal h2 {
+  margin-bottom: 20px;
+}
+
+.modal input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.modal button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: hsl(222, 51%, 56%);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal button:hover {
+  background-color: hsl(222, 51%, 46%);
+}

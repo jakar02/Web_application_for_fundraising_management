@@ -72,119 +72,127 @@ function MyForm() {
   ];
 
   return (
-    <div className="page-container">
-      <div className="left-column">
-        <div className="main-page-grid2">
-          {collections.map((collection, index) => (
-            <div
-              className="main-page-content"
-              onClick={() => handleZbiorkaClick(collection)}
-              key={index}
-            >
-              <div className="collection-frame">
-                <p className="collection-title">{collection.title}</p>
-                <img
-                  src={collection.image}
-                  className="collection-image"
-                  alt="zdjecie"
-                />
-                <p className="collection-description">{collection.description}</p>
-                <p className="collection-funds">
-                  Zbierane pieniądze: {collection.funds}
-                </p>
+    <div>
+      <h1 className="title-of-the-page">Szukaj zbiórkę</h1>
+      <div className="page-container">
+        <div className="left-column">
+          <div className="main-page-grid2">
+            {collections.map((collection, index) => (
+              <div
+                className="main-page-content"
+                onClick={() => handleZbiorkaClick(collection)}
+                key={index}
+              >
+                <div className="collection-frame">
+                  <p className="collection-title">{collection.title}</p>
+                  <img
+                    src={collection.image}
+                    className="collection-image"
+                    alt="zdjecie"
+                  />
+                  <p className="collection-description">
+                    {collection.description}
+                  </p>
+                  <p className="collection-funds">
+                    Zbierane pieniądze: {collection.funds}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="right-column">
-        <div className="szukaj-zbiorke-all">
-          <label htmlFor="szukaj-input" className="szukaj-font">
-            <b>Szukaj zbiórki po celu i opisie</b>
-          </label>
-          <input
-            type="text"
-            placeholder="np. nowe buty"
-            className="szukaj-input"
-          ></input>
-          <p>
-            <b>Wybierz kategorie:</b>
-          </p>
-          <form className="form-input">
-            <input
-              type="checkbox"
-              id="sport"
-              name="sport"
-              value="sport"
-              checked={sportChecked}
-              onChange={handleSportCheckboxChange}
-            />
-            <label htmlFor="sport"> Sprzęt sportowy/spełnianie marzeń</label>
-            <br />
-
-            <input
-              type="checkbox"
-              id="zdrowie"
-              name="zdrowie"
-              value="zdrowie"
-              checked={zdrowieChecked}
-              onChange={handleZdrowieCheckboxChange}
-            />
-            <label htmlFor="zdrowie"> Operacja/leki/zdrowie</label>
-            <br />
-
-            <input
-              type="checkbox"
-              id="wojna"
-              name="wojna"
-              value="wojna"
-              checked={wojnaChecked}
-              onChange={handleWojnaCheckboxChange}
-            />
-            <label htmlFor="wojna"> Wojna</label>
-            <br />
-
-            <input
-              type="checkbox"
-              id="katastrofy"
-              name="katastrofy"
-              value="katastrofy"
-              checked={katastrofyChecked}
-              onChange={handleKatastrofyCheckboxChange}
-            />
-            <label htmlFor="katastrofy">
-              {" "}
-              Katastrofy naturalne/pożary/powodzie
+        <div className="right-column">
+          <div className="szukaj-zbiorke-all">
+            <label htmlFor="szukaj-input" className="szukaj-font">
+              <b>Szukaj zbiórki po celu i opisie</b>
             </label>
-            <br />
-
             <input
-              type="checkbox"
-              id="pozostale"
-              name="pozostale"
-              value="pozostale"
-              checked={pozostaleChecked}
-              onChange={handlePozostaleCheckboxChange}
-            />
-            <label htmlFor="pozostale"> Pozostale</label>
-            <br />
-          </form>
-          <label htmlFor="lokalizacja-input" className="lokalizacja-font">
-            <b>Lokalizacja</b>
-          </label>
-          <input
-            type="text"
-            placeholder="np. Kraków"
-            className="lokalizacja-input"
-          ></input>
+              type="text"
+              placeholder="np. nowe buty"
+              className="szukaj-input"
+            ></input>
+            <p>
+              <b>Wybierz kategorie:</b>
+            </p>
+            <form className="form-input">
+              <input
+                type="checkbox"
+                id="sport"
+                name="sport"
+                value="sport"
+                checked={sportChecked}
+                onChange={handleSportCheckboxChange}
+              />
+              <label htmlFor="sport"> Sprzęt sportowy/spełnianie marzeń</label>
+              <br />
 
-          <div className="button-container">
-            <button className="button-anuluj" onClick={handleAnulujClick}>
-              Anuluj ✖
-            </button>
-            <button className="button-szukaj-po-celu" onClick={handleSzukajClick}>
-              Szukaj 🔍︎
-            </button>
+              <input
+                type="checkbox"
+                id="zdrowie"
+                name="zdrowie"
+                value="zdrowie"
+                checked={zdrowieChecked}
+                onChange={handleZdrowieCheckboxChange}
+              />
+              <label htmlFor="zdrowie"> Operacja/leki/zdrowie</label>
+              <br />
+
+              <input
+                type="checkbox"
+                id="wojna"
+                name="wojna"
+                value="wojna"
+                checked={wojnaChecked}
+                onChange={handleWojnaCheckboxChange}
+              />
+              <label htmlFor="wojna"> Wojna</label>
+              <br />
+
+              <input
+                type="checkbox"
+                id="katastrofy"
+                name="katastrofy"
+                value="katastrofy"
+                checked={katastrofyChecked}
+                onChange={handleKatastrofyCheckboxChange}
+              />
+              <label htmlFor="katastrofy">
+                {" "}
+                Katastrofy naturalne/pożary/powodzie
+              </label>
+              <br />
+
+              <input
+                type="checkbox"
+                id="pozostale"
+                name="pozostale"
+                value="pozostale"
+                checked={pozostaleChecked}
+                onChange={handlePozostaleCheckboxChange}
+              />
+              <label htmlFor="pozostale"> Pozostale</label>
+              <br />
+            </form>
+            <label htmlFor="lokalizacja-input" className="lokalizacja-font">
+              <b>Lokalizacja</b>
+            </label>
+            <input
+              type="text"
+              placeholder="np. Kraków"
+              className="lokalizacja-input"
+            ></input>
+
+            <div className="button-container">
+              <button className="button-anuluj" onClick={handleAnulujClick}>
+                Anuluj ✖
+              </button>
+              <button
+                className="button-szukaj-po-celu"
+                onClick={handleSzukajClick}
+              >
+                Szukaj 🔍︎
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -5,13 +5,12 @@ import batman4k from "./assets/batman4k.jpg";
 import homelander from "./assets/homelander.jpg";
 import joker from "./assets/joker.jpg";
 
-
 function MainPage() {
   const [showModal, setShowModal] = useState(false);
   const [isLogin, areYouLoggingIn] = useState(true);
   const navigate = useNavigate();
 
-  const[isLogged, setIsLogged] = useState(false);
+  const [isLogged, setIsLogged] = useState(true);
 
   const handleSzukajClick = () => {
     navigate("/SzukajZbiorke.jsx");
@@ -19,14 +18,12 @@ function MainPage() {
   };
 
   const handleLogujWylogujClick = () => {
-    if(isLogged){
+    if (isLogged) {
       setIsLogged(false);
-    }
-    else{
+    } else {
       areYouLoggingIn(true);
-      setShowModal(true);      
+      setShowModal(true);
     }
-
   };
 
   const handleLogujZalogujClick = () => {
@@ -54,11 +51,18 @@ function MainPage() {
   };
 
   const handleTworzClick = () => {
-    if(isLogged) {
+    if (isLogged) {
       navigate("/StworzZbiorke.jsx");
-    }
-    else{
+    } else {
       handleRejestrujClick();
+    }
+  };
+
+  const handleTwojeClick = () => {
+    if (isLogged) {
+      navigate("/ZarzadzajZbiorkami.jsx");
+    } else {
+      handleLogujWylogujClick();
     }
   };
 
@@ -66,30 +70,34 @@ function MainPage() {
     {
       title: "Nowi rodzice dla Batmana",
       image: batman4k,
-      description: "Pilnie potrzebuję 2mln zł na piwo dla Twojego starego pijanego. Pomóż",
+      description:
+        "Pilnie potrzebuję 2mln zł na piwo dla Twojego starego pijanego. Pomóż bla bla bla Pomóż bla bla blaPomóż bla bla blaPomóż bla bla blaPomóż bla bla bla ",
       funds: "5000 PLN",
-      bank: "12345678910"
+      bank: "12345678910",
     },
     {
       title: "Zbiórka na szkołę",
       image: joker,
       description: "Pomóż dzieciom w potrzebie uzyskać amunicję.",
       funds: "12000 PLN",
-      bank: "12345678910"
+      bank: "12345678910",
     },
     {
       title: "Wsparcie dla lokalnych firm",
       image: homelander,
       description: "Pomóż lokalnym przedsiębiorcom przetrwać trudne czasy",
       funds: "8000 PLN",
-      bank: "12345678910"
-    }
+      bank: "12345678910",
+    },
   ];
 
   return (
     <div className={`all-main-page ${showModal ? "modal-active" : ""}`}>
       <div className="gorne-buttony">
         <div className="button-tworz-szukaj">
+          <button className="button-twoje" onClick={handleTwojeClick}>
+            Twoje zbiórki
+          </button>
           <button className="button-tworz" onClick={handleTworzClick}>
             Stwórz zbiórkę
           </button>
@@ -109,13 +117,22 @@ function MainPage() {
 
       <div className="main-page-grid">
         {collections.map((collection, index) => (
-          <div className="main-page-content" onClick={() => handleZbiorkaClick(collection)} key={index}>
+          <div
+            className="main-page-content"
+            onClick={() => handleZbiorkaClick(collection)}
+            key={index}
+          >
             <div className="collection-frame">
               <p className="collection-title">{collection.title}</p>
-              <img src={collection.image} className="collection-image" alt="zdjecie" />
+              <img
+                src={collection.image}
+                className="collection-image"
+                alt="zdjecie"
+              />
               <p className="collection-description">{collection.description}</p>
-              <p className="collection-funds">Zbierane pieniądze: {collection.funds}</p>
-
+              <p className="collection-funds">
+                Zbierane pieniądze: {collection.funds}
+              </p>
             </div>
           </div>
         ))}
@@ -128,13 +145,15 @@ function MainPage() {
             <input type="text" placeholder="Nazwa użytkownika" />
             <input type="password" placeholder="Hasło" />
             {!isLogin && <input type="password" placeholder="Powtórz hasło" />}
-            {isLogin && <button onClick={handleLogujZalogujClick}> Zaloguj się </button>}
+            {isLogin && (
+              <button onClick={handleLogujZalogujClick}> Zaloguj się </button>
+            )}
             {!isLogin && <button> Zarejestruj się </button>}
-
-            
           </div>
         </div>
       )}
+
+      {/* <footer>All rights reserved.</footer> */}
     </div>
   );
 }
