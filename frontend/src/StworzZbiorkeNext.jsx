@@ -1,4 +1,4 @@
-import "./StworzSzukajZbiorke.css";
+import "./styles/StworzSzukajZbiorke.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 

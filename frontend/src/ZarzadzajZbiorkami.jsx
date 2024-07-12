@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./ZarzadzajZbiorkami.css";
+import "./styles/ZarzadzajZbiorkami.css";
 import { useNavigate } from "react-router-dom";
 import batman4k from "./assets/batman4k.jpg";
 import homelander from "./assets/homelander.jpg";

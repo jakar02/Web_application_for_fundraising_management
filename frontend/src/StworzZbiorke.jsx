@@ -1,4 +1,4 @@
-import "./StworzSzukajZbiorke.css";
+import "./styles/StworzSzukajZbiorke.css";
 import { useNavigate } from "react-router-dom";
 
 function StworzZbiorke() {

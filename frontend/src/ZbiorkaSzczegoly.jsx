@@ -1,4 +1,4 @@
-import "./ZbiorkaSzczegoly.css";
+import "./styles/ZbiorkaSzczegoly.css";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import copyicon from "./assets/copy-icon.png";

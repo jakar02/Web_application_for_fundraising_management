@@ -1,4 +1,4 @@
-import "./MainPage.css";
+import "./styles/MainPage.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import batman4k from "./assets/batman4k.jpg";
