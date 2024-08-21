@@ -195,11 +195,8 @@ body {
 }
 
 .modal input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  /* padding: 5px; */
+  /* margin-bottom: 10px; */
 }
 
 .modal button {

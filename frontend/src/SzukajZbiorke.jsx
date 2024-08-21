@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import batman4k from "./assets/batman4k.jpg";
 import homelander from "./assets/homelander.jpg";
 import joker from "./assets/joker.jpg";
+import TextField from "@mui/material/TextField";
 
 function MyForm() {
   const navigate = useNavigate();
@@ -103,14 +104,32 @@ function MyForm() {
         </div>
         <div className="right-column">
           <div className="szukaj-zbiorke-all">
-            <label htmlFor="szukaj-input" className="szukaj-font">
+            <TextField
+              label="Szukaj zbiórki po tytule i opisie"
+              variant="outlined"
+              size="normal"
+              margin="normal"
+              fullWidth
+              sx={{ backgroundColor: "white", marginBottom: "10px" }}
+            />
+
+            <TextField
+              label="Miasto"
+              variant="outlined"
+              size="normal"
+              margin="normal"
+              fullWidth
+              sx={{ backgroundColor: "white", marginBottom: "10px" }}
+            />
+
+            {/* <label htmlFor="szukaj-input" className="szukaj-font">
               <b>Szukaj zbiórki po celu i opisie</b>
             </label>
             <input
               type="text"
               placeholder="np. nowe buty"
               className="szukaj-input"
-            ></input>
+            ></input> */}
             <p>
               <b>Wybierz kategorie:</b>
             </p>
@@ -173,14 +192,14 @@ function MyForm() {
               <label htmlFor="pozostale"> Pozostale</label>
               <br />
             </form>
-            <label htmlFor="lokalizacja-input" className="lokalizacja-font">
+            {/* <label htmlFor="lokalizacja-input" className="lokalizacja-font">
               <b>Lokalizacja</b>
             </label>
             <input
               type="text"
               placeholder="np. Kraków"
               className="lokalizacja-input"
-            ></input>
+            ></input> */}
 
             <div className="button-container">
               <button className="button-anuluj" onClick={handleAnulujClick}>

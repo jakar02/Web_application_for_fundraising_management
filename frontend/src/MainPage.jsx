@@ -1,14 +1,21 @@
 import "./styles/MainPage.css";
+import TextField from '@mui/material/TextField';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // Add this line to import axios
 import batman4k from "./assets/batman4k.jpg";
 import homelander from "./assets/homelander.jpg";
 import joker from "./assets/joker.jpg";
 
 function MainPage() {
-  const [showModal, setShowModal] = useState(false);
-  const [isLogin, areYouLoggingIn] = useState(true);
+  const [showModal, setShowModal] = useState(0); //0 - nie pokazuj, 1 - logowanie, 2 - rejestracja
   const navigate = useNavigate();
+  const [email, setEmail] = useState(''); 
+  const [password, setPassword] = useState(''); 
+  const [emailRegister, setEmailRegister] = useState('');
+  const [passwordRegister, setPasswordRegister] = useState('');
+  const [passwordRepeat, setPasswordRepeat] = useState('');
+  const [fullName, setFullNameRegister] = useState('');
 
   const [isLogged, setIsLogged] = useState(true);
 
@@ -21,23 +28,55 @@ function MainPage() {
     if (isLogged) {
       setIsLogged(false);
     } else {
-      areYouLoggingIn(true);
-      setShowModal(true);
+      setShowModal(1);
     }
   };
 
-  const handleLogujZalogujClick = () => {
-    setIsLogged(true);
-    setShowModal(false);
+  const handleLogujZalogujClick = async () => {
+    try {
+      const response = await axios.post('http://localhost:8081/auth/signin', {
+        email: email,
+        password: password   
+      });
+      console.log('Login successful:', response.data); 
+      const { jwt } = response.data;
+      localStorage.setItem('token', jwt); // Zapisz token w localStorage
+      console.log('Token saved:', jwt);
+      // Jeśli logowanie się powiedzie, ustaw stan jako zalogowany
+      setIsLogged(true);
+      setShowModal(0); // Zamknij modal po zalogowaniu
+      
+    } catch (error) {
+      console.error('Błąd logowania:', error);
+      // Możesz wyświetlić komunikat o błędzie w modalu
+    }
+  };
+
+  const handleRejestrujZarejestrujClick = async () => {
+    try {
+      const response = await axios.post('http://localhost:8081/auth/signup', {
+        fullName: fullName,
+        email: emailRegister,
+        password: passwordRegister,
+      });
+      console.log('Signup successful:', response.data); 
+      
+      // Jeśli rejestracja się powiedzie, ustaw stan jako zalogowany
+      setIsLogged(true);
+      setShowModal(0); // Zamknij modal po zalogowaniu
+      
+    } catch (error) {
+      console.error('Błąd rejestracji:', error);
+      // Możesz wyświetlić komunikat o błędzie w modalu
+    }
   };
 
   const handleRejestrujClick = () => {
-    areYouLoggingIn(false);
-    setShowModal(true);
+    setShowModal(2);
   };
 
   const handleCloseModal = () => {
-    setShowModal(false);
+    setShowModal(0);
   };
 
   const handleOverlayClick = (e) => {
@@ -92,7 +131,7 @@ function MainPage() {
   ];
 
   return (
-    <div className={`all-main-page ${showModal ? "modal-active" : ""}`}>
+    <div className={`all-main-page ${showModal!=0 ? "modal-active" : ""}`}>
       <div className="gorne-buttony">
         <div className="button-tworz-szukaj">
           <button className="button-twoje" onClick={handleTwojeClick}>
@@ -138,20 +177,31 @@ function MainPage() {
         ))}
       </div>
 
-      {showModal && (
+      {showModal==1 && (
         <div className="modal-overlay" onClick={handleOverlayClick}>
           <div className="modal">
-            <h2>{isLogin ? "Logowanie" : "Rejestracja"}</h2>
-            <input type="text" placeholder="Nazwa użytkownika" />
-            <input type="password" placeholder="Hasło" />
-            {!isLogin && <input type="password" placeholder="Powtórz hasło" />}
-            {isLogin && (
-              <button onClick={handleLogujZalogujClick}> Zaloguj się </button>
-            )}
-            {!isLogin && <button> Zarejestruj się </button>}
+            <h2>{"Logowanie"}</h2>
+            <TextField label="Email" variant="outlined" size="small" margin="normal" value={email} onChange={(e) => setEmail(e.target.value)}/>
+            <TextField label="Hasło" variant="outlined" size="small" margin="normal" value={password} onChange={(e) => setPassword(e.target.value)}/>
+            <button onClick={handleLogujZalogujClick}> Zaloguj się </button>
           </div>
         </div>
       )}
+
+      {showModal==2 && (
+          <div className="modal-overlay" onClick={handleOverlayClick}>
+            <div className="modal">
+              <h2>{"Rejestracja"}</h2>
+              <TextField label="Imię i nazwisko" margin="normal" size="small" variant="outlined" value={fullName} onChange={(e) => setFullNameRegister(e.target.value)}/>
+              <TextField label="Email" variant="outlined" size="small" margin="normal" value={emailRegister} onChange={(e) => setEmailRegister(e.target.value)}/>
+              <TextField label="Hasło" variant="outlined" size="small" margin="normal" value={passwordRegister} onChange={(e) => setPasswordRegister(e.target.value)}/>
+              <TextField label="Powtórz hasło" margin="normal" size="small" variant="outlined" value={passwordRepeat} onChange={(e) => setPasswordRepeat(e.target.value)}/>
+              
+              <button onClick={handleRejestrujZarejestrujClick}> Zarejestruj się</button>
+            </div>
+          </div>
+        )
+      }
 
       {/* <footer>All rights reserved.</footer> */}
     </div>

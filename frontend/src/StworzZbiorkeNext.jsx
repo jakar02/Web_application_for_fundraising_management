@@ -1,14 +1,22 @@
 import "./styles/StworzSzukajZbiorke.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import TextField from "@mui/material/TextField";
+import axios from "axios"; 
+import { useLocation } from "react-router-dom";
 
 function StworzZbiorkeNext() {
+  const location = useLocation();
+  const { collectionGoal, collectionAmount } = location.state || {};
   const navigate = useNavigate();
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [accountNumber, setAccountNumber] = useState("");
+  const [description, setDescription] = useState("");
+  const [city, setCity] = useState("");
+  const [date, setDate] = useState("");
 
   function handleCofnijClick() {
     navigate("/StworzZbiorke.jsx");
-    // window.location.href = "./StworzZbiorke.jsx";
   }
 
   function handleFileChange(event) {
@@ -16,41 +24,83 @@ function StworzZbiorkeNext() {
     setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
   }
 
+  const handleChange = (event) => {
+    setDate(event.target.value);
+  };
+
+  const handleStworzZbiorkeClick = async () => {
+
+    const token = localStorage.getItem('token'); // Pobierz token z localStorage
+    try {
+        await axios.post('http://localhost:8081/auth/api/user_collections', {
+        collectionGoal: collectionGoal,
+        collectionAmount: collectionAmount,
+        accountNumber: accountNumber,
+        description: description,
+        city: city,
+        date: date,
+        selectedFiles: selectedFiles
+   
+
+      }, {headers: {Authorization: `Bearer ${token}`}});
+      console.log('Utworzono zbiorke'); 
+
+    } catch (error) {
+      console.error('Błąd tworzenia zbiorki:', error);
+    }
+  };
+
+
+
   return (
     <div className="stworz-zbiorke-all">
-      <label htmlFor="numer-konta-input" className="numer-konta-input">
-        <b>Numer konta bankowego do przelewu</b>
-      </label>
-      <input
-        id="stworz-zbiorke-all"
-        type="text"
-        placeholder=""
-        className="kto-input"
+      <TextField
+        label="Numer konta bankowego do przelewu"
+        variant="outlined"
+        size="normal"
+        margin="normal"
+        sx={{ backgroundColor: "white", marginBottom: "20px" }}
+        value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)}
       />
 
-      <label htmlFor="opis-input" className="opis-font">
-        <b>Opis</b>
-      </label>
-      <textarea id="opis-input" placeholder="" className="opis-input" />
-
-      <label htmlFor="region-input">
-        <b>Region</b>
-      </label>
-      <input
-        id="region-input"
-        type="text"
-        placeholder="np. Kraków"
-        className="region-input"
+      <TextField
+        label="Opis"
+        variant="outlined"
+        multiline
+        rows={4}
+        sx={{
+          backgroundColor: "white",
+          marginBottom: "10px",
+          "& .MuiInputBase-root": {
+            height: "auto",
+          },
+        }}
+        fullWidth
+        value={description} onChange={(e) => setDescription(e.target.value)}
       />
 
-      <label htmlFor="data-input">
-        <b>Data zakończenia</b>
-      </label>
-      <input
-        id="data-input"
-        type="text"
-        placeholder="np. 01.01.2024"
-        className="data-input"
+      <TextField
+        label="Miasto"
+        variant="outlined"
+        size="normal"
+        margin="normal"
+        sx={{ backgroundColor: "white", marginBottom: "20px" }}
+        value={city} onChange={(e) => setCity(e.target.value)}
+      />
+
+      <TextField
+        label="Wybierz datę zakończenia zbiórki"
+        type="date"
+        value={date}
+        onChange={handleChange}
+        sx={{
+          backgroundColor: "white",
+          marginBottom: "20px",
+          width: "100%",
+        }}
+        InputLabelProps={{
+          shrink: true, // Sprawia, że etykieta jest widoczna, gdy pole ma fokus
+        }}
       />
 
       <label className="image-upload-btn" htmlFor="image-input">
@@ -77,7 +127,7 @@ function StworzZbiorkeNext() {
         <button className="button-anuluj" onClick={handleCofnijClick}>
           ←Cofnij
         </button>
-        <button className="button-stworz-zbiorke">Stwórz</button>
+        <button className="button-stworz-zbiorke" onClick={handleStworzZbiorkeClick}>Stwórz</button>
       </div>
 
       <p className="page-info">Strona 2/2</p>
