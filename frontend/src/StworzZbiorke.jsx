@@ -3,17 +3,28 @@ import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import InputAdornment from "@mui/material/InputAdornment";
+import { useRef } from "react";
 
 function StworzZbiorke() {
   const navigate = useNavigate();
+
+  const [collectionGoal, setCollectionGoal] = useState("");
+  const [collectionAmount, setCollectionAmount] = useState("");
+
+  const goalRef = useRef(null);
+  const amountRef = useRef(null);
 
   function handleAnulujClick() {
     navigate("/");
   }
 
   function handleDalejClick() {
-    if(collectionGoal === "" || collectionAmount === "") {
-      alert("Wypełnij wszystkie pola!");
+    if (collectionGoal === "") {
+      alert("Podaj cel zbiorki!");
+      return;
+    }
+    if (Number(collectionAmount) < 0 || isNaN(Number(collectionAmount))) {
+      alert("Podaj poprawną kwotę zbiórki!");
       return;
     }
     navigate("/StworzZbiorkeNext.jsx", {
@@ -21,8 +32,22 @@ function StworzZbiorke() {
     });
   }
 
-  const [collectionGoal, setCollectionGoal] = useState("");
-  const [collectionAmount, setCollectionAmount] = useState("");
+
+  const handleKey = (e) => {
+    if (e.key === "Enter") {
+      handleDalejClick();
+    } else if (e.key === "ArrowDown") {
+      if (e.target === goalRef.current) {
+        amountRef.current.focus();
+      }
+    } else if (e.key === "ArrowUp") {
+      if (e.target === amountRef.current) {
+        goalRef.current.focus();
+      }
+    }
+  };
+
+
 
 
   return (
@@ -33,50 +58,58 @@ function StworzZbiorke() {
         size="normal"
         margin="normal"
         sx={{ backgroundColor: "white", marginBottom: "20px" }}
-        value={collectionGoal} onChange={(e) => setCollectionGoal(e.target.value)}
+        value={collectionGoal}
+        onChange={(e) => setCollectionGoal(e.target.value)}
+        inputRef={goalRef}
+        onKeyDown={handleKey}
       />
 
       <TextField
         label="Zbierana kwota"
         variant="outlined"
-
         placeholder="0,00"
-        
         InputProps={{
-          endAdornment: <InputAdornment  position="end" ><span style={{ fontSize: '50px' }}>zł</span></InputAdornment>,
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ fontSize: "50px" }}>zł</span>
+            </InputAdornment>
+          ),
         }}
         fullWidth
-
         inputProps={{
           style: {
             fontSize: "50px", // Rozmiar tekstu w inp
             height: "70px", // Ustaw wysokość dla inputa, standardowa dla `outlined`
             padding: "12px 14px", // Padding wewnątrz pola
-          },}}
-          sx={{
-            backgroundColor: "white",
-            // Dostosuj wysokość tekstowego inputa
-            '& .MuiInputBase-input': {
-              fontSize: '18px',
-              padding: '12px 14px',
-            },
-            // Dostosuj wysokość label
-            '& .MuiInputLabel-root': {
-              fontSize: '16px',
-              top: '-8px', // Przesuwa etykietę w górę
-              transform: 'translateY(0)', // Resetuje przekształcenie
-            },
-            '& .MuiInputLabel-shrink': {
-              top: '-8px', // Ustawienie dla etykiety, gdy jest w stanie "shrink"
-              left: '14px', // Ustawienie dla etykiety, gdy jest w stanie "shrink"
-              transform: 'translateY(0)', // Resetuje przekształcenie
-              fontSize: '12px', // Opcjonalne dostosowanie rozmiaru czcionki, gdy etykieta jest w stanie "shrink"
-            }
-          }}
-          InputLabelProps={{
-            shrink: true, // Ustawia, aby etykieta była zawsze widoczna
-          }}
-          value={collectionAmount} onChange={(e) => setCollectionAmount(e.target.value)}
+          },
+        }}
+        sx={{
+          backgroundColor: "white",
+          // Dostosuj wysokość tekstowego inputa
+          "& .MuiInputBase-input": {
+            fontSize: "18px",
+            padding: "12px 14px",
+          },
+          // Dostosuj wysokość label
+          "& .MuiInputLabel-root": {
+            fontSize: "16px",
+            top: "-8px", // Przesuwa etykietę w górę
+            transform: "translateY(0)", // Resetuje przekształcenie
+          },
+          "& .MuiInputLabel-shrink": {
+            top: "-8px", // Ustawienie dla etykiety, gdy jest w stanie "shrink"
+            left: "14px", // Ustawienie dla etykiety, gdy jest w stanie "shrink"
+            transform: "translateY(0)", // Resetuje przekształcenie
+            fontSize: "12px", // Opcjonalne dostosowanie rozmiaru czcionki, gdy etykieta jest w stanie "shrink"
+          },
+        }}
+        InputLabelProps={{
+          shrink: true, // Ustawia, aby etykieta była zawsze widoczna
+        }}
+        value={collectionAmount}
+        onChange={(e) => setCollectionAmount(e.target.value)}
+        inputRef={amountRef}
+        onKeyDown={handleKey}
       />
 
       <div className="button-container">
