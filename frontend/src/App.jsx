@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./MainPage";
-import StworzZbiorke from "./StworzZbiorke";
-import SzukajZbiorke from "./SzukajZbiorke";
-import StworzZbiorkeNext from "./StworzZbiorkeNext";
-import ZbiorkaSzczegoly from "./ZbiorkaSzczegoly";
-import ZarzadzajZbiorkami from "./ZarzadzajZbiorkami";
+import CreateCollection from "./CreateCollection";
+import SearchForCollection from "./SearchForCollection";
+import CreateCollectionNext from "./CreateCollectionNext";
+import CollectionDetails from "./CollectionDetails";
+import ManageCollections from "./ManageCollections";
 
 
 function App() {
@@ -12,11 +12,11 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/StworzZbiorke.jsx" element={<StworzZbiorke />} />
-        <Route path="/SzukajZbiorke.jsx" element={<SzukajZbiorke />} />
-        <Route path="/StworzZbiorkeNext.jsx" element={<StworzZbiorkeNext />} />
-        <Route path="/ZbiorkaSzczegoly.jsx" element={<ZbiorkaSzczegoly />} />
-        <Route path="/ZarzadzajZbiorkami.jsx" element={<ZarzadzajZbiorkami />} />
+        <Route path="/CreateCollection" element={<CreateCollection />} />
+        <Route path="/SearchForCollection" element={<SearchForCollection />} />
+        <Route path="/CreateCollectionNext" element={<CreateCollectionNext />} />
+        <Route path="/CollectionDetails" element={<CollectionDetails />} />
+        <Route path="/ManageCollections" element={<ManageCollections />} />
       </Routes>
     </Router>
   );

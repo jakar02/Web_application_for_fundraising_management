@@ -14,6 +14,7 @@ function MainPage() {
   const [passwordRegister, setPasswordRegister] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [fullName, setFullNameRegister] = useState("");
+  const [navigateRequest, setNavigateRequest] = useState("");
 
   // State for login status
   const [isLogged, setIsLogged] = useState(false);
@@ -27,11 +28,11 @@ function MainPage() {
   const passwordRegisterRef = useRef(null);
   const passwordRepeatRef = useRef(null);
 
-  const handleSzukajClick = () => {
-    navigate("/SzukajZbiorke.jsx");
+  const handleSearchClick = () => {
+    navigate("/SearchForCollection");
   };
 
-  const handleLogujWylogujClick = () => {
+  const handleLoginLogoutClick = () => {
     if (isLogged) {
       setIsLogged(false);
     } else {
@@ -39,7 +40,7 @@ function MainPage() {
     }
   };
 
-  const handleLogujZalogujClick = async () => {
+  const handleLoginInModalClick = async () => {
     try {
       const response = await axios.post(
         "http://localhost:8081/auth/signin",
@@ -58,12 +59,16 @@ function MainPage() {
       localStorage.setItem("token", jwt);
       setIsLogged(true);
       setShowModal(0);
+      if (navigateRequest) {
+        navigate(`${navigateRequest}`);
+        setNavigateRequest("");
+      }
     } catch (error) {
       console.error("Błąd logowania:", error);
     }
   };
 
-  const handleRejestrujZarejestrujClick = async () => {
+  const handleRegisterInModalClick = async () => {
     try {
       await axios.post(
         "http://localhost:8081/auth/signup",
@@ -87,7 +92,7 @@ function MainPage() {
     }
   };
 
-  const handleRejestrujClick = () => {
+  const handleRegisterClick = () => {
     setShowModal(2);
   };
 
@@ -101,24 +106,29 @@ function MainPage() {
     }
   };
 
-  const handleZbiorkaClick = (collection) => {
-    navigate("/ZbiorkaSzczegoly.jsx", { state: { collection } });
+  const handleCollectionClick = (collection) => {
+    navigate("/CollectionDetails", { state: { collection } });
   };
 
-  const handleTworzClick = () => {
+  const handleCreateCollectionClick = async () => {
     if (isLogged) {
-      navigate("/StworzZbiorke.jsx");
+      navigate("/CreateCollection");
     } else {
-      handleLogujWylogujClick();
+      handleLoginLogoutClick();
+      setNavigateRequest("/CreateCollection");
     }
   };
 
-  const handleTwojeClick = () => {
+  const handleYourCollectionsClick = () => {
     if (isLogged) {
-      navigate("/ZarzadzajZbiorkami.jsx");
+      navigate("/ManageCollections" );
+      return;
     } else {
-      handleLogujWylogujClick();
+      handleLoginLogoutClick();
+      setNavigateRequest("/ManageCollections");
     }
+
+    
   };
 
   const showCollections = async () => {
@@ -133,13 +143,12 @@ function MainPage() {
 
   useEffect(() => {
     showCollections();
-    console.log("Pobrane kolekcje:", collections);
   }, []);
 
   // Function to handle keydown events in the login modal
   const handleKeyLogin = (e) => {
     if (e.key === "Enter") {
-      handleLogujZalogujClick();
+      handleLoginInModalClick();
     } else if (e.key === "ArrowDown") {
       if (e.target === emailRef.current) {
         passwordRef.current.focus();
@@ -153,7 +162,7 @@ function MainPage() {
 
   const handleKeyRegister = (e) => {
     if (e.key === "Enter") {
-      handleRejestrujZarejestrujClick();
+      handleRegisterInModalClick();
     } else if (e.key === "ArrowDown") {
       if (e.target === fullNameRef.current) {
         emailRegisterRef.current.focus();
@@ -179,35 +188,39 @@ function MainPage() {
     <div className={`all-main-page ${showModal != 0 ? "modal-active" : ""}`}>
       <div className="gorne-buttony">
         <div className="button-tworz-szukaj">
-          <button className="button-twoje" onClick={handleTwojeClick}>
+          <button className="button-twoje" onClick={handleYourCollectionsClick}>
             Twoje zbiórki
           </button>
-          <button className="button-tworz" onClick={handleTworzClick}>
+          <button className="button-tworz" onClick={handleCreateCollectionClick}>
             Stwórz zbiórkę
           </button>
-          <button className="button-szukaj" onClick={handleSzukajClick}>
+          <button className="button-szukaj" onClick={handleSearchClick}>
             Szukaj zbiórkę 🔍︎
           </button>
         </div>
         <div className="button-loguj-rejestruj">
-          <button className="button-loguj" onClick={handleLogujWylogujClick}>
+          <button className="button-loguj" onClick={handleLoginLogoutClick}>
             {!isLogged ? "Zaloguj się" : "Wyloguj się"}
           </button>
-          <button className="button-rejestruj" onClick={handleRejestrujClick}>
+          <button className="button-rejestruj" onClick={handleRegisterClick}>
             Zarejestruj się
           </button>
         </div>
       </div>
 
       <div className="main-page-grid">
-        {collections.map((collection, index) => (
+        {collections.map((collection) => (
           <div
             className="main-page-content"
-            onClick={() => handleZbiorkaClick(collection)}
-            key={index}
+            onClick={() => handleCollectionClick(collection)}
+            key={collection.id}
+            to={{
+              pathname: `/collection/${collection.id}`,
+              state: { collection }
+            }}
           >
             <div className="collection-frame">
-              <p className="collection-title">{collection.collectionGoal}</p>
+
               {collection.images && collection.images.length > 0 && (
                 <img
                   src={`data:image/jpeg;base64,${collection.images[0].imageData}`}
@@ -215,6 +228,7 @@ function MainPage() {
                   alt="zdjecie"
                 />
               )}
+              <p className="collection-title">{collection.collectionGoal}</p>
               <p className="collection-description">{collection.description}</p>
               <p className="collection-funds">
                 Zbierane pieniądze: {collection.collectionAmount} zł
@@ -248,7 +262,7 @@ function MainPage() {
               inputRef={passwordRef}
               onKeyDown={handleKeyLogin}
             />
-            <button onClick={handleLogujZalogujClick}>Zaloguj się</button>
+            <button onClick={handleLoginInModalClick}>Zaloguj się</button>
           </div>
         </div>
       )}
@@ -298,7 +312,7 @@ function MainPage() {
               onKeyDown={handleKeyRegister}
             />
 
-            <button onClick={handleRejestrujZarejestrujClick}>
+            <button onClick={handleRegisterInModalClick}>
               Zarejestruj się
             </button>
           </div>

@@ -1,2 +1,0 @@
-package com.restApp.charityApp.SecurityConfig;public class MappingJackson2HttpMessageConverterWithTextPlainSupport {
-}

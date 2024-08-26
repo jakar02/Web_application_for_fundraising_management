@@ -8,7 +8,7 @@ import homelander from "./assets/homelander.jpg";
 import joker from "./assets/joker.jpg";
 import TextField from "@mui/material/TextField";
 
-function MyForm() {
+function SearchForCollection() {
   const navigate = useNavigate();
 
   function handleAnulujClick() {
@@ -42,7 +42,7 @@ function MyForm() {
   };
 
   const handleZbiorkaClick = (collection) => {
-    navigate("/ZbiorkaSzczegoly.jsx", { state: { collection } });
+    navigate("/ZbiorkaSzczegoly", { state: { collection } });
   };
 
   const handleSzukajClick = () => {};
@@ -219,4 +219,4 @@ function MyForm() {
   );
 }
 
-export default MyForm;
+export default SearchForCollection;

@@ -5,7 +5,7 @@ import { useState } from "react";
 import InputAdornment from "@mui/material/InputAdornment";
 import { useRef } from "react";
 
-function StworzZbiorke() {
+function CreateCollection() {
   const navigate = useNavigate();
 
   const [collectionGoal, setCollectionGoal] = useState("");
@@ -27,7 +27,7 @@ function StworzZbiorke() {
       alert("Podaj poprawną kwotę zbiórki!");
       return;
     }
-    navigate("/StworzZbiorkeNext.jsx", {
+    navigate("/CreateCollectionNext", {
       state: { collectionGoal, collectionAmount },
     });
   }
@@ -126,4 +126,4 @@ function StworzZbiorke() {
   );
 }
 
-export default StworzZbiorke;
+export default CreateCollection;

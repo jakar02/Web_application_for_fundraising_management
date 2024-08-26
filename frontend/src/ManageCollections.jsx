@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./styles/ZarzadzajZbiorkami.css";
-import { useNavigate } from "react-router-dom";
-import batman4k from "./assets/batman4k.jpg";
-import homelander from "./assets/homelander.jpg";
-import joker from "./assets/joker.jpg";
+import { useNavigate} from "react-router-dom";
+import axios from "axios";
 
-function ZarzadzajZbiorkami() {
+function ManageCollections() {
   const navigate = useNavigate();
+  const [collections, setCollections] = useState([]);
+  const token = localStorage.getItem("token");
 
   function handleAnulujClick() {
     navigate("/");
@@ -15,16 +15,16 @@ function ZarzadzajZbiorkami() {
   const [whichZbiorkaSelected, setWhichZbiorkaSelected] = useState(null);
 
   const handleZbiorkaClick = (collection) => {
-    setWhichZbiorkaSelected(collection.title);
+    setWhichZbiorkaSelected(collection.collectionGoal);
   };
 
   const handleZbiorkaDoubleClick = (collection) => {
-    navigate("/ZbiorkaSzczegoly.jsx", { state: { collection } });
+    navigate("/ZbiorkaSzczegoly", { state: { collection } });
   };
 
   const handleEdytujClick = () => {
     if (whichZbiorkaSelected != null) {
-      navigate("/StworzZbiorkeNext.jsx");
+      navigate("/StworzZbiorkeNext");
     }
   };
 
@@ -40,30 +40,26 @@ function ZarzadzajZbiorkami() {
     }
   };
 
-  const collections = [
-    {
-      title: "Nowi rodzice dla Batmana",
-      image: batman4k,
-      description:
-        "Pilnie potrzebuję 2mln zł na piwo dla Twojego starego pijanego. Pomóż",
-      funds: "5000 PLN",
-      bank: "12345678910",
-    },
-    {
-      title: "Zbiórka na szkołę",
-      image: joker,
-      description: "Pomóż dzieciom w potrzebie uzyskać amunicję.",
-      funds: "12000 PLN",
-      bank: "12345678910",
-    },
-    {
-      title: "Wsparcie dla lokalnych firm",
-      image: homelander,
-      description: "Pomóż lokalnym przedsiębiorcom przetrwać trudne czasy",
-      funds: "8000 PLN",
-      bank: "12345678910",
-    },
-  ];
+
+  const showCollections = async () => {
+    try {
+      const response = await axios.get("http://localhost:8081/auth/api/user_collections_get",
+        {
+          headers: {Authorization: `Bearer ${token}`}},
+      );
+      console.log("Poprawnie pobrano zbiorki uzytkownika:", response.data);
+      setCollections(response.data);
+    } catch (error) {
+      console.error("Błąd pobierania zbiorek uzytkownika:", error);
+    }
+    
+  };
+
+  useEffect(() => {
+    showCollections();
+  }, []);
+
+
 
   return (
     <div>
@@ -81,14 +77,14 @@ function ZarzadzajZbiorkami() {
                 >
                   <div
                     className={
-                      whichZbiorkaSelected !== collection.title
+                      whichZbiorkaSelected !== collection.collectionGoal
                         ? "collection-frame2"
                         : "collection-frame2-selected"
                     }
                   >
-                    <p className="collection-title">{collection.title}</p>
+                    <p className="collection-title">{collection.collectionGoal}</p>
                     <img
-                      src={collection.image}
+                      src={`data:image/jpeg;base64,${collection.images[0].imageData}`}
                       className="collection-image"
                       alt="zdjecie"
                     />
@@ -96,7 +92,7 @@ function ZarzadzajZbiorkami() {
                       {collection.description}
                     </p>
                     <p className="collection-funds">
-                      Zbierane pieniądze: {collection.funds}
+                      Zbierane pieniądze: {collection.collectionAmount}
                     </p>
                   </div>
                 </div>
@@ -131,4 +127,4 @@ function ZarzadzajZbiorkami() {
   );
 }
 
-export default ZarzadzajZbiorkami;
+export default ManageCollections;

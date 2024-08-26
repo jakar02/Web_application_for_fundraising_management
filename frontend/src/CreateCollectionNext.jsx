@@ -6,7 +6,7 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useRef } from "react";
 
-function StworzZbiorkeNext() {
+function CreateCollectionNext() {
   const location = useLocation();
   const { collectionGoal, collectionAmount } = location.state || {};
   const navigate = useNavigate();
@@ -21,8 +21,8 @@ function StworzZbiorkeNext() {
   const cityRef = useRef(null);
   const dateRef = useRef(null);
 
-  function handleCofnijClick() {
-    navigate("/StworzZbiorke.jsx");
+  function handlePreviosPageClick() {
+    navigate("/CreateCollection");
   }
 
   function handleFileChange(event) {
@@ -34,7 +34,7 @@ function StworzZbiorkeNext() {
     setDate(event.target.value);
   };
 
-  const handleStworzZbiorkeClick = async () => {
+  const handleCreateCollectionClick = async () => {
     const token = localStorage.getItem('token'); // Pobierz token z localStorage
 
     // Tworzenie obiektu FormData
@@ -70,7 +70,7 @@ function StworzZbiorkeNext() {
 
   const handleKey = (e) => {
     if (e.key === "Enter") {
-      handleStworzZbiorkeClick();
+      handleCreateCollectionClick();
     } else if (e.key === "ArrowDown") {
       if (e.target === accountNumberRef.current) {
         descriptionRef.current.focus();
@@ -175,10 +175,10 @@ function StworzZbiorkeNext() {
       )}
 
       <div className="button-container">
-        <button className="button-anuluj" onClick={handleCofnijClick}>
+        <button className="button-anuluj" onClick={handlePreviosPageClick}>
           ←Cofnij
         </button>
-        <button className="button-stworz-zbiorke" onClick={handleStworzZbiorkeClick}>Stwórz</button>
+        <button className="button-stworz-zbiorke" onClick={handleCreateCollectionClick}>Stwórz</button>
       </div>
 
       <p className="page-info">Strona 2/2</p>
@@ -186,4 +186,4 @@ function StworzZbiorkeNext() {
   );
 }
 
-export default StworzZbiorkeNext;
+export default CreateCollectionNext;
