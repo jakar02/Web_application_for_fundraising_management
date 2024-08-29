@@ -17,7 +17,7 @@ function CollectionDetails() {
 
   const handlePowrotClick = () => {
     navigate("/");
-  }
+  };
 
   const handleWesprzyjClick = () => {
     // Implement support functionality here
@@ -29,28 +29,44 @@ function CollectionDetails() {
 
   return (
     <div className="szczegoly-main">
+      <div className="gorne-buttony4">
+        <h1>Szczegóły zbiórki</h1>
+      </div>
       <div className="left-container">
         <h1>{collection.title}</h1>
-        <img className="image-to-show" src={`data:image/jpeg;base64,${collection.images[0].imageData}`} alt={collection.title} />
+        <img
+          className="image-to-show"
+          src={`data:image/jpeg;base64,${collection.images[0].imageData}`}
+          alt={collection.title}
+        />
         <p>{collection.description}</p>
         <p>Zbierana kwota: {collection.collectionAmount}</p>
         <p>
           Dla: <b>Marzena Rogalska</b>
-          <button className="copy-button-kto" onClick={() => handleCopyKtoClick("Marzena Rogalska")}>
+          <button
+            className="copy-button-kto"
+            onClick={() => handleCopyKtoClick("Marzena Rogalska")}
+          >
             <img src={copyicon} alt="copy-icon" />
           </button>
         </p>
         <p className="collection-bank-x">
           Numer konta do wpłaty: <b>{collection.accountNumber}</b>
-          <button className="copy-button-" onClick={() => handleCopyKontoClick(collection.accountNumber)}>
+          <button
+            className="copy-button-"
+            onClick={() => handleCopyKontoClick(collection.accountNumber)}
+          >
             <img src={copyicon} alt="copy-icon" />
           </button>
         </p>
       </div>
 
       <div className="right-container">
-        <button className="wesprzyj-teraz-button" onClick={() => handleWesprzyjClick(collection.accountNumber)}>
-          Wesprzyj teraz 
+        <button
+          className="wesprzyj-teraz-button"
+          onClick={() => handleWesprzyjClick(collection.accountNumber)}
+        >
+          Wesprzyj teraz
         </button>
         <button className="udostpnij" onClick={() => handleUdostepnnijClick()}>
           Udostępnij 🔗

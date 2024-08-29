@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "./styles/ZarzadzajZbiorkami.css";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function ManageCollections() {
@@ -15,22 +15,43 @@ function ManageCollections() {
   const [whichZbiorkaSelected, setWhichZbiorkaSelected] = useState(null);
 
   const handleZbiorkaClick = (collection) => {
-    setWhichZbiorkaSelected(collection.collectionGoal);
+    setWhichZbiorkaSelected(collection);
   };
 
   const handleZbiorkaDoubleClick = (collection) => {
-    navigate("/ZbiorkaSzczegoly", { state: { collection } });
+    navigate("/CollectionDetails", { state: { collection } });
   };
 
   const handleEdytujClick = () => {
     if (whichZbiorkaSelected != null) {
-      navigate("/StworzZbiorkeNext");
+      navigate("/CreateCollection", {
+        state: { sendCollection: whichZbiorkaSelected },
+      });
     }
   };
 
-  const handleZakonczClick = () => {
+  const handleZakonczClick = async () => {
     if (whichZbiorkaSelected != null) {
-      console.log("Zakończono zbiórkę: " + whichZbiorkaSelected);
+      try {
+        await axios.post(
+          "http://localhost:8081/auth/api/user_collections_end",
+          null,
+          {
+            params: { id: whichZbiorkaSelected.id },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Błąd zakończenia zbiórki:", error);
+      }
+      setCollections(
+        collections.filter(
+          (collection) => collection.id !== whichZbiorkaSelected.id
+        )
+      );
+      setWhichZbiorkaSelected(null);
     }
   };
 
@@ -40,30 +61,29 @@ function ManageCollections() {
     }
   };
 
-
   const showCollections = async () => {
     try {
-      const response = await axios.get("http://localhost:8081/auth/api/user_collections_get",
+      const response = await axios.get(
+        "http://localhost:8081/auth/api/user_collections_get",
         {
-          headers: {Authorization: `Bearer ${token}`}},
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       console.log("Poprawnie pobrano zbiorki uzytkownika:", response.data);
       setCollections(response.data);
     } catch (error) {
       console.error("Błąd pobierania zbiorek uzytkownika:", error);
     }
-    
   };
+
 
   useEffect(() => {
     showCollections();
   }, []);
 
-
-
   return (
     <div>
-      <h1 className="title-of-the-page">Zarządzaj swoimi zbiórkami</h1>
+      <h1 className="gorne-buttony2">Zarządzaj swoimi zbiórkami</h1>
       <div className="page-container2">
         <div className="content-container">
           <div className="left-column2">
@@ -82,17 +102,22 @@ function ManageCollections() {
                         : "collection-frame2-selected"
                     }
                   >
-                    <p className="collection-title">{collection.collectionGoal}</p>
                     <img
                       src={`data:image/jpeg;base64,${collection.images[0].imageData}`}
                       className="collection-image"
                       alt="zdjecie"
                     />
+                    <p className="collection-title">
+                      {collection.collectionGoal}
+                    </p>
                     <p className="collection-description">
                       {collection.description}
                     </p>
                     <p className="collection-funds">
                       Zbierane pieniądze: {collection.collectionAmount}
+                    </p>
+                    <p>
+                      {collection.active ? "Aktywna" : "Zakończona"}
                     </p>
                   </div>
                 </div>
@@ -103,7 +128,7 @@ function ManageCollections() {
           <div className="right-column2">
             <p className="collection-title2">
               {whichZbiorkaSelected != null
-                ? whichZbiorkaSelected
+                ? `Wybrano: ${whichZbiorkaSelected.collectionGoal}`
                 : "Wybierz zbiórkę"}
             </p>
             <div className="button-container-3">

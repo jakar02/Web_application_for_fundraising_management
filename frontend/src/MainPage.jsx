@@ -1,8 +1,15 @@
 import "./styles/MainPage.css";
-import TextField from "@mui/material/TextField";
+
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 
 function MainPage() {
   const navigate = useNavigate();
@@ -15,10 +22,15 @@ function MainPage() {
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [fullName, setFullNameRegister] = useState("");
   const [navigateRequest, setNavigateRequest] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("isLogged") === "true"
+  );
+  const [searchValue, setSearchValue] = useState("");
+  const [sortValue, setSortValue] = useState("");
 
   // State for login status
-  const [isLogged, setIsLogged] = useState(false);
   const [collections, setCollections] = useState([]);
+  const [filteredCollections, setFilteredCollections] = useState([]);
 
   // Refs for login fields
   const emailRef = useRef(null);
@@ -28,13 +40,11 @@ function MainPage() {
   const passwordRegisterRef = useRef(null);
   const passwordRepeatRef = useRef(null);
 
-  const handleSearchClick = () => {
-    navigate("/SearchForCollection");
-  };
-
   const handleLoginLogoutClick = () => {
-    if (isLogged) {
-      setIsLogged(false);
+    if (localStorage.getItem("isLogged")) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("isLogged");
+      setIsLoggedIn(false);
     } else {
       setShowModal(1);
     }
@@ -57,7 +67,8 @@ function MainPage() {
       console.log("Login successful!");
       const { jwt } = response.data;
       localStorage.setItem("token", jwt);
-      setIsLogged(true);
+      localStorage.setItem("isLogged", true);
+      setIsLoggedIn(true);
       setShowModal(0);
       if (navigateRequest) {
         navigate(`${navigateRequest}`);
@@ -85,7 +96,8 @@ function MainPage() {
       );
 
       console.log("Signup successful!");
-      setIsLogged(true);
+      localStorage.setItem("isLogged", true);
+      setIsLoggedIn(true);
       setShowModal(0);
     } catch (error) {
       console.error("Błąd rejestracji:", error);
@@ -111,7 +123,7 @@ function MainPage() {
   };
 
   const handleCreateCollectionClick = async () => {
-    if (isLogged) {
+    if (localStorage.getItem("isLogged")) {
       navigate("/CreateCollection");
     } else {
       handleLoginLogoutClick();
@@ -120,15 +132,13 @@ function MainPage() {
   };
 
   const handleYourCollectionsClick = () => {
-    if (isLogged) {
-      navigate("/ManageCollections" );
+    if (localStorage.getItem("isLogged")) {
+      navigate("/ManageYourCollections");
       return;
     } else {
       handleLoginLogoutClick();
-      setNavigateRequest("/ManageCollections");
+      setNavigateRequest("/ManageYourCollections");
     }
-
-    
   };
 
   const showCollections = async () => {
@@ -136,14 +146,24 @@ function MainPage() {
       const response = await axios.get("http://localhost:8081/all_collections");
       console.log("Poprawnie pobrano zbiorki:", response.data);
       setCollections(response.data);
+      setFilteredCollections(response.data);
     } catch (error) {
       console.error("Błąd pobierania zbiorek:", error);
     }
   };
 
-  useEffect(() => {
-    showCollections();
-  }, []);
+  // const fetchCollections = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:8081/all_collections");
+  //     const fetchedCollections = response.data;
+  //     setCollections(fetchedCollections);
+  //     localStorage.setItem("collections", JSON.stringify(fetchedCollections));
+  //   } catch (error) {
+  //     console.error("Błąd pobierania zbiorek:", error);
+  //   }
+  // };
+
+
 
   // Function to handle keydown events in the login modal
   const handleKeyLogin = (e) => {
@@ -184,6 +204,30 @@ function MainPage() {
     }
   };
 
+  const handleSortChange = (event) => {
+    setSortValue(event.target.value);
+  };
+
+  useEffect(() => {
+    showCollections();
+  }, []);
+
+  useEffect(() => {
+    if (searchValue === "") {
+      setFilteredCollections(collections);
+    } else {
+      const filter = searchValue.toLowerCase();
+      const filtered = collections.filter(collection =>
+        collection.collectionGoal.toLowerCase().includes(filter) ||
+        collection.description.toLowerCase().includes(filter)
+      );
+      setFilteredCollections(filtered);
+    }
+  }, [searchValue]);
+
+
+
+  
   return (
     <div className={`all-main-page ${showModal != 0 ? "modal-active" : ""}`}>
       <div className="gorne-buttony">
@@ -191,16 +235,16 @@ function MainPage() {
           <button className="button-twoje" onClick={handleYourCollectionsClick}>
             Twoje zbiórki
           </button>
-          <button className="button-tworz" onClick={handleCreateCollectionClick}>
+          <button
+            className="button-tworz"
+            onClick={handleCreateCollectionClick}
+          >
             Stwórz zbiórkę
-          </button>
-          <button className="button-szukaj" onClick={handleSearchClick}>
-            Szukaj zbiórkę 🔍︎
           </button>
         </div>
         <div className="button-loguj-rejestruj">
           <button className="button-loguj" onClick={handleLoginLogoutClick}>
-            {!isLogged ? "Zaloguj się" : "Wyloguj się"}
+            {isLoggedIn ? "Wyloguj się" : "Zaloguj się"}
           </button>
           <button className="button-rejestruj" onClick={handleRegisterClick}>
             Zarejestruj się
@@ -208,19 +252,73 @@ function MainPage() {
         </div>
       </div>
 
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          //height: "100vh", // Opcjonalne, aby wycentrować również pionowo
+        }}
+      >
+        <TextField
+          id="search-input"
+          label="Szukaj zbiórki"
+          variant="outlined"
+          size="normal"
+          margin="normal"
+          sx={{
+            backgroundColor: "white",
+            marginTop: "40px",
+            marginBottom: "-20px",
+            width: "25%",
+          }}
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
+
+        <FormControl
+          variant="outlined"
+          sx={{
+            minWidth: 244,
+            marginTop: "40px",
+            marginBottom: "-20px",
+            marginLeft: "10px",
+            backgroundColor: "white",
+          }}
+        >
+          <InputLabel id="sort-label">Sortuj według</InputLabel>
+          <Select
+            labelId="sort-label"
+            value={sortValue}
+            onChange={handleSortChange}
+            label="Sortuj według"
+          >
+            <MenuItem value="najnowsze">Najnowsze</MenuItem>
+            <MenuItem value="najstarsze">Najstarsze</MenuItem>
+            <MenuItem value="najpopularniejsze">Najpopularniejsze</MenuItem>
+            <MenuItem value="najmniej popularne">Najmniej popularne</MenuItem>
+            <MenuItem value="brakujaca kwota malejaco">
+              Brakująca kwota malejąco
+            </MenuItem>
+            <MenuItem value="brakujaca kwota rosnaco">
+              Brakująca kwota rosnąco
+            </MenuItem>
+          </Select>
+        </FormControl>
+      </div>
+
       <div className="main-page-grid">
-        {collections.map((collection) => (
+        {filteredCollections.map((collection) => (
           <div
             className="main-page-content"
             onClick={() => handleCollectionClick(collection)}
             key={collection.id}
             to={{
               pathname: `/collection/${collection.id}`,
-              state: { collection }
+              state: { collection },
             }}
           >
             <div className="collection-frame">
-
               {collection.images && collection.images.length > 0 && (
                 <img
                   src={`data:image/jpeg;base64,${collection.images[0].imageData}`}

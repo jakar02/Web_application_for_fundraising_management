@@ -1,14 +1,14 @@
 import "./styles/StworzSzukajZbiorke.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import axios from "axios"; 
+import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useRef } from "react";
 
 function CreateCollectionNext() {
   const location = useLocation();
-  const { collectionGoal, collectionAmount } = location.state || {};
+  const { sendCollection} = location.state || {};
   const navigate = useNavigate();
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [accountNumber, setAccountNumber] = useState("");
@@ -21,8 +21,20 @@ function CreateCollectionNext() {
   const cityRef = useRef(null);
   const dateRef = useRef(null);
 
+
+
+
   function handlePreviosPageClick() {
-    navigate("/CreateCollection");
+    const newSendCollection = {
+      collectionGoal: sendCollection.collectionGoal,
+      collectionAmount: sendCollection.collectionAmount,
+      accountNumber: accountNumber,
+      description: description,
+      city: city,
+      date: date,
+      images: selectedFiles,
+    };
+    navigate("/CreateCollection", {state: { sendCollection: newSendCollection}});
   }
 
   function handleFileChange(event) {
@@ -35,33 +47,45 @@ function CreateCollectionNext() {
   };
 
   const handleCreateCollectionClick = async () => {
-    const token = localStorage.getItem('token'); // Pobierz token z localStorage
+    const token = localStorage.getItem("token"); // Pobierz token z localStorage
 
     // Tworzenie obiektu FormData
     const formData = new FormData();
-    formData.append('collection', new Blob([JSON.stringify({
-      collectionGoal: collectionGoal,
-      collectionAmount: collectionAmount,
-      accountNumber: accountNumber,
-      description: description,
-      city: city,
-      date: date,
-    })], { type: "application/json" }));
-  
+    formData.append(
+      "collection",
+      new Blob(
+        [
+          JSON.stringify({
+            collectionGoal: sendCollection.collectionGoal,
+            collectionAmount: sendCollection.collectionAmount,
+            accountNumber: accountNumber,
+            description: description,
+            city: city,
+            date: date,
+          }),
+        ],
+        { type: "application/json" }
+      )
+    );
+
     selectedFiles.forEach((file) => {
-      formData.append('images', file);
+      formData.append("images", file);
     });
 
     try {
-      await axios.post('http://localhost:8081/auth/api/user_collections', formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data' // Ustawienie odpowiedniego Content-Type
+      await axios.post(
+        "http://localhost:8081/auth/api/user_collections",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data", // Ustawienie odpowiedniego Content-Type
+          },
         }
-      });
-      console.log('Utworzono zbiorke');
+      );
+      console.log("Utworzono zbiorke");
     } catch (error) {
-      console.error('Błąd tworzenia zbiorki:', error);
+      console.error("Błąd tworzenia zbiorki:", error);
     }
 
     navigate("/");
@@ -93,17 +117,38 @@ function CreateCollectionNext() {
   };
 
 
+  useEffect(() => { 
+    if(sendCollection.accountNumber){
+      setAccountNumber(sendCollection.accountNumber);
+    }
+    if(sendCollection.description){
+      setDescription(sendCollection.description);
+    }
+    if(sendCollection.city){
+      setCity(sendCollection.city);
+    }
+    if(sendCollection.date){
+      setDate(sendCollection.date);
+    }
+    if(sendCollection.images){
+      setSelectedFiles(sendCollection.images);
+    }
+  }, []);
+
 
   return (
     <div className="stworz-zbiorke-all">
-      {/* Pozostała część formularza */}
+      <div className="gorne-buttony3">
+        <h1>Stwórz zbiórkę</h1>
+      </div>
       <TextField
         label="Numer konta bankowego do przelewu"
         variant="outlined"
         size="normal"
         margin="normal"
         sx={{ backgroundColor: "white", marginBottom: "20px" }}
-        value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)}
+        value={accountNumber}
+        onChange={(e) => setAccountNumber(e.target.value)}
         inputRef={accountNumberRef}
         onKeyDown={handleKey}
       />
@@ -121,7 +166,8 @@ function CreateCollectionNext() {
           },
         }}
         fullWidth
-        value={description} onChange={(e) => setDescription(e.target.value)}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
         inputRef={descriptionRef}
         onKeyDown={handleKey}
       />
@@ -132,7 +178,8 @@ function CreateCollectionNext() {
         size="normal"
         margin="normal"
         sx={{ backgroundColor: "white", marginBottom: "20px" }}
-        value={city} onChange={(e) => setCity(e.target.value)}
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
         inputRef={cityRef}
         onKeyDown={handleKey}
       />
@@ -178,7 +225,12 @@ function CreateCollectionNext() {
         <button className="button-anuluj" onClick={handlePreviosPageClick}>
           ←Cofnij
         </button>
-        <button className="button-stworz-zbiorke" onClick={handleCreateCollectionClick}>Stwórz</button>
+        <button
+          className="button-stworz-zbiorke"
+          onClick={handleCreateCollectionClick}
+        >
+          {sendCollection.description ? "Aktualizuj" : "Stwórz"}
+        </button>
       </div>
 
       <p className="page-info">Strona 2/2</p>

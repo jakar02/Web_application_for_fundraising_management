@@ -1,18 +1,22 @@
 import "./styles/StworzSzukajZbiorke.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import InputAdornment from "@mui/material/InputAdornment";
-import { useRef } from "react";
+
 
 function CreateCollection() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const{ sendCollection } = location.state ?? {};
 
   const [collectionGoal, setCollectionGoal] = useState("");
   const [collectionAmount, setCollectionAmount] = useState("");
 
   const goalRef = useRef(null);
   const amountRef = useRef(null);
+
+  //const partialCollection = { collectionGoal, collectionAmount };
 
   function handleAnulujClick() {
     navigate("/");
@@ -27,9 +31,30 @@ function CreateCollection() {
       alert("Podaj poprawną kwotę zbiórki!");
       return;
     }
-    navigate("/CreateCollectionNext", {
-      state: { collectionGoal, collectionAmount },
-    });
+
+    if(sendCollection === undefined){
+      const newSendCollection = {
+        collectionGoal: collectionGoal,
+        collectionAmount: collectionAmount
+      };
+      navigate("/CreateCollectionNext", {
+        state: { sendCollection: newSendCollection },
+      });
+    } else {
+      const newSendCollection = {
+        collectionGoal: collectionGoal,
+        collectionAmount: collectionAmount,
+        accountNumber: sendCollection.accountNumber,
+        description: sendCollection.description,
+        city: sendCollection.city,
+        date: sendCollection.date,
+        images: sendCollection.images};
+
+        navigate("/CreateCollectionNext", {
+          state: { sendCollection: newSendCollection },
+        });        
+      }
+    
   }
 
 
@@ -47,11 +72,21 @@ function CreateCollection() {
     }
   };
 
+  useEffect(() => {
+    console.log("sendCollection: ", sendCollection);
+    if (sendCollection) {
+      setCollectionGoal(sendCollection.collectionGoal);
+      setCollectionAmount(sendCollection.collectionAmount);
+    }
+  }, []);
 
 
 
   return (
     <div className="stworz-zbiorke-all">
+      <div className="gorne-buttony3"> 
+        <h1>Stwórz zbiórkę</h1>
+      </div>
       <TextField
         label="Cel zbiórki"
         variant="outlined"
