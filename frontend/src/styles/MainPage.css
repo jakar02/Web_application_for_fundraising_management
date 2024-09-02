@@ -24,7 +24,7 @@
   border-radius: 7px;
   width: 100%; /* Take full width of grid cell */
   text-align: justify;
-  height: 420px; /* Adjust as needed to make all frames equal height */
+  height: 440px; /* Adjust as needed to make all frames equal height */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -32,24 +32,21 @@
 
 .collection-description {
   font-size: 16px;
-  margin-bottom: 10px;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-line-clamp: 5; /* Limit to 2 lines */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis; /* Add ellipsis */
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 14px;
+  margin-right: 14px;
   margin-bottom: 10px;
 }
 
 .collection-title {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 5px;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  margin-left: 14px;
+  margin-right: 14px;
 }
 
 .collection-image {
@@ -64,15 +61,11 @@
 .collection-funds {
   font-size: 18px;
   font-weight: bold;
-  color: green;
-  margin-top: auto; /* Pushes this element to the bottom */
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  color: rgb(24, 154, 24);
+  margin-top: auto; 
+  margin-left: 14px;
+  margin-right: 14px;
+  margin-bottom: 20px;
 }
 
-.collection-bank {
-  font-size: 18px;
-  font-weight: bold;
-  color: rgb(0, 0, 0);
-}
+

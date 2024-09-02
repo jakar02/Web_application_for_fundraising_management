@@ -223,3 +223,11 @@ p {
   display: none;
 }
 
+.file-item {
+  cursor: pointer; /* Ustawia kursor na łapkę */
+  transition: text-decoration 0.2s ease-in-out; /* Dodaje płynne przejście dla efektu przekreślenia */
+}
+
+.file-item:hover {
+  text-decoration: line-through; /* Przekreśla tekst po najechaniu */
+}

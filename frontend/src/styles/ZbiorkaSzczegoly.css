@@ -1,7 +1,6 @@
 .szczegoly-main {
-  /* max-width: 90%; */
-  /* margin: auto; */
-  /* padding: 20px; */
+  min-height: 100vh; /* Ustawia minimalną wysokość na pełne okno przeglądarki */
+  height: 100vh;
   background-color: rgb(249, 249, 249);
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(243, 229, 229, 0.1);
@@ -9,6 +8,20 @@
   flex-direction: row;
   align-items: flex-start;
 }
+
+.left-container {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* Dostosowuje elementy wewnątrz, aby rozciągnąć kontener */
+  border: solid 1px #ccc;
+  background-color: hsl(0, 0%, 100%);
+  margin-top: 70px;
+  padding-bottom: 0px; /* Dodatkowy odstęp od dołu */
+  flex-grow: 1; /* Sprawia, że kontener rozciąga się do pełnej dostępnej wysokości */
+}
+
 
 .gorne-buttony4 {
   display: flex;
@@ -61,16 +74,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  justify-content: space-between;
   /* border: none; */
   /* border-radius: 10px; */
   border: solid 1px #ccc;
   background-color: hsl(0, 0%, 100%);
-  margin-top: 70px;
+  margin-top: 50px;
+  padding-bottom: 20px;
+  flex-grow: 1;
+  min-height: 100%;
 }
 
-.right-container {
-  flex: 1;
+.right-container9 {
+  /* flex: 1; */
+  min-width: 220px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -88,10 +105,11 @@
 }
 
 .image-to-show {
-  max-width: 100%;
-  width: 50%;
+  max-width: 90%;
+  width: 60%;
   height: auto;
-  border-radius: 10px;
+  border-radius: 7px;
+  margin-top: 0px;
   margin-bottom: 20px;
 }
 
@@ -99,7 +117,9 @@
   font-size: 1.2em;
   color: #555;
   margin-bottom: 15px;
-  text-align: center;
+  text-align: justify;
+  margin-left: 50px;
+  margin-right: 50px;
 }
 
 .copy-button-kto,
@@ -178,7 +198,7 @@
     align-items: center;
   }
 
-  .right-container {
+  .right-container9 {
     margin-left: 0;
     width: 100%;
   }
@@ -202,4 +222,6 @@
   .image-to-show {
     max-width: 70%;
   }
+
+
 }

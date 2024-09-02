@@ -1,5 +1,6 @@
 import "./styles/MainPage.css";
-
+import LinearProgress from "@mui/material/LinearProgress";
+import Box from "@mui/material/Box";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -144,7 +145,7 @@ function MainPage() {
   const showCollections = async () => {
     try {
       const response = await axios.get("http://localhost:8081/all_collections");
-      console.log("Poprawnie pobrano zbiorki:", response.data);
+      //console.log("Poprawnie pobrano zbiorki:", response.data);
       setCollections(response.data);
       setFilteredCollections(response.data);
     } catch (error) {
@@ -162,8 +163,6 @@ function MainPage() {
   //     console.error("Błąd pobierania zbiorek:", error);
   //   }
   // };
-
-
 
   // Function to handle keydown events in the login modal
   const handleKeyLogin = (e) => {
@@ -208,6 +207,13 @@ function MainPage() {
     setSortValue(event.target.value);
   };
 
+  const calculateProgress = (collection) => {
+    console.log(collection.collectionCollectedAmount);
+    return (
+      ((collection.collectionCollectedAmount) / collection.collectionAmount) * 100
+    );
+  };
+
   useEffect(() => {
     showCollections();
   }, []);
@@ -217,17 +223,15 @@ function MainPage() {
       setFilteredCollections(collections);
     } else {
       const filter = searchValue.toLowerCase();
-      const filtered = collections.filter(collection =>
-        collection.collectionGoal.toLowerCase().includes(filter) ||
-        collection.description.toLowerCase().includes(filter)
+      const filtered = collections.filter(
+        (collection) =>
+          collection.collectionGoal.toLowerCase().includes(filter) ||
+          collection.description.toLowerCase().includes(filter)
       );
       setFilteredCollections(filtered);
     }
   }, [searchValue]);
 
-
-
-  
   return (
     <div className={`all-main-page ${showModal != 0 ? "modal-active" : ""}`}>
       <div className="gorne-buttony">
@@ -329,8 +333,22 @@ function MainPage() {
               <p className="collection-title">{collection.collectionGoal}</p>
               <p className="collection-description">{collection.description}</p>
               <p className="collection-funds">
-                Zbierane pieniądze: {collection.collectionAmount} zł
+                {0} z {collection.collectionAmount} zł
               </p>
+              <Box sx={{ width: "90%", margin: "auto", marginBottom: "10px" }}>
+                <LinearProgress
+                  variant="determinate"
+                  value={calculateProgress(collection)}
+                  sx={{
+                    height: "10px",
+                    backgroundColor: "#d3d3d3", // Tło paska (szary)
+                    "& .MuiLinearProgress-bar": {
+                      backgroundColor: "rgb(20, 131, 20)",
+                    },
+                    borderRadius: "6px",
+                  }}
+                />
+              </Box>
             </div>
           </div>
         ))}

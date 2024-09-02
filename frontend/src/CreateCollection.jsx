@@ -32,6 +32,7 @@ function CreateCollection() {
       return;
     }
 
+    
     if(sendCollection === undefined){
       const newSendCollection = {
         collectionGoal: collectionGoal,
@@ -42,6 +43,7 @@ function CreateCollection() {
       });
     } else {
       const newSendCollection = {
+        id: sendCollection.id,
         collectionGoal: collectionGoal,
         collectionAmount: collectionAmount,
         accountNumber: sendCollection.accountNumber,
@@ -50,6 +52,7 @@ function CreateCollection() {
         date: sendCollection.date,
         images: sendCollection.images};
 
+        //console.log("id: ", sendCollection.id);
         navigate("/CreateCollectionNext", {
           state: { sendCollection: newSendCollection },
         });        
@@ -73,7 +76,6 @@ function CreateCollection() {
   };
 
   useEffect(() => {
-    console.log("sendCollection: ", sendCollection);
     if (sendCollection) {
       setCollectionGoal(sendCollection.collectionGoal);
       setCollectionAmount(sendCollection.collectionAmount);

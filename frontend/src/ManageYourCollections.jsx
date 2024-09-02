@@ -24,9 +24,13 @@ function ManageCollections() {
 
   const handleEdytujClick = () => {
     if (whichZbiorkaSelected != null) {
-      navigate("/CreateCollection", {
-        state: { sendCollection: whichZbiorkaSelected },
-      });
+      if (!whichZbiorkaSelected.active) {
+        alert("Nie można edytować zakończonej zbiórki!");
+      } else {
+        navigate("/CreateCollection", {
+          state: { sendCollection: whichZbiorkaSelected },
+        });
+      }
     }
   };
 
@@ -46,11 +50,6 @@ function ManageCollections() {
       } catch (error) {
         console.error("Błąd zakończenia zbiórki:", error);
       }
-      setCollections(
-        collections.filter(
-          (collection) => collection.id !== whichZbiorkaSelected.id
-        )
-      );
       setWhichZbiorkaSelected(null);
     }
   };
@@ -69,8 +68,10 @@ function ManageCollections() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("Poprawnie pobrano zbiorki uzytkownika:", response.data);
-      setCollections(response.data);
+      const sortedCollections = response.data.sort((a, b) => {
+        return a.active === b.active ? 0 : a.active ? -1 : 1;
+      });
+      setCollections(sortedCollections); // Zapisz posortowane zbiorki
     } catch (error) {
       console.error("Błąd pobierania zbiorek uzytkownika:", error);
     }
@@ -88,7 +89,7 @@ function ManageCollections() {
         <div className="content-container">
           <div className="left-column2">
             <div className="main-page-grid3">
-              {collections.map((collection, index) => (
+              {collections.map((collection, index)  => (
                 <div
                   className="main-page-content"
                   onClick={() => handleZbiorkaClick(collection)}
@@ -97,7 +98,7 @@ function ManageCollections() {
                 >
                   <div
                     className={
-                      whichZbiorkaSelected !== collection.collectionGoal
+                      whichZbiorkaSelected !== collection
                         ? "collection-frame2"
                         : "collection-frame2-selected"
                     }
@@ -116,7 +117,13 @@ function ManageCollections() {
                     <p className="collection-funds">
                       Zbierane pieniądze: {collection.collectionAmount}
                     </p>
-                    <p>
+                    <p
+                      className={
+                        collection.active
+                          ? "collection-active"
+                          : "collection-notactive"
+                      }
+                    >
                       {collection.active ? "Aktywna" : "Zakończona"}
                     </p>
                   </div>

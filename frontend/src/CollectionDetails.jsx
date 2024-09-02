@@ -1,19 +1,21 @@
 import "./styles/ZbiorkaSzczegoly.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import copyicon from "./assets/copy-icon.png";
+import LinearProgress from "@mui/material/LinearProgress";
+import Box from "@mui/material/Box";
+// import copyicon from "./assets/copy-icon.png";
 
 function CollectionDetails() {
   const navigate = useNavigate();
   const location = useLocation();
   const { collection } = location.state || {}; // Pobranie danych z state
 
-  const handleCopyKontoClick = (bank) => {
-    navigator.clipboard.writeText(bank);
-  };
+  // const handleCopyKontoClick = (bank) => {
+  //   navigator.clipboard.writeText(bank);
+  // };
 
-  const handleCopyKtoClick = (kto) => {
-    navigator.clipboard.writeText(kto);
-  };
+  // const handleCopyKtoClick = (kto) => {
+  //   navigator.clipboard.writeText(kto);
+  // };
 
   const handlePowrotClick = () => {
     navigate("/");
@@ -27,10 +29,17 @@ function CollectionDetails() {
     // Implement share functionality here
   };
 
+  const calculateProgress = (collection) => {
+    console.log(collection.collectionCollectedAmount);
+    return (
+      (collection.collectionCollectedAmount / collection.collectionAmount) * 100
+    );
+  };
+
   return (
     <div className="szczegoly-main">
       <div className="gorne-buttony4">
-        <h1>Szczegóły zbiórki</h1>
+        <h1>{collection.collectionGoal}</h1>
       </div>
       <div className="left-container">
         <h1>{collection.title}</h1>
@@ -41,7 +50,7 @@ function CollectionDetails() {
         />
         <p>{collection.description}</p>
         <p>Zbierana kwota: {collection.collectionAmount}</p>
-        <p>
+        {/* <p>
           Dla: <b>Marzena Rogalska</b>
           <button
             className="copy-button-kto"
@@ -49,8 +58,8 @@ function CollectionDetails() {
           >
             <img src={copyicon} alt="copy-icon" />
           </button>
-        </p>
-        <p className="collection-bank-x">
+        </p> */}
+        {/* <p className="collection-bank-x">
           Numer konta do wpłaty: <b>{collection.accountNumber}</b>
           <button
             className="copy-button-"
@@ -58,10 +67,27 @@ function CollectionDetails() {
           >
             <img src={copyicon} alt="copy-icon" />
           </button>
-        </p>
+        </p> */}
       </div>
 
-      <div className="right-container">
+      <div className="right-container9">
+        <p className="collection-funds">
+          {0} z {collection.collectionAmount} zł
+        </p>
+        <Box sx={{ width: "100%", margin: "auto", marginBottom: "30px" }}>
+          <LinearProgress
+            variant="determinate"
+            value={calculateProgress(collection)}
+            sx={{
+              height: "10px",
+              backgroundColor: "#d3d3d3", // Tło paska (szary)
+              "& .MuiLinearProgress-bar": {
+                backgroundColor: "rgb(20, 131, 20)",
+              },
+              borderRadius: "6px",
+            }}
+          />
+        </Box>
         <button
           className="wesprzyj-teraz-button"
           onClick={() => handleWesprzyjClick(collection.accountNumber)}

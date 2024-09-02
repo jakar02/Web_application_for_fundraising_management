@@ -103,27 +103,29 @@
 .collection-frame2 {
   background-color: hsl(0, 0%, 100%);
   border: 1px solid #888787;
-  margin: 10px;
+  margin: 0px;
   border-radius: 7px;
   width: 100%; /* Take full width of grid cell */
-  height: 450px; /* Adjust as needed to make all frames equal height */
+  height: 500px; /* Adjust as needed to make all frames equal height */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   text-align: justify;
+  position: relative;
 }
 
 .collection-frame2-selected {
-  background-color: hsl(0, 0%, 100%);
-  border: 3px solid #888787;
-  margin: 10px;
+  background-color: hsl(0, 3%, 94%);
+  border: 1px solid #888787;
+  margin: 0px;
   border-radius: 7px;
   width: 100%; /* Take full width of grid cell */
-  height: 452px; /* Adjust as needed to make all frames equal height */
+  height: 500px; /* Adjust as needed to make all frames equal height */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   text-align: justify;
+  position: relative;
 }
 
 .collection-title {
@@ -157,7 +159,7 @@
   font-size: 16px;
   margin-bottom: 10px;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-line-clamp: 5; /* Limit to 2 lines */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis; /* Add ellipsis */
@@ -166,25 +168,42 @@
 
 
 
-.collection-funds {
-  font-size: 18px;
-  font-weight: bold;
-  color: green;
-  margin-top: 10px; /* Space between the description and funds */
-}
-
-.collection-bank {
-  font-size: 18px;
-  font-weight: bold;
-  color: rgb(0, 0, 0);
-}
-
 /* Button container styles */
 .button-container-3 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
+}
+
+.collection-active{
+  background-color: hsl(113, 29%, 49%);
+  border-bottom-right-radius: 7px;
+  border-bottom-left-radius: 7px;
+  width: 100%; /* Take full width of grid cell */
+  height: 30px; /* Adjust as needed to make all frames equal height */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 0px;
+}
+
+.collection-notactive{
+  background-color: hsl(0, 73%, 39%);
+  border-bottom-right-radius: 7px;
+  border-bottom-left-radius: 7px;
+  width: 100%; /* Take full width of grid cell */
+  height: 30px; /* Adjust as needed to make all frames equal height */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 0px;
 }
 
 /* Individual button styles */

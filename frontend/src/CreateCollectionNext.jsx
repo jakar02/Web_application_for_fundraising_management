@@ -8,7 +8,7 @@ import { useRef } from "react";
 
 function CreateCollectionNext() {
   const location = useLocation();
-  const { sendCollection} = location.state || {};
+  const { sendCollection } = location.state || {};
   const navigate = useNavigate();
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [accountNumber, setAccountNumber] = useState("");
@@ -21,25 +21,33 @@ function CreateCollectionNext() {
   const cityRef = useRef(null);
   const dateRef = useRef(null);
 
-
-
-
   function handlePreviosPageClick() {
     const newSendCollection = {
+      collectionId: sendCollection.id,
       collectionGoal: sendCollection.collectionGoal,
       collectionAmount: sendCollection.collectionAmount,
       accountNumber: accountNumber,
       description: description,
       city: city,
       date: date,
-      images: selectedFiles,
+      images: selectedFiles.length > 0 ? selectedFiles : sendCollection.images || [],
     };
-    navigate("/CreateCollection", {state: { sendCollection: newSendCollection}});
+    navigate("/CreateCollection", {
+      state: { sendCollection: newSendCollection },
+    });
   }
 
   function handleFileChange(event) {
     const files = Array.from(event.target.files);
     setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
+  }
+
+  function handleFileRemove(index) {
+    setSelectedFiles((prevFiles) => {
+      const newFiles = [...prevFiles];
+      newFiles.splice(index, 1);
+      return newFiles;
+    });
   }
 
   const handleChange = (event) => {
@@ -56,6 +64,7 @@ function CreateCollectionNext() {
       new Blob(
         [
           JSON.stringify({
+            id: sendCollection.id,
             collectionGoal: sendCollection.collectionGoal,
             collectionAmount: sendCollection.collectionAmount,
             accountNumber: accountNumber,
@@ -84,12 +93,67 @@ function CreateCollectionNext() {
         }
       );
       console.log("Utworzono zbiorke");
+      navigate("/");
     } catch (error) {
       console.error("Błąd tworzenia zbiorki:", error);
     }
 
-    navigate("/");
     alert("Utworzono zbiorke");
+  };
+
+  const handleUpdateCollectionClick = async () => {
+    const token = localStorage.getItem("token"); // Pobierz token z localStorage
+
+    //console.log("id: ", sendCollection.id);
+    //console.log("sendCollection: ", sendCollection);
+    const formData = new FormData();
+    formData.append(
+      "collection",
+      new Blob(
+        [
+          JSON.stringify({
+            id: sendCollection.id,
+            collectionGoal: sendCollection.collectionGoal,
+            collectionAmount: sendCollection.collectionAmount,
+            accountNumber: accountNumber,
+            description: description,
+            city: city,
+            date: date,
+          }),
+        ],
+        { type: "application/json" }
+      )
+    );
+
+    if (selectedFiles.length === 0) {
+      console.log("Pusta lista")
+      formData.append("images", new Blob([]));
+  } else {
+      selectedFiles.forEach((file) => {
+          console.log("Dodaje zdjecia do formData")
+          formData.append("images", file);
+      });
+  }
+
+    try {
+      await axios.post(
+        "http://localhost:8081/auth/api/update_user_collections",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data", // Ustawienie odpowiedniego Content-Type
+          },
+        }
+      );
+      console.log("Zaktualizowano zbiorke");
+      navigate("/");
+      alert("Zaktualizowano zbiorke");
+    } catch (error) {
+      console.error("Błąd aktualizacji zbiorki:", error);
+    }
+
+    
   };
 
   const handleKey = (e) => {
@@ -116,25 +180,38 @@ function CreateCollectionNext() {
     }
   };
 
-
-  useEffect(() => { 
-    if(sendCollection.accountNumber){
-      setAccountNumber(sendCollection.accountNumber);
+  useEffect(() => {
+    if (sendCollection.accountNumber) {
+      setAccountNumber(sendCollection.accountNumber || "");
     }
-    if(sendCollection.description){
-      setDescription(sendCollection.description);
+    if (sendCollection.description) {
+      setDescription(sendCollection.description || "");
     }
-    if(sendCollection.city){
-      setCity(sendCollection.city);
+    if (sendCollection.city) {
+      setCity(sendCollection.city || "");
     }
-    if(sendCollection.date){
-      setDate(sendCollection.date);
+    if (sendCollection.date) {
+      setDate(sendCollection.date || "");
     }
-    if(sendCollection.images){
-      setSelectedFiles(sendCollection.images);
+    if (sendCollection.images) {
+      const formattedImages = sendCollection.images.map((img) => {
+        // Tworzenie pliku z już istniejącego obrazka
+        const byteCharacters = atob(img.imageData);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: "image/jpeg" }); // Dopasuj typ MIME, np. "image/jpeg"
+        const file = new File([blob], img.imageName, { type: "image/jpeg" });
+  
+        return file;
+      });
+      setSelectedFiles(formattedImages);
+    } else {
+      setSelectedFiles([]);
     }
   }, []);
-
 
   return (
     <div className="stworz-zbiorke-all">
@@ -216,7 +293,11 @@ function CreateCollectionNext() {
       {selectedFiles.length > 0 && (
         <div className="selected-image-info">
           {selectedFiles.map((file, index) => (
-            <p key={index}>{`${index + 1})   ${file.name}`}</p>
+              <div key={index} onClick={handleFileRemove} className="file-item">
+              {`${index + 1})   ${file.name}`} <br />
+
+              
+            </div>
           ))}
         </div>
       )}
@@ -227,9 +308,13 @@ function CreateCollectionNext() {
         </button>
         <button
           className="button-stworz-zbiorke"
-          onClick={handleCreateCollectionClick}
+          onClick={
+            sendCollection.description || sendCollection.accountNumber
+              ? handleUpdateCollectionClick
+              : handleCreateCollectionClick
+          }
         >
-          {sendCollection.description ? "Aktualizuj" : "Stwórz"}
+          {sendCollection.description || sendCollection.accountNumber ? "Aktualizuj" : "Stwórz"}
         </button>
       </div>
 
