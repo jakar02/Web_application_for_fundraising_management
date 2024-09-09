@@ -1,0 +1,233 @@
+.gorne-buttony3 {
+  display: flex;
+  align-items: center;
+  padding: 0px;
+  border-bottom: 5px solid transparent; /* Ustawiamy wysokość marginesu dolnego jako obramowanie */
+  position: relative;
+  justify-content: center;
+  text-align: center;
+  margin: 0px;
+  height: 70px;
+  color: rgb(249, 249, 249);
+  position: fixed; /* Ustawienie elementu na stałe w jednym miejscu */
+  top: 0; /* Ustawia go na samej górze strony */
+  left: 0; /* Ustawia go na samej lewej stronie */
+  width: 100%; /* Element zajmuje całą szerokość ekranu */
+
+  background-image: linear-gradient(
+    to right,
+    hsl(15, 100%, 88%),
+    hsl(226, 100%, 77%),
+    hsl(226, 100%, 77%),
+    hsl(149, 100%, 94%)
+  );
+  background-color: rgb(245, 245, 245);
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.gorne-buttony3::after {
+  content: "";
+  position: absolute;
+  bottom: -5px; /* Wysokość marginesu */
+  left: 0;
+  width: 100%;
+  height: 5px; /* Wysokość marginesu */
+  background: linear-gradient(
+    to right,
+    hsl(15, 100%, 78%),
+    hsl(226, 100%, 67%),
+    hsl(226, 100%, 67%),
+    hsl(149, 100%, 84%)
+  );
+  z-index: 1; 
+
+}
+
+
+
+.stworz-zbiorke-all{
+  max-width: 400px;
+  margin: 20px auto;
+  margin-top: 120px;
+  padding: 20px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+/* .cel-input,
+.kwota-input, */
+.kto-input,
+.data-input,
+.opis-input,
+.region-input,
+.szukaj-input,
+.lokalizacja-input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 15px;
+  margin-right: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+.opis-input {
+  height: 100px;
+}
+
+.cel-input {
+  height: 30px;
+  font-size: 20px;
+}
+
+.cel-font {
+  font-size: 24px;
+}
+
+.kwota-input {
+  height: 80px;
+  font-size: 40px;
+}
+
+.kwota-font{
+  font-size: 30px;
+}
+
+.opis-font,
+.kto-font,
+.lokalizacja-font,
+.szukaj-font {
+  font-size: 20px;
+}
+
+.button-dalej,
+.button-anuluj,
+.button-szukaj-po-celu,
+.button-stworz-zbiorke {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+  background-color: hsl(222, 51%, 56%);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between; /* Space between buttons */
+  width: 100%;
+  margin-top: 20px; /* Space above the button container */
+}
+
+.button-dalej,
+.button-anuluj,
+.button-stworz-zbiorke,
+.button-szukaj-po-celu {
+  width: 48%; /* Adjust width to fit within the container */
+}
+
+.button-dalej:hover,
+.button-anuluj:hover,
+.button-szukaj-po-celu:hover,
+.button-stworz-zbiorke:hover {
+  background-color: hsl(222, 51%, 46%);
+}
+
+.form-input input[type="checkbox"] {
+  display: none;
+}
+
+.form-input label {
+  display: inline-block;
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.form-input label::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid hsl(222, 51%, 56%);
+  border-radius: 5px;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+.form-input input[type="checkbox"]:checked + label::before {
+  background-color: hsl(222, 51%, 56%);
+  border-color: hsl(222, 51%, 56%);
+}
+
+.form-input input[type="checkbox"]:checked + label::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+p {
+  font-size: 20px;
+  float: left;
+}
+
+.page-info {
+  margin-top: 20px; /* Space above the page info text */
+  font-size: 14px; /* Font size for the page info text */
+  color: #555; /* Color for the page info text */
+  text-align: center; /* Center the text */
+  width: 100%; /* Ensure it fits within the container */
+}
+
+.image-upload-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: hsla(167, 59%, 35%, 0.888);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+.image-upload-btn:hover {
+  background-color: hsla(167, 59%, 25%, 0.888);
+}
+
+/* Ukrycie oryginalnego inputa dla zdjęcia */
+.image-input {
+  display: none;
+}
+
+.file-item {
+  cursor: pointer; /* Ustawia kursor na łapkę */
+  transition: text-decoration 0.2s ease-in-out; /* Dodaje płynne przejście dla efektu przekreślenia */
+}
+
+.file-item:hover {
+  text-decoration: line-through; /* Przekreśla tekst po najechaniu */
+}
