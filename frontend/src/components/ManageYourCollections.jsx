@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import "../styles/ManageYourCollections.css";
 import { useNavigate } from "react-router-dom";
+import LinearProgress from "@mui/material/LinearProgress";
+import Box from "@mui/material/Box";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import axios from "axios";
 
 function ManageCollections() {
@@ -77,6 +80,12 @@ function ManageCollections() {
     }
   };
 
+  const calculateProgress = (collection) => {
+    console.log(collection.collectionCollectedAmount);
+    return (
+      (collection.collectionCollectedAmount / collection.collectionAmount) * 100
+    );
+  };
 
   useEffect(() => {
     showCollections();
@@ -89,7 +98,7 @@ function ManageCollections() {
         <div className="content-container">
           <div className="left-column2">
             <div className="main-page-grid3">
-              {collections.map((collection, index)  => (
+              {collections.map((collection, index) => (
                 <div
                   className="main-page-content"
                   onClick={() => handleZbiorkaClick(collection)}
@@ -114,9 +123,37 @@ function ManageCollections() {
                     <p className="collection-description">
                       {collection.description}
                     </p>
-                    <p className="collection-funds">
-                      Zbierane pieniądze: {collection.collectionAmount}
-                    </p>
+                    <div className="collection-fundsWithCity">
+                <p className="collection-funds">
+                  {0} z {collection.collectionAmount} zł
+                </p>
+                <p className="collection-city">
+                  <LocationOnIcon
+                    sx={{ fontSize: 18, marginRight: "2px", color: "gray" }} // Zmniejszony odstęp
+                  />
+                  {collection.city}
+                </p>
+              </div>
+                    <Box
+                      sx={{
+                        marginBottom: "50px",
+                        marginLeft: "10px",
+                        marginRight: "10px",
+                      }}
+                    >
+                      <LinearProgress
+                        variant="determinate"
+                        value={calculateProgress(collection)}
+                        sx={{
+                          height: "10px",
+                          backgroundColor: "#d3d3d3", // Tło paska (szary)
+                          "& .MuiLinearProgress-bar": {
+                            backgroundColor: "rgb(20, 131, 20)",
+                          },
+                          borderRadius: "6px",
+                        }}
+                      />
+                    </Box>
                     <p
                       className={
                         collection.active

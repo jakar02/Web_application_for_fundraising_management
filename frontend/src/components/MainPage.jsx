@@ -1,6 +1,7 @@
 import "../styles/MainPage.css";
 import LinearProgress from "@mui/material/LinearProgress";
 import Box from "@mui/material/Box";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -120,7 +121,7 @@ function MainPage() {
   };
 
   const handleCollectionClick = (collection) => {
-    navigate("/CollectionDetails", { state: { collection } });
+    navigate("/CollectionDetails", { state: { collection, collections } });
   };
 
   const handleCreateCollectionClick = async () => {
@@ -207,10 +208,25 @@ function MainPage() {
     setSortValue(event.target.value);
   };
 
+  useEffect (() => {
+    if (sortValue === "najnowsze") {
+      setFilteredCollections(collections.sort((a, b) => a.dateOfCreation - b.dateOfCreation));
+    } else if (sortValue === "najstarsze") {
+      setFilteredCollections(collections.sort((a, b) => b.dateOfCreation - a.dateOfCreation));
+    // } else if (sortValue === "najpopularniejsze") {
+    //   setFilteredCollections(collections.sort((a, b) => b.collectionCollectedAmount - a.collectionCollectedAmount));
+    // } else if (sortValue === "najmniej popularne") {
+    //   setFilteredCollections(collections.sort((a, b) => a.collectionCollectedAmount - b.collectionCollectedAmount));
+    } else if (sortValue === "brakujaca kwota malejaco") {
+      setFilteredCollections(collections.sort((a, b) => b.collectionAmount - b.collectionCollectedAmount - (a.collectionAmount - a.collectionCollectedAmount) ));
+    } else if (sortValue === "brakujaca kwota rosnaco") {
+      setFilteredCollections(collections.sort((a, b) => a.collectionAmount - a.collectionCollectedAmount - (b.collectionAmount - b.collectionCollectedAmount) ));
+  }
+},[sortValue]);
+
   const calculateProgress = (collection) => {
-    console.log(collection.collectionCollectedAmount);
     return (
-      ((collection.collectionCollectedAmount) / collection.collectionAmount) * 100
+      (collection.collectionCollectedAmount / collection.collectionAmount) * 100
     );
   };
 
@@ -219,18 +235,22 @@ function MainPage() {
   }, []);
 
   useEffect(() => {
-    if (searchValue === "") {
-      setFilteredCollections(collections);
-    } else {
-      const filter = searchValue.toLowerCase();
-      const filtered = collections.filter(
-        (collection) =>
-          collection.collectionGoal.toLowerCase().includes(filter) ||
-          collection.description.toLowerCase().includes(filter)
-      );
-      setFilteredCollections(filtered);
+    let sortedCollections = [...collections]; // Kopia tablicy
+  
+    if (sortValue === "najnowsze") {
+      sortedCollections.sort((a, b) => new Date(b.dateOfCreation) - new Date(a.dateOfCreation));
+    } else if (sortValue === "najstarsze") {
+      sortedCollections.sort((a, b) => new Date(a.dateOfCreation) - new Date(b.dateOfCreation));
+    } else if (sortValue === "brakujaca kwota malejaco") {
+      sortedCollections.sort((a, b) => (b.collectionAmount - b.collectionCollectedAmount) - (a.collectionAmount - a.collectionCollectedAmount));
+    } else if (sortValue === "brakujaca kwota rosnaco") {
+      sortedCollections.sort((a, b) => (a.collectionAmount - a.collectionCollectedAmount) - (b.collectionAmount - b.collectionCollectedAmount));
     }
-  }, [searchValue]);
+  
+    setFilteredCollections(sortedCollections); // Aktualizacja stanu po sortowaniu
+  }, [sortValue, collections]);
+  
+
 
   return (
     <div className={`all-main-page ${showModal != 0 ? "modal-active" : ""}`}>
@@ -332,10 +352,25 @@ function MainPage() {
               )}
               <p className="collection-title">{collection.collectionGoal}</p>
               <p className="collection-description">{collection.description}</p>
-              <p className="collection-funds">
-                {0} z {collection.collectionAmount} zł
-              </p>
-              <Box sx={{ width: "90%", margin: "auto", marginBottom: "10px" }}>
+              <div className="collection-fundsWithCity">
+                <p className="collection-funds">
+                  {collection.collectionCollectedAmount} z {collection.collectionAmount} zł
+                </p>
+                <p className="collection-city">
+                  <LocationOnIcon
+                    sx={{ fontSize: 18, marginRight: "2px", color: "gray" }} // Zmniejszony odstęp
+                  />
+                  {collection.city}
+                </p>
+              </div>
+
+              <Box
+                sx={{
+                  marginBottom: "15px",
+                  marginLeft: "10px",
+                  marginRight: "10px",
+                }}
+              >
                 <LinearProgress
                   variant="determinate"
                   value={calculateProgress(collection)}
@@ -364,6 +399,7 @@ function MainPage() {
               size="small"
               margin="normal"
               value={email}
+              autoComplete="off"
               onChange={(e) => setEmail(e.target.value)}
               inputRef={emailRef}
               onKeyDown={handleKeyLogin}
@@ -374,6 +410,7 @@ function MainPage() {
               size="small"
               margin="normal"
               value={password}
+              autoComplete="off"
               onChange={(e) => setPassword(e.target.value)}
               inputRef={passwordRef}
               onKeyDown={handleKeyLogin}
@@ -393,6 +430,7 @@ function MainPage() {
               size="small"
               variant="outlined"
               value={fullName}
+              autoComplete="off"
               onChange={(e) => setFullNameRegister(e.target.value)}
               inputRef={fullNameRef}
               onKeyDown={handleKeyRegister}
@@ -402,6 +440,7 @@ function MainPage() {
               variant="outlined"
               size="small"
               margin="normal"
+              autoComplete="off"
               value={emailRegister}
               onChange={(e) => setEmailRegister(e.target.value)}
               inputRef={emailRegisterRef}
@@ -413,6 +452,7 @@ function MainPage() {
               size="small"
               margin="normal"
               value={passwordRegister}
+              autoComplete="off"
               onChange={(e) => setPasswordRegister(e.target.value)}
               inputRef={passwordRegisterRef}
               onKeyDown={handleKeyRegister}
@@ -423,6 +463,7 @@ function MainPage() {
               size="small"
               variant="outlined"
               value={passwordRepeat}
+              autoComplete="off"
               onChange={(e) => setPasswordRepeat(e.target.value)}
               inputRef={passwordRepeatRef}
               onKeyDown={handleKeyRegister}

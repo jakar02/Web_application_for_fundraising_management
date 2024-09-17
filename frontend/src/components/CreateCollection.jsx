@@ -93,6 +93,7 @@ function CreateCollection() {
         label="Cel zbiórki"
         variant="outlined"
         size="normal"
+        autoComplete="off"
         margin="normal"
         sx={{ backgroundColor: "white", marginBottom: "20px" }}
         value={collectionGoal}
@@ -105,6 +106,7 @@ function CreateCollection() {
         label="Zbierana kwota"
         variant="outlined"
         placeholder="0,00"
+        autoComplete="off"
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

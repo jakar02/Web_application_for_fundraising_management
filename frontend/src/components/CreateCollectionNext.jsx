@@ -223,6 +223,7 @@ function CreateCollectionNext() {
         variant="outlined"
         size="normal"
         margin="normal"
+        autoComplete="off"
         sx={{ backgroundColor: "white", marginBottom: "20px" }}
         value={accountNumber}
         onChange={(e) => setAccountNumber(e.target.value)}

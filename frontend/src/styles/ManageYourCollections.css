@@ -106,12 +106,14 @@
   margin: 0px;
   border-radius: 7px;
   width: 100%; /* Take full width of grid cell */
-  height: 500px; /* Adjust as needed to make all frames equal height */
+  
+  height: 520px; /* Adjust as needed to make all frames equal height */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   text-align: justify;
   position: relative;
+  max-width: 400px;
 }
 
 .collection-frame2-selected {
@@ -120,12 +122,13 @@
   margin: 0px;
   border-radius: 7px;
   width: 100%; /* Take full width of grid cell */
-  height: 500px; /* Adjust as needed to make all frames equal height */
+  height: 520px; /* Adjust as needed to make all frames equal height */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   text-align: justify;
   position: relative;
+  max-width: 400px;
 }
 
 .collection-title {
@@ -138,7 +141,7 @@
   font-size: 20px;
   font-weight: bold;
   text-align: center;
-  background-color: #888787;
+  background-color: #0b45a2;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   width: 100%;
@@ -204,6 +207,29 @@
   position: absolute;
   bottom: 0;
   margin-bottom: 0px;
+}
+
+.collection-fundsWithCity {
+  display: flex;
+  justify-content: space-between; /* Ustawia jedno po lewej, drugie po prawej */
+  align-items: center; /* Wyrównuje w pionie */
+  font-size: 18px;
+  font-weight: bold;
+  color: rgb(112, 112, 112);
+  margin-top: auto; 
+  margin-left: 14px;
+  margin-right: 14px;
+  margin-bottom: 0px;
+}
+
+.collection-funds {
+  text-align: left; /* Wyrównanie do lewej */
+}
+
+.collection-city {
+  display: flex;
+  align-items: center; /* Umożliwia wyrównanie ikony i tekstu w pionie */
+  text-align: right; /* Wyrównanie do prawej */
 }
 
 /* Individual button styles */

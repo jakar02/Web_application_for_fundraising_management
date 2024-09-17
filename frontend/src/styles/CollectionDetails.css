@@ -9,36 +9,37 @@
   align-items: flex-start;
 }
 
-.left-container {
+.left-container9 {
   flex: 3;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   justify-content: space-between; /* Dostosowuje elementy wewnątrz, aby rozciągnąć kontener */
   border: solid 1px #ccc;
   background-color: hsl(0, 0%, 100%);
-  margin-top: 70px;
+  /* margin-top: 70px; */
   padding-bottom: 0px; /* Dodatkowy odstęp od dołu */
   flex-grow: 1; /* Sprawia, że kontener rozciąga się do pełnej dostępnej wysokości */
+  margin-top: 40px;
+  padding-bottom: 20px;
+  min-height: 100%;
 }
-
 
 .gorne-buttony4 {
   display: flex;
   align-items: center;
   padding: 0px;
-  border-bottom: 5px solid transparent; /* Ustawiamy wysokość marginesu dolnego jako obramowanie */
+  border-bottom: 5px solid transparent;
   position: relative;
-  justify-content: center;
+  justify-content: center; /* Wyśrodkowanie nagłówka */
   text-align: center;
   margin: 0px;
   height: 70px;
   color: rgb(249, 249, 249);
-  position: fixed; /* Ustawienie elementu na stałe w jednym miejscu */
-  top: 0; /* Ustawia go na samej górze strony */
-  left: 0; /* Ustawia go na samej lewej stronie */
-  width: 100%; /* Element zajmuje całą szerokość ekranu */
-
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   background-image: linear-gradient(
     to right,
     hsl(15, 100%, 88%),
@@ -50,6 +51,18 @@
   box-sizing: border-box;
   z-index: 1000;
 }
+
+.gorne-buttony4 > .home-button {
+  position: absolute;
+  left: 44px; /* Odstęp od lewej krawędzi */
+}
+
+.gorne-buttony4 > h1 {
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
 
 .gorne-buttony4::after {
   color: rgb(249, 249, 249);
@@ -69,25 +82,16 @@
   z-index: 1;
 }
 
-.left-container {
-  flex: 3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  /* border: none; */
-  /* border-radius: 10px; */
-  border: solid 1px #ccc;
-  background-color: hsl(0, 0%, 100%);
-  margin-top: 50px;
-  padding-bottom: 20px;
-  flex-grow: 1;
-  min-height: 100%;
-}
+
+
+
+
+
 
 .right-container9 {
   /* flex: 1; */
-  min-width: 220px;
+  min-width: 200px;
+  max-width: 260px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -101,7 +105,7 @@
   border-radius: 5px;
   background-color: hsl(0, 0%, 100%);
   position: sticky;
-  top: 140px; 
+  top: 140px;
 }
 
 .image-to-show {
@@ -120,6 +124,7 @@
   text-align: justify;
   margin-left: 50px;
   margin-right: 50px;
+  max-width: 90%;
 }
 
 .copy-button-kto,
@@ -192,6 +197,117 @@
   text-align: center;
 }
 
+.share-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.share-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.share-divider {
+  width: 100%;
+  border: 0;
+  height: 1px;
+  background-color: #ccc;
+  margin-bottom: 30px;
+}
+
+.share-modal-content h2 {
+  margin-bottom: 10px;
+}
+
+.share-modal-content input {
+  /* padding: 5px; */
+  /* margin-bottom: 10px; */
+}
+
+.share-modal-content button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: hsl(222, 51%, 56%);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 5px;
+}
+
+.share-modal-content button:hover {
+  background-color: hsl(222, 51%, 46%);
+}
+
+.share-modal-content p {
+  margin-bottom: 20px;
+  color: #5c5c5c;
+  margin-bottom: 0px;
+}
+
+.collection-fundsWithCity2 {
+  display: flex;
+  justify-content: space-between; 
+  align-items: left; 
+  font-size: 18px;
+  font-weight: bold;
+  color: rgb(112, 112, 112);
+  margin-top: auto; 
+  /* margin-left: -50px; */
+  margin-right: 0px;
+  margin-bottom: 0px;
+  max-width: 100%;
+}
+
+
+.collection-description9 {
+  font-size: 26px;
+  display: -webkit-box;
+
+  text-overflow: ellipsis; /* Add ellipsis */
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 10px;
+}
+
+
+.collection-authorWithCity {
+  display: flex;
+  align-items: left;
+  font-size: 20px;
+  color: rgb(112, 112, 112);
+  margin-top: 0px;
+  margin-left: 50px;
+}
+
+.collection-authorWithCity .MuiSvgIcon-root {
+  font-size: 18px;
+  /* margin-right: 5px; */
+}
+
+.collection-authorWithCity .collection-city2 {
+  margin-left: 0px;
+}
+
+
+
 @media (max-width: 768px) {
   .szczegoly-main {
     flex-direction: column;
@@ -200,7 +316,7 @@
 
   .right-container9 {
     margin-left: 0;
-    width: 100%;
+    width: 50%;
   }
 
   .szczegoly-main h1 {
@@ -211,17 +327,7 @@
     font-size: 1em;
   }
 
-  .wesprzyj-teraz-button,
-  .udostpnij,
-  .wroc-button {
-    padding: 8px 10px;
-    font-size: 0.8em;
-    background-color: hsl(0, 100%, 37%);
-  }
-
-  .image-to-show {
-    max-width: 70%;
-  }
-
-
 }
+
+
+
