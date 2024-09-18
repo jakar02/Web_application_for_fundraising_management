@@ -28,7 +28,8 @@ function MainPage() {
     localStorage.getItem("isLogged") === "true"
   );
   const [searchValue, setSearchValue] = useState("");
-  const [sortValue, setSortValue] = useState("");
+  //const [sortValue, setSortValue] = useState("");
+  const [sortValue, setSortValue] = useState('najnowsze');
 
   // State for login status
   const [collections, setCollections] = useState([]);

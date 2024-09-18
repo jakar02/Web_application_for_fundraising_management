@@ -17,7 +17,7 @@ import axios from "axios";
 // import HomeIcon from "@mui/icons-material/Home";
 
 function CollectionDetails() {
-  const token = localStorage.getItem("token");
+  //const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const location = useLocation();
   const { collection } = location.state || {}; // Pobranie danych z state
@@ -112,7 +112,7 @@ function CollectionDetails() {
                 <img
                   src={`data:image/jpeg;base64,${selectedImage.imageData}`}
                   alt="Selected"
-                  style={{ width: "100%", borderRadius: "7px" }}
+                  style={{ width: "97%", borderRadius: "7px" }}
                 />
               )}
             </DialogContent>
@@ -304,9 +304,9 @@ function CollectionDetails() {
     try {
       const response = await axios.get("http://localhost:8081/userFullName", {
         params: { id: collection.id },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
       });
       setUserFullName(response.data);
     } catch (error) {

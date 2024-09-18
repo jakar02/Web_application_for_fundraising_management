@@ -75,6 +75,23 @@ function CreateCollection() {
     }
   };
 
+  const handleSetCollectionAmount = (e) => {
+
+    let value = e.target.value;
+
+    value = value.replace(',', '.');
+  
+    const roundedValue = Math.round(Number(value));
+    
+    if (!isNaN(roundedValue)) {
+      setCollectionAmount(roundedValue.toString());
+    } else {
+      setCollectionAmount(''); // lub inna odpowiednia wartość
+    }
+
+  };
+
+
   useEffect(() => {
     if (sendCollection) {
       setCollectionGoal(sendCollection.collectionGoal);
@@ -105,7 +122,7 @@ function CreateCollection() {
       <TextField
         label="Zbierana kwota"
         variant="outlined"
-        placeholder="0,00"
+        placeholder="0"
         autoComplete="off"
         InputProps={{
           endAdornment: (
@@ -146,7 +163,7 @@ function CreateCollection() {
           shrink: true, // Ustawia, aby etykieta była zawsze widoczna
         }}
         value={collectionAmount}
-        onChange={(e) => setCollectionAmount(e.target.value)}
+        onChange={(e) => handleSetCollectionAmount(e)}
         inputRef={amountRef}
         onKeyDown={handleKey}
       />

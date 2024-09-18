@@ -14,7 +14,8 @@
   display: flex;
   flex-direction: column;
   /* align-items: center; */
-  justify-content: space-between; /* Dostosowuje elementy wewnątrz, aby rozciągnąć kontener */
+  /* justify-content: space-between; */
+  justify-content: flex-start;
   border: solid 1px #ccc;
   background-color: hsl(0, 0%, 100%);
   /* margin-top: 70px; */

@@ -1,10 +1,9 @@
-import "../styles/CreateCollection.css";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import TextField from "@mui/material/TextField";
+import InputMask from "react-input-mask";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
-import { useRef } from "react";
+import "../styles/CreateCollection.css";
 
 function CreateCollectionNext() {
   const location = useLocation();
@@ -21,6 +20,11 @@ function CreateCollectionNext() {
   const cityRef = useRef(null);
   const dateRef = useRef(null);
 
+  const handleSetCity = (e) => {
+    let text = e.target.value;
+    setCity(text.charAt(0).toUpperCase() + text.slice(1)) ;
+  }
+
   function handlePreviosPageClick() {
     const newSendCollection = {
       collectionId: sendCollection.id,
@@ -30,7 +34,8 @@ function CreateCollectionNext() {
       description: description,
       city: city,
       date: date,
-      images: selectedFiles.length > 0 ? selectedFiles : sendCollection.images || [],
+      images:
+        selectedFiles.length > 0 ? selectedFiles : sendCollection.images || [],
     };
     navigate("/CreateCollection", {
       state: { sendCollection: newSendCollection },
@@ -39,7 +44,11 @@ function CreateCollectionNext() {
 
   function handleFileChange(event) {
     const files = Array.from(event.target.files);
-    setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
+    if (selectedFiles.length + files.length > 4) {
+      alert("Limit zdjęć to 4");
+    } else {
+      setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
+    }
   }
 
   function handleFileRemove(index) {
@@ -55,9 +64,8 @@ function CreateCollectionNext() {
   };
 
   const handleCreateCollectionClick = async () => {
-    const token = localStorage.getItem("token"); // Pobierz token z localStorage
+    const token = localStorage.getItem("token");
 
-    // Tworzenie obiektu FormData
     const formData = new FormData();
     formData.append(
       "collection",
@@ -88,7 +96,7 @@ function CreateCollectionNext() {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data", // Ustawienie odpowiedniego Content-Type
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -102,10 +110,8 @@ function CreateCollectionNext() {
   };
 
   const handleUpdateCollectionClick = async () => {
-    const token = localStorage.getItem("token"); // Pobierz token z localStorage
+    const token = localStorage.getItem("token");
 
-    //console.log("id: ", sendCollection.id);
-    //console.log("sendCollection: ", sendCollection);
     const formData = new FormData();
     formData.append(
       "collection",
@@ -126,14 +132,12 @@ function CreateCollectionNext() {
     );
 
     if (selectedFiles.length === 0) {
-      console.log("Pusta lista")
       formData.append("images", new Blob([]));
-  } else {
+    } else {
       selectedFiles.forEach((file) => {
-          console.log("Dodaje zdjecia do formData")
-          formData.append("images", file);
+        formData.append("images", file);
       });
-  }
+    }
 
     try {
       await axios.post(
@@ -142,7 +146,7 @@ function CreateCollectionNext() {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data", // Ustawienie odpowiedniego Content-Type
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -152,8 +156,6 @@ function CreateCollectionNext() {
     } catch (error) {
       console.error("Błąd aktualizacji zbiorki:", error);
     }
-
-    
   };
 
   const handleKey = (e) => {
@@ -195,41 +197,49 @@ function CreateCollectionNext() {
     }
     if (sendCollection.images) {
       const formattedImages = sendCollection.images.map((img) => {
-        // Tworzenie pliku z już istniejącego obrazka
         const byteCharacters = atob(img.imageData);
         const byteNumbers = new Array(byteCharacters.length);
         for (let i = 0; i < byteCharacters.length; i++) {
           byteNumbers[i] = byteCharacters.charCodeAt(i);
         }
         const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: "image/jpeg" }); // Dopasuj typ MIME, np. "image/jpeg"
+        const blob = new Blob([byteArray], { type: "image/jpeg" });
         const file = new File([blob], img.imageName, { type: "image/jpeg" });
-  
+
         return file;
       });
       setSelectedFiles(formattedImages);
     } else {
       setSelectedFiles([]);
     }
-  }, []);
+  }, [sendCollection]);
 
   return (
     <div className="stworz-zbiorke-all">
       <div className="gorne-buttony3">
         <h1>Stwórz zbiórkę</h1>
       </div>
-      <TextField
-        label="Numer konta bankowego do przelewu"
-        variant="outlined"
-        size="normal"
-        margin="normal"
-        autoComplete="off"
-        sx={{ backgroundColor: "white", marginBottom: "20px" }}
-        value={accountNumber}
-        onChange={(e) => setAccountNumber(e.target.value)}
-        inputRef={accountNumberRef}
-        onKeyDown={handleKey}
-      />
+
+    <InputMask
+      mask="99 9999 9999 9999 9999 9999 9999 9999" // Adjust to match the account number format
+      value={accountNumber}
+      onChange={(e) => setAccountNumber(e.target.value)}
+      maskChar=""
+    >
+      {(inputProps) => (
+        <TextField
+          {...inputProps}
+          label="Numer konta bankowego do przelewu"
+          variant="outlined"
+          size="normal"
+          margin="normal"
+          autoComplete="off"
+          sx={{ backgroundColor: "white", marginBottom: "20px" }}
+          inputRef={accountNumberRef}
+          onKeyDown={handleKey}
+        />
+      )}
+    </InputMask>
 
       <TextField
         label="Opis"
@@ -257,7 +267,7 @@ function CreateCollectionNext() {
         margin="normal"
         sx={{ backgroundColor: "white", marginBottom: "20px" }}
         value={city}
-        onChange={(e) => setCity(e.target.value)}
+        onChange={(e) => handleSetCity(e)}
         inputRef={cityRef}
         onKeyDown={handleKey}
       />
@@ -294,10 +304,12 @@ function CreateCollectionNext() {
       {selectedFiles.length > 0 && (
         <div className="selected-image-info">
           {selectedFiles.map((file, index) => (
-              <div key={index} onClick={handleFileRemove} className="file-item">
-              {`${index + 1})   ${file.name}`} <br />
-
-              
+            <div
+              key={index}
+              onClick={() => handleFileRemove(index)}
+              className="file-item"
+            >
+              {`${index + 1}) ${file.name}`} <br />
             </div>
           ))}
         </div>
@@ -315,7 +327,9 @@ function CreateCollectionNext() {
               : handleCreateCollectionClick
           }
         >
-          {sendCollection.description || sendCollection.accountNumber ? "Aktualizuj" : "Stwórz"}
+          {sendCollection.description || sendCollection.accountNumber
+            ? "Aktualizuj"
+            : "Stwórz"}
         </button>
       </div>
 
