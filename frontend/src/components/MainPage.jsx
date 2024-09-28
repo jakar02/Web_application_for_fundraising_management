@@ -155,16 +155,14 @@ function MainPage() {
     }
   };
 
-  // const fetchCollections = async () => {
-  //   try {
-  //     const response = await axios.get("http://localhost:8081/all_collections");
-  //     const fetchedCollections = response.data;
-  //     setCollections(fetchedCollections);
-  //     localStorage.setItem("collections", JSON.stringify(fetchedCollections));
-  //   } catch (error) {
-  //     console.error("Błąd pobierania zbiorek:", error);
-  //   }
-  // };
+  const fetchAccountState = async () => {
+    try {
+      await axios.get("http://localhost:8081/account/082e7fe0-5a7f-42fa-a294-39d943ca53a0/transactions");
+      console.log("Pobrano stan konta");
+    } catch (error) {
+      console.error("Błąd pobierania:", error);
+    }
+  };
 
   // Function to handle keydown events in the login modal
   const handleKeyLogin = (e) => {
@@ -232,6 +230,7 @@ function MainPage() {
   };
 
   useEffect(() => {
+    fetchAccountState();
     showCollections();
   }, []);
 
