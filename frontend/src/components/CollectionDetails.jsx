@@ -14,6 +14,11 @@ import fontkit from "@pdf-lib/fontkit";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PersonIcon from "@mui/icons-material/Person";
 import axios from "axios";
+import { TextField, Tooltip } from "@mui/material";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+// import { QRCodeSVG } from "qrcode.react";
+//import QRCode from 'qrcode-svg';
+
 // import HomeIcon from "@mui/icons-material/Home";
 
 function CollectionDetails() {
@@ -33,6 +38,10 @@ function CollectionDetails() {
   const [showModal, setShowModal] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
   const [userFullName, setUserFullName] = useState("");
+
+  const [showSupportModal, setShowSupportModal] = useState(false); // Nowy stan dla modal wsparcia
+
+  const [amount, setAmount] = useState(10);
 
   const handlePowrotClick = () => {
     navigate("/");
@@ -218,6 +227,12 @@ function CollectionDetails() {
     }
   };
 
+  const handleSupportOverlayClick = (e) => {
+    if (e.target.classList.contains("support-modal-overlay")) {
+      setShowSupportModal(false);
+    }
+  };
+
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopySuccess(true);
@@ -314,6 +329,60 @@ function CollectionDetails() {
     }
   };
 
+  const [responseQR, setResponseQR] = useState();
+
+  const generateQrCode = async () => {
+    if (isNaN(amount) || amount <= 0) {
+      return ""; // Zwróć pusty string, jeśli kwota jest nieprawidłowa
+    }
+    try {
+      const response = await axios.get("http://localhost:8081/generate-qr", {
+        params: {
+          name: "Jakub Karaś",
+          ibanWithoutPL: "32102028920000510209352958",
+          amount: amount,
+          unstructuredReference: collection.id,
+          information: collection.collectionGoal,
+        },
+        responseType: "text", // Ensuring we expect a text-based response
+      });
+      // Directly setting the Base64 image in state
+      setResponseQR(response.data);
+    } catch (error) {
+      console.error("Błąd generowania kodu QR:", error);
+    }
+  };
+
+  const handleSupportClick = () => {
+    setShowSupportModal(true); // Otwórz modal wsparcia
+    generateQrCode();
+  };
+
+  // Funkcja obsługująca zmianę kwoty wsparcia
+  const handleSupportAmountChange = (e) => {
+    const inputAmount = Math.floor(e.target.value); // Konwersja na liczbę całkowitą (bez przecinka)
+
+    // Sprawdzamy, czy kwota jest co najmniej 1 zł, jeśli nie, ustawiamy na 1
+    if (inputAmount < 1) {
+      setAmount(1);
+    } else {
+      setAmount(inputAmount);
+    }
+
+    // Generuj QR kod po ustawieniu kwoty
+    generateQrCode();
+  };
+
+
+  const [copyMessage, setCopyMessage] = useState("");
+
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text);
+    setCopyMessage("Skopiowano!");
+    setTimeout(() => setCopyMessage(""), 2000); // Resetuje wiadomość po 2 sekundach
+  };
+
+
   useEffect(() => {
     getCollectionCreator();
   }, []);
@@ -334,9 +403,7 @@ function CollectionDetails() {
         </div> */}
         <h1>{collection.collectionGoal}</h1>
       </div>
-
       {manageImagesGrid()}
-
       <div className="right-container9">
         <div className="collection-fundsWithCity2">
           {0} z {collection.collectionAmount} zł
@@ -363,7 +430,9 @@ function CollectionDetails() {
         {/* <p className="collection-date">
           Data zakończenia: {collection.collectionEndDate}
         </p> */}
-        <button className="wesprzyj-teraz-button">Wesprzyj teraz</button>
+        <button className="wesprzyj-teraz-button" onClick={handleSupportClick}>
+          Wesprzyj teraz
+        </button>
         <button className="udostpnij" onClick={handleShareCollectionClick}>
           Udostępnij 🔗
         </button>
@@ -371,7 +440,6 @@ function CollectionDetails() {
           Powrót
         </button>
       </div>
-
       {showModal && (
         <div className="share-modal-overlay" onClick={handleOverlayClick}>
           <div className="share-modal-content">
@@ -401,6 +469,150 @@ function CollectionDetails() {
           </div>
         </div>
       )}
+      {/* Modal wsparcia */}
+      {showSupportModal && (
+<div
+  className="support-modal-overlay"
+  onClick={handleSupportOverlayClick} // Zamyka modal przy kliknięciu na overlay
+>
+  <div className="support-modal">
+    {/* Nagłówki h4 i formularze wyśrodkowane do lewej */}
+    <h4 style={{ textAlign: "left" }}>1. Wpisz kwotę i zeskanuj kod QR w aplikacji bankowej</h4>
+    <div className="qr-code">
+    {responseQR && (
+      <div>
+        <img
+          src={responseQR}
+          alt="QR Code"
+          style={{ width: "200px", height: "200px" }}
+        />
+      </div>
+    )}
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "200px",
+        marginBottom: "10px",
+      }}
+    >
+      <input
+        type="number"
+        value={amount}
+        onChange={handleSupportAmountChange}
+        placeholder="Kwota wsparcia"
+        min="1"
+        step="1"
+        style={{
+          width: "100%", 
+        }}
+      />
+      <span
+        style={{
+          position: "absolute",
+          right: "34px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          fontSize: "16px",
+          color: "gray",
+          pointerEvents: "none",
+        }}
+      >
+        zł
+      </span>
+    </div>
+    </div>
+
+    {/* Sekcja przelewu bankowego */}
+    <h4 style={{ textAlign: "left" }}>2. Przelew bankowy</h4>
+
+    {/* Numer konta */}
+    <Grid container spacing={2} alignItems="center" style={{ marginBottom: "10px" }}>
+      <Grid item xs={9}>
+        <TextField
+          label="Numer konta"
+          value="32 1020 2892 0000 5102 0935 2958"
+          InputProps={{
+            readOnly: true,
+          }}
+          fullWidth
+          variant="outlined"
+          style={{ paddingRight: "8px" }} // Dodać odstęp wokół etykiety
+        
+        />
+      </Grid>
+      <Grid item xs={3}>
+        <Tooltip title="Kopiuj numer konta">
+          <IconButton
+            onClick={() =>
+              handleCopy("32 1020 2892 0000 5102 0935 2958")
+            }
+          >
+            <ContentCopyIcon />
+          </IconButton>
+        </Tooltip>
+      </Grid>
+    </Grid>
+
+    {/* Tytuł przelewu */}
+    <Grid container spacing={2} alignItems="center" style={{ marginBottom: "10px" }}>
+      <Grid item xs={9}>
+        <TextField
+          label="Tytuł przelewu (id zbiórki)"
+          value={collection.id}
+          InputProps={{
+            readOnly: true,
+          }}
+          fullWidth
+          variant="outlined"
+          style={{ paddingRight: "8px" }}
+        />
+      </Grid>
+      <Grid item xs={3}>
+        <Tooltip title="Kopiuj tytuł przelewu">
+          <IconButton
+            onClick={() => handleCopy(collection.collectionGoal)}
+          >
+            <ContentCopyIcon />
+          </IconButton>
+        </Tooltip>
+      </Grid>
+    </Grid>
+
+    {/* Odbiorca */}
+    <Grid container spacing={2} alignItems="center">
+      <Grid item xs={9}>
+        <TextField
+          label="Odbiorca"
+          value="Jakub Karaś"
+          InputProps={{
+            readOnly: true,
+          }}
+          fullWidth
+          variant="outlined"
+          style={{ paddingRight: "8px" }}
+        />
+      </Grid>
+      <Grid item xs={3}>
+        <Tooltip title="Kopiuj odbiorcę">
+          <IconButton
+            onClick={() => handleCopy("Jakub Karaś")}
+          >
+            <ContentCopyIcon />
+          </IconButton>
+        </Tooltip>
+      </Grid>
+    </Grid>
+
+    {/* Wiadomość po skopiowaniu */}
+    {copyMessage && <p style={{ color: "blue" }}>{copyMessage}</p>}
+  </div>
+</div>
+
+      )}
+      );
     </div>
   );
 }

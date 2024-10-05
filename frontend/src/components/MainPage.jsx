@@ -155,14 +155,7 @@ function MainPage() {
     }
   };
 
-  const fetchAccountState = async () => {
-    try {
-      await axios.get("http://localhost:8081/account/082e7fe0-5a7f-42fa-a294-39d943ca53a0/transactions");
-      console.log("Pobrano stan konta");
-    } catch (error) {
-      console.error("Błąd pobierania:", error);
-    }
-  };
+
 
   // Function to handle keydown events in the login modal
   const handleKeyLogin = (e) => {
@@ -229,10 +222,20 @@ function MainPage() {
     );
   };
 
-  useEffect(() => {
-    fetchAccountState();
-    showCollections();
-  }, []);
+  const fetchAccountState = async () => {
+    try {
+      await axios.get("http://localhost:8081/account/082e7fe0-5a7f-42fa-a294-39d943ca53a0/transactions");
+      console.log("Fetching account state");
+    } catch (error) {
+      console.error("Błąd pobierania:", error);
+    }
+  };
+
+useEffect(() => {
+  fetchAccountState(); 
+  showCollections();   
+}, []);
+
 
   useEffect(() => {
     let sortedCollections = [...collections]; // Kopia tablicy

@@ -57,11 +57,11 @@ function ManageCollections() {
     }
   };
 
-  const handleRaportClick = () => {
-    if (whichZbiorkaSelected != null) {
-      console.log("Wygenerowano raport dla zbiórki: " + whichZbiorkaSelected);
-    }
-  };
+  // const handleRaportClick = () => {
+  //   if (whichZbiorkaSelected != null) {
+  //     console.log("Wygenerowano raport dla zbiórki: " + whichZbiorkaSelected);
+  //   }
+  // };
 
   const showCollections = async () => {
     try {
@@ -179,9 +179,9 @@ function ManageCollections() {
               <button className="button-edytuj3" onClick={handleEdytujClick}>
                 Edytuj
               </button>
-              <button className="button-raport3" onClick={handleRaportClick}>
+              {/* <button className="button-raport3" onClick={handleRaportClick}>
                 Generuj raport
-              </button>
+              </button> */}
               <button className="button-zakoncz3" onClick={handleZakonczClick}>
                 Zakończ zbiórkę
               </button>
