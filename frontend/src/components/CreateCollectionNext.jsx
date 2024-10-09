@@ -59,9 +59,9 @@ function CreateCollectionNext() {
     });
   }
 
-  const handleChange = (event) => {
-    setDate(event.target.value);
-  };
+  // const handleChange = (event) => {
+  //   setDate(event.target.value);
+  // };
 
   const handleCreateCollectionClick = async () => {
     const token = localStorage.getItem("token");
@@ -272,7 +272,7 @@ function CreateCollectionNext() {
         onKeyDown={handleKey}
       />
 
-      <TextField
+      {/* <TextField
         label="Wybierz datę zakończenia zbiórki"
         type="date"
         value={date}
@@ -287,7 +287,7 @@ function CreateCollectionNext() {
         InputLabelProps={{
           shrink: true,
         }}
-      />
+      /> */}
 
       <label className="image-upload-btn" htmlFor="image-input">
         <b>Dodaj zdjęcia (&lt;1MB)</b>

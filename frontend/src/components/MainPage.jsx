@@ -25,7 +25,7 @@ function MainPage() {
   const [fullName, setFullNameRegister] = useState("");
   const [navigateRequest, setNavigateRequest] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("isLogged") === "true"
+    localStorage.getItem("isLogged") === "true" 
   );
   const [searchValue, setSearchValue] = useState("");
   //const [sortValue, setSortValue] = useState("");
@@ -47,6 +47,7 @@ function MainPage() {
     if (localStorage.getItem("isLogged")) {
       localStorage.removeItem("token");
       localStorage.removeItem("isLogged");
+      localStorage.removeItem("role");  
       setIsLoggedIn(false);
     } else {
       setShowModal(1);
@@ -70,6 +71,8 @@ function MainPage() {
       console.log("Login successful!");
       const { jwt } = response.data;
       localStorage.setItem("token", jwt);
+      localStorage.setItem("role", response.data.role);
+      console.log("Role: ", response.data.role);
       localStorage.setItem("isLogged", true);
       setIsLoggedIn(true);
       setShowModal(0);
@@ -122,7 +125,7 @@ function MainPage() {
   };
 
   const handleCollectionClick = (collection) => {
-    navigate("/CollectionDetails", { state: { collection, collections } });
+    navigate(`/CollectionDetails/${collection.id}`, { state: { collection } });
   };
 
   const handleCreateCollectionClick = async () => {
@@ -216,6 +219,8 @@ function MainPage() {
   }
 },[sortValue]);
 
+
+
   const calculateProgress = (collection) => {
     return (
       (collection.collectionCollectedAmount / collection.collectionAmount) * 100
@@ -235,6 +240,7 @@ useEffect(() => {
   fetchAccountState(); 
   showCollections();   
 }, []);
+
 
 
   useEffect(() => {
@@ -259,6 +265,11 @@ useEffect(() => {
     <div className={`all-main-page ${showModal != 0 ? "modal-active" : ""}`}>
       <div className="gorne-buttony">
         <div className="button-tworz-szukaj">
+          {localStorage.getItem("role")==="ROLE_ADMIN" &&
+          <button className="button-stan"  onClick={handleYourCollectionsClick}>
+          Stan zbiórek
+          </button>
+          }
           <button className="button-twoje" onClick={handleYourCollectionsClick}>
             Twoje zbiórki
           </button>
@@ -322,8 +333,8 @@ useEffect(() => {
           >
             <MenuItem value="najnowsze">Najnowsze</MenuItem>
             <MenuItem value="najstarsze">Najstarsze</MenuItem>
-            <MenuItem value="najpopularniejsze">Najpopularniejsze</MenuItem>
-            <MenuItem value="najmniej popularne">Najmniej popularne</MenuItem>
+            {/* <MenuItem value="najpopularniejsze">Najpopularniejsze</MenuItem>
+            <MenuItem value="najmniej popularne">Najmniej popularne</MenuItem> */}
             <MenuItem value="brakujaca kwota malejaco">
               Brakująca kwota malejąco
             </MenuItem>

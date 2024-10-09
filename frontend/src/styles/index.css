@@ -79,7 +79,8 @@ body {
 }
 
 .button-tworz,
-.button-twoje {
+.button-twoje,
+.button-stan {
   margin: 5px;
   padding: 15px;
   border: none;
@@ -90,6 +91,10 @@ body {
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.5s ease;
+}
+
+.button-stan{
+  background-color: hsl(34, 68%, 44%);
 }
 
 .button-tworz:hover,
@@ -104,6 +109,10 @@ body {
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.5s ease;
+}
+
+.button-stan:hover{
+  background-color: hsl(34, 68%, 34%);
 }
 
 .button-szukaj {

@@ -13,7 +13,7 @@ function App() {
         <Route path="/" element={<MainPage />} />
         <Route path="/CreateCollection" element={<CreateCollection />} />
         <Route path="/CreateCollectionNext" element={<CreateCollectionNext />} />
-        <Route path="/CollectionDetails" element={<CollectionDetails />} />
+        <Route path="/CollectionDetails/:id" element={<CollectionDetails />} />
         <Route path="/ManageYourCollections" element={<ManageYourCollections />} />
       </Routes>
     </Router>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "../styles/CollectionDetails.css";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LinearProgress from "@mui/material/LinearProgress";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -16,6 +16,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import axios from "axios";
 import { TextField, Tooltip } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { Helmet } from "react-helmet";
 // import { QRCodeSVG } from "qrcode.react";
 //import QRCode from 'qrcode-svg';
 
@@ -24,23 +25,34 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 function CollectionDetails() {
   //const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const location = useLocation();
-  const { collection } = location.state || {}; // Pobranie danych z state
+  //const location = useLocation();
+  const { id } = useParams();
+  // const { collection } = location.state || {}; // Pobranie danych z state
+  const [title, setTitle] = useState("");
+  const [isActive, setIsActive] = useState(false);
+  //const [description, setDescription] = useState("");
   const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
     window.location.href
   )}`;
-  const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-    window.location.href
-  )}&text=${encodeURIComponent("Wspieram zbiórkę!")}`;
+  // const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+  //   window.location.href
+  // )}&text=${encodeURIComponent("Wspieram zbiórkę "+ title)}`;
+
+  const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+    "Wspieraj zbiórkę: " +
+      title +
+      "! Sprawdź szczegóły: \n" +
+      window.location.href
+  )}`;
 
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
   const [userFullName, setUserFullName] = useState("");
+  const [collection, setCollection] = useState(null);
 
   const [showSupportModal, setShowSupportModal] = useState(false); // Nowy stan dla modal wsparcia
-
   const [amount, setAmount] = useState(10);
 
   const handlePowrotClick = () => {
@@ -60,6 +72,20 @@ function CollectionDetails() {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+  };
+
+  const getCollection = async () => {
+    try {
+      const response = await axios.get("http://localhost:8081/collection", {
+        params: { id: id },
+      });
+
+      setCollection(response.data);
+      setTitle(response.data.collectionGoal);
+      setIsActive(response.data.active);
+    } catch (error) {
+      console.error("Błąd pobierania zbiorki", error);
+    }
   };
 
   const manageImagesGrid = () => {
@@ -217,7 +243,9 @@ function CollectionDetails() {
   };
 
   const handleShareCollectionClick = () => {
-    setShowModal(true);
+    if (isActive) {
+      setShowModal(true);
+    }
   };
 
   const handleOverlayClick = (e) => {
@@ -319,9 +347,6 @@ function CollectionDetails() {
     try {
       const response = await axios.get("http://localhost:8081/userFullName", {
         params: { id: collection.id },
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // },
       });
       setUserFullName(response.data);
     } catch (error) {
@@ -354,8 +379,10 @@ function CollectionDetails() {
   };
 
   const handleSupportClick = () => {
-    setShowSupportModal(true); // Otwórz modal wsparcia
-    generateQrCode();
+    if (isActive) {
+      setShowSupportModal(true); // Otwórz modal wsparcia
+      generateQrCode();
+    }
   };
 
   // Funkcja obsługująca zmianę kwoty wsparcia
@@ -373,7 +400,6 @@ function CollectionDetails() {
     generateQrCode();
   };
 
-
   const [copyMessage, setCopyMessage] = useState("");
 
   const handleCopy = (text) => {
@@ -382,63 +408,93 @@ function CollectionDetails() {
     setTimeout(() => setCopyMessage(""), 2000); // Resetuje wiadomość po 2 sekundach
   };
 
+  useEffect(() => {
+    getCollection();
+  }, []);
 
   useEffect(() => {
-    getCollectionCreator();
-  }, []);
+    if (collection) {
+      getCollectionCreator(); // Call this only when `collection` is available
+    }
+  }, [collection]);
 
   return (
     <div className={`szczegoly-main`}>
+      <Helmet>
+        <meta
+          property="og:title"
+          content={collection ? collection.collectionGoal : "Zbiórka"}
+        />
+        <meta
+          property="og:description"
+          content={
+            collection ? collection.collectionDescription : "Wsparcie zbiórki"
+          }
+        />
+        <meta
+          property="og:image"
+          content={
+            collection ? collection.collectionImageUrl : "domyślny-obrazek.jpg"
+          }
+        />
+        <meta property="og:url" content={window.location.href} />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className="gorne-buttony4">
-        {/* <div className="home-button"
-          style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            padding: "10px",
-          }}
-        >
-          <IconButton onClick={handlePowrotClick} sx={{ color: "white" }}>
-            <HomeIcon />
-          </IconButton>
-        </div> */}
-        <h1>{collection.collectionGoal}</h1>
+        <h1>{collection ? collection.collectionGoal : "Loading..."}</h1>
       </div>
-      {manageImagesGrid()}
-      <div className="right-container9">
-        <div className="collection-fundsWithCity2">
-          {0} z {collection.collectionAmount} zł
-          {/* <LocationOnIcon
-            sx={{ fontSize: 18, marginRight: "2px", color: "gray" }} // Zmniejszony odstęp
-          />
-          {collection.city} */}
+      {/* Wyświetlenie napisu "Zbiórka jest nieaktywna" nad ramką */}
+      {collection && !isActive && (
+        <div className="inactive-message">
+          <h3>Zbiórka jest nieaktywna</h3>
         </div>
-        <Box sx={{ width: "100%", margin: "auto", marginBottom: "30px" }}>
-          <LinearProgress
-            variant="determinate"
-            value={calculateProgress(collection)}
-            sx={{
-              height: "10px",
-              backgroundColor: "#d3d3d3", // Tło paska (szary)
-              "& .MuiLinearProgress-bar": {
-                backgroundColor: "rgb(20, 131, 20)",
-              },
-              borderRadius: "6px",
-            }}
-          />
-        </Box>
-
-        {/* <p className="collection-date">
-          Data zakończenia: {collection.collectionEndDate}
-        </p> */}
-        <button className="wesprzyj-teraz-button" onClick={handleSupportClick}>
-          Wesprzyj teraz
-        </button>
-        <button className="udostpnij" onClick={handleShareCollectionClick}>
-          Udostępnij 🔗
-        </button>
-        <button className="wroc-button" onClick={handlePowrotClick}>
-          Powrót
-        </button>
+      )}
+      {collection ? manageImagesGrid() : <p>Loading...</p>}
+      {/* Check if collection is available */}
+      <div className="right-container09">
+        {collection ? (
+          <>
+            <div className="collection-fundsWithCity2">
+              {collection.collectionCollectedAmount} z{" "}
+              {collection.collectionAmount} zł
+            </div>
+            <Box sx={{ width: "100%", margin: "auto", marginBottom: "30px" }}>
+              <LinearProgress
+                variant="determinate"
+                value={calculateProgress(collection)}
+                sx={{
+                  height: "10px",
+                  backgroundColor: "#d3d3d3",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: "rgb(20, 131, 20)",
+                  },
+                  borderRadius: "6px",
+                }}
+              />
+            </Box>
+            <button
+              className={
+                isActive
+                  ? "wesprzyj-teraz-button"
+                  : "wesprzyj-teraz-button-disabled"
+              }
+              onClick={handleSupportClick}
+            >
+              Wesprzyj teraz
+            </button>
+            <button
+              className={isActive ? "udostpnij" : "udostpnij-disabled"}
+              onClick={handleShareCollectionClick}
+            >
+              Udostępnij 🔗
+            </button>
+            <button className="wroc-button" onClick={handlePowrotClick}>
+              Powrót
+            </button>
+          </>
+        ) : (
+          <p>Loading...</p>
+        )}
       </div>
       {showModal && (
         <div className="share-modal-overlay" onClick={handleOverlayClick}>
@@ -471,146 +527,154 @@ function CollectionDetails() {
       )}
       {/* Modal wsparcia */}
       {showSupportModal && (
-<div
-  className="support-modal-overlay"
-  onClick={handleSupportOverlayClick} // Zamyka modal przy kliknięciu na overlay
->
-  <div className="support-modal">
-    {/* Nagłówki h4 i formularze wyśrodkowane do lewej */}
-    <h4 style={{ textAlign: "left" }}>1. Wpisz kwotę i zeskanuj kod QR w aplikacji bankowej</h4>
-    <div className="qr-code">
-    {responseQR && (
-      <div>
-        <img
-          src={responseQR}
-          alt="QR Code"
-          style={{ width: "200px", height: "200px" }}
-        />
-      </div>
-    )}
-    <div
-      style={{
-        position: "relative",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "200px",
-        marginBottom: "10px",
-      }}
-    >
-      <input
-        type="number"
-        value={amount}
-        onChange={handleSupportAmountChange}
-        placeholder="Kwota wsparcia"
-        min="1"
-        step="1"
-        style={{
-          width: "100%", 
-        }}
-      />
-      <span
-        style={{
-          position: "absolute",
-          right: "34px",
-          top: "50%",
-          transform: "translateY(-50%)",
-          fontSize: "16px",
-          color: "gray",
-          pointerEvents: "none",
-        }}
-      >
-        zł
-      </span>
-    </div>
-    </div>
+        <div
+          className="support-modal-overlay"
+          onClick={handleSupportOverlayClick} // Zamyka modal przy kliknięciu na overlay
+        >
+          <div className="support-modal">
+            {/* Nagłówki h4 i formularze wyśrodkowane do lewej */}
+            <h4 style={{ textAlign: "left" }}>
+              1. Wpisz kwotę i zeskanuj kod QR w aplikacji bankowej
+            </h4>
+            <div className="qr-code">
+              {responseQR && (
+                <div>
+                  <img
+                    src={responseQR}
+                    alt="QR Code"
+                    style={{ width: "200px", height: "200px" }}
+                  />
+                </div>
+              )}
+              <div
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "200px",
+                  marginBottom: "10px",
+                }}
+              >
+                <input
+                  type="number"
+                  value={amount}
+                  onChange={handleSupportAmountChange}
+                  placeholder="Kwota wsparcia"
+                  min="1"
+                  step="1"
+                  style={{
+                    width: "100%",
+                  }}
+                />
+                <span
+                  style={{
+                    position: "absolute",
+                    right: "34px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    fontSize: "16px",
+                    color: "gray",
+                    pointerEvents: "none",
+                  }}
+                >
+                  zł
+                </span>
+              </div>
+            </div>
 
-    {/* Sekcja przelewu bankowego */}
-    <h4 style={{ textAlign: "left" }}>2. Przelew bankowy</h4>
+            {/* Sekcja przelewu bankowego */}
+            <h4 style={{ textAlign: "left" }}>2. Przelew bankowy</h4>
 
-    {/* Numer konta */}
-    <Grid container spacing={2} alignItems="center" style={{ marginBottom: "10px" }}>
-      <Grid item xs={9}>
-        <TextField
-          label="Numer konta"
-          value="32 1020 2892 0000 5102 0935 2958"
-          InputProps={{
-            readOnly: true,
-          }}
-          fullWidth
-          variant="outlined"
-          style={{ paddingRight: "8px" }} // Dodać odstęp wokół etykiety
-        
-        />
-      </Grid>
-      <Grid item xs={3}>
-        <Tooltip title="Kopiuj numer konta">
-          <IconButton
-            onClick={() =>
-              handleCopy("32 1020 2892 0000 5102 0935 2958")
-            }
-          >
-            <ContentCopyIcon />
-          </IconButton>
-        </Tooltip>
-      </Grid>
-    </Grid>
+            {/* Numer konta */}
+            <Grid
+              container
+              spacing={2}
+              alignItems="center"
+              style={{ marginBottom: "10px" }}
+            >
+              <Grid item xs={9}>
+                <TextField
+                  label="Numer konta"
+                  value="32 1020 2892 0000 5102 0935 2958"
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                  variant="outlined"
+                  style={{ paddingRight: "8px" }} // Dodać odstęp wokół etykiety
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <Tooltip title="Kopiuj numer konta">
+                  <IconButton
+                    onClick={() =>
+                      handleCopy("32 1020 2892 0000 5102 0935 2958")
+                    }
+                  >
+                    <ContentCopyIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid>
 
-    {/* Tytuł przelewu */}
-    <Grid container spacing={2} alignItems="center" style={{ marginBottom: "10px" }}>
-      <Grid item xs={9}>
-        <TextField
-          label="Tytuł przelewu (id zbiórki)"
-          value={collection.id}
-          InputProps={{
-            readOnly: true,
-          }}
-          fullWidth
-          variant="outlined"
-          style={{ paddingRight: "8px" }}
-        />
-      </Grid>
-      <Grid item xs={3}>
-        <Tooltip title="Kopiuj tytuł przelewu">
-          <IconButton
-            onClick={() => handleCopy(collection.collectionGoal)}
-          >
-            <ContentCopyIcon />
-          </IconButton>
-        </Tooltip>
-      </Grid>
-    </Grid>
+            {/* Tytuł przelewu */}
+            <Grid
+              container
+              spacing={2}
+              alignItems="center"
+              style={{ marginBottom: "10px" }}
+            >
+              <Grid item xs={9}>
+                <TextField
+                  label="Tytuł przelewu (id zbiórki)"
+                  value={collection.id}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                  variant="outlined"
+                  style={{ paddingRight: "8px" }}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <Tooltip title="Kopiuj tytuł przelewu">
+                  <IconButton
+                    onClick={() => handleCopy(collection.collectionGoal)}
+                  >
+                    <ContentCopyIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid>
 
-    {/* Odbiorca */}
-    <Grid container spacing={2} alignItems="center">
-      <Grid item xs={9}>
-        <TextField
-          label="Odbiorca"
-          value="Jakub Karaś"
-          InputProps={{
-            readOnly: true,
-          }}
-          fullWidth
-          variant="outlined"
-          style={{ paddingRight: "8px" }}
-        />
-      </Grid>
-      <Grid item xs={3}>
-        <Tooltip title="Kopiuj odbiorcę">
-          <IconButton
-            onClick={() => handleCopy("Jakub Karaś")}
-          >
-            <ContentCopyIcon />
-          </IconButton>
-        </Tooltip>
-      </Grid>
-    </Grid>
+            {/* Odbiorca */}
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={9}>
+                <TextField
+                  label="Odbiorca"
+                  value="Jakub Karaś"
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                  variant="outlined"
+                  style={{ paddingRight: "8px" }}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <Tooltip title="Kopiuj odbiorcę">
+                  <IconButton onClick={() => handleCopy("Jakub Karaś")}>
+                    <ContentCopyIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid>
 
-    {/* Wiadomość po skopiowaniu */}
-    {copyMessage && <p style={{ color: "blue" }}>{copyMessage}</p>}
-  </div>
-</div>
-
+            {/* Wiadomość po skopiowaniu */}
+            {copyMessage && <p style={{ color: "blue" }}>{copyMessage}</p>}
+          </div>
+        </div>
       )}
       );
     </div>

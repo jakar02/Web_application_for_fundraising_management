@@ -13,17 +13,13 @@
   flex: 3;
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
-  /* justify-content: space-between; */
   justify-content: flex-start;
   border: solid 1px #ccc;
   background-color: hsl(0, 0%, 100%);
-  /* margin-top: 70px; */
-  padding-bottom: 0px; /* Dodatkowy odstęp od dołu */
-  flex-grow: 1; /* Sprawia, że kontener rozciąga się do pełnej dostępnej wysokości */
   margin-top: 40px;
   padding-bottom: 20px;
   min-height: 100%;
+  margin-right: 300px;
 }
 
 .gorne-buttony4 {
@@ -31,7 +27,6 @@
   align-items: center;
   padding: 0px;
   border-bottom: 5px solid transparent;
-  position: relative;
   justify-content: center; /* Wyśrodkowanie nagłówka */
   text-align: center;
   margin: 0px;
@@ -85,11 +80,24 @@
 
 
 
+.inactive-message {
+  position: fixed;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #ffcccc; /* Kolor tła np. czerwony, symbolizujący brak aktywności */
+  border: 1px solid #ff0000; /* Czerwony obrys */
+  color: #ff0000; /* Kolor tekstu */
+  text-align: center;
+  border-radius: 5px;
+  top: 160px; /* Odległość od górnej krawędzi */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+}
 
 
 
-
-.right-container9 {
+.right-container09 {
   /* flex: 1; */
   min-width: 200px;
   max-width: 260px;
@@ -100,14 +108,18 @@
   margin-top: 130px;
   margin-left: 20px;
   margin-right: 20px;
-
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: hsl(0, 0%, 100%);
-  position: sticky;
-  top: 140px;
+  position: fixed; 
+  top: 20px; 
+  right: 20px; 
+  z-index: 1000; 
 }
+
+
+
 
 .image-to-show {
   max-width: 90%;
@@ -187,7 +199,27 @@
   background-color: hsl(222, 51%, 46%);
 }
 
-.wroc-button:hover {
+.wesprzyj-teraz-button-disabled,
+.udostpnij-disabled{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 15px;
+  font-size: 0.9em;
+  font-weight: bold;
+  color: #fff;
+  background-color: hsl(0, 0%, 62%);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+
+.wroc-button:hover,
+.udostpnij:hover {
   background-color: hsla(167, 59%, 25%, 0.888);
 }
 
@@ -375,7 +407,7 @@
     align-items: center;
   }
 
-  .right-container9 {
+  .right-container09 {
     margin-left: 0;
     width: 50%;
   }

@@ -22,7 +22,7 @@ function ManageCollections() {
   };
 
   const handleZbiorkaDoubleClick = (collection) => {
-    navigate("/CollectionDetails", { state: { collection } });
+    navigate(`/CollectionDetails/${collection.id}`, { state: { collection } });
   };
 
   const handleEdytujClick = () => {
@@ -54,6 +54,7 @@ function ManageCollections() {
         console.error("Błąd zakończenia zbiórki:", error);
       }
       setWhichZbiorkaSelected(null);
+      showCollections();
     }
   };
 
@@ -81,7 +82,6 @@ function ManageCollections() {
   };
 
   const calculateProgress = (collection) => {
-    console.log(collection.collectionCollectedAmount);
     return (
       (collection.collectionCollectedAmount / collection.collectionAmount) * 100
     );
@@ -125,7 +125,7 @@ function ManageCollections() {
                     </p>
                     <div className="collection-fundsWithCity">
                 <p className="collection-funds">
-                  {0} z {collection.collectionAmount} zł
+                  {collection.collectionCollectedAmount} z {collection.collectionAmount} zł
                 </p>
                 <p className="collection-city">
                   <LocationOnIcon
