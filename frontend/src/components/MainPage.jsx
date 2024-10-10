@@ -128,6 +128,11 @@ function MainPage() {
     navigate(`/CollectionDetails/${collection.id}`, { state: { collection } });
   };
 
+  const handleCollectionStateClick = () => {
+    console.log(collections)
+    navigate(`/CollectionState/`, {state: {collections}} );
+  };
+
   const handleCreateCollectionClick = async () => {
     if (localStorage.getItem("isLogged")) {
       navigate("/CreateCollection");
@@ -149,7 +154,7 @@ function MainPage() {
 
   const showCollections = async () => {
     try {
-      const response = await axios.get("http://localhost:8081/all_collections");
+      const response = await axios.get("http://localhost:8081/all_active_collections");
       //console.log("Poprawnie pobrano zbiorki:", response.data);
       setCollections(response.data);
       setFilteredCollections(response.data);
@@ -266,7 +271,7 @@ useEffect(() => {
       <div className="gorne-buttony">
         <div className="button-tworz-szukaj">
           {localStorage.getItem("role")==="ROLE_ADMIN" &&
-          <button className="button-stan"  onClick={handleYourCollectionsClick}>
+          <button className="button-stan"  onClick={handleCollectionStateClick}>
           Stan zbiórek
           </button>
           }

@@ -4,13 +4,14 @@ import CreateCollection from "./CreateCollection";
 import CreateCollectionNext from "./CreateCollectionNext";
 import CollectionDetails from "./CollectionDetails";
 import ManageYourCollections from "./ManageYourCollections";
-
+import CollectionState from "./CollectionState";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<MainPage />} />
+        <Route path="/CollectionState" element={<CollectionState />} />
         <Route path="/CreateCollection" element={<CreateCollection />} />
         <Route path="/CreateCollectionNext" element={<CreateCollectionNext />} />
         <Route path="/CollectionDetails/:id" element={<CollectionDetails />} />

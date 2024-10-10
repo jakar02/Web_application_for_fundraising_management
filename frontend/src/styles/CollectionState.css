@@ -1,0 +1,45 @@
+.gorne-buttony-State {
+    display: flex;
+    align-items: center;
+    padding: 0px;
+    border-bottom: 5px solid transparent; /* Ustawiamy wysokość marginesu dolnego jako obramowanie */
+    position: relative;
+    justify-content: center;
+    text-align: center;
+    margin: 0px;
+    height: 70px;
+    color: rgb(249, 249, 249);
+    position: fixed; /* Ustawienie elementu na stałe w jednym miejscu */
+    top: 0; /* Ustawia go na samej górze strony */
+    left: 0; /* Ustawia go na samej lewej stronie */
+    width: 100%; /* Element zajmuje całą szerokość ekranu */
+  
+    background-image: linear-gradient(
+      to right,
+      hsl(15, 100%, 88%),
+      hsl(226, 100%, 77%),
+      hsl(226, 100%, 77%),
+      hsl(149, 100%, 94%)
+    );
+    background-color: rgb(245, 245, 245);
+    box-sizing: border-box;
+    z-index: 1000;
+  }
+  
+  .gorne-buttony-State::after {
+    content: "";
+    position: absolute;
+    bottom: -5px; /* Wysokość marginesu */
+    left: 0;
+    width: 100%;
+    height: 5px; /* Wysokość marginesu */
+    background: linear-gradient(
+      to right,
+      hsl(15, 100%, 78%),
+      hsl(226, 100%, 67%),
+      hsl(226, 100%, 67%),
+      hsl(149, 100%, 84%)
+    );
+    z-index: 1; 
+  
+  }
