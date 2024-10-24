@@ -218,8 +218,7 @@
 }
 
 
-.wroc-button:hover,
-.udostpnij:hover {
+.wroc-button:hover{
   background-color: hsla(167, 59%, 25%, 0.888);
 }
 

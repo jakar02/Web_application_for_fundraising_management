@@ -265,7 +265,16 @@ useEffect(() => {
   }, [sortValue, collections]);
   
 
+  useEffect(() => {
+    const filtered = collections.filter((collection) =>
+      collection.collectionGoal.toLowerCase().includes(searchValue.toLowerCase()) ||
+      collection.description.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setFilteredCollections(filtered);
+  }, [searchValue, collections]);
 
+
+  
   return (
     <div className={`all-main-page ${showModal != 0 ? "modal-active" : ""}`}>
       <div className="gorne-buttony">

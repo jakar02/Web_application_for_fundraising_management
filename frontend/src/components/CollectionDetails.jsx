@@ -28,27 +28,27 @@ function CollectionDetails() {
   //const location = useLocation();
   const { id } = useParams();
   // const { collection } = location.state || {}; // Pobranie danych z state
-  const [title, setTitle] = useState("");
+  // const [title, setTitle] = useState("");
   const [isActive, setIsActive] = useState(false);
   //const [description, setDescription] = useState("");
-  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-    window.location.href
-  )}`;
+  // const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+  //   window.location.href
+  // )}`;
   // const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
   //   window.location.href
   // )}&text=${encodeURIComponent("Wspieram zbiórkę "+ title)}`;
 
-  const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-    "Wspieraj zbiórkę: " +
-      title +
-      "! Sprawdź szczegóły: \n" +
-      window.location.href
-  )}`;
+  // const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+  //   "Wspieraj zbiórkę: " +
+  //     title +
+  //     "! Sprawdź szczegóły: \n" +
+  //     window.location.href
+  // )}`;
 
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [copySuccess, setCopySuccess] = useState(false);
+  // const [copySuccess, setCopySuccess] = useState(false);
   const [userFullName, setUserFullName] = useState("");
   const [collection, setCollection] = useState(null);
 
@@ -81,7 +81,7 @@ function CollectionDetails() {
       });
 
       setCollection(response.data);
-      setTitle(response.data.collectionGoal);
+      // setTitle(response.data.collectionGoal);
       setIsActive(response.data.active);
     } catch (error) {
       console.error("Błąd pobierania zbiorki", error);
@@ -251,7 +251,7 @@ function CollectionDetails() {
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains("share-modal-overlay")) {
       setShowModal(false);
-      setCopySuccess(false);
+      // setCopySuccess(false);
     }
   };
 
@@ -261,12 +261,13 @@ function CollectionDetails() {
     }
   };
 
-  const copyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopySuccess(true);
-  };
+  // const copyLink = () => {
+  //   navigator.clipboard.writeText(window.location.href);
+  //   setCopySuccess(true);
+  // };
 
   const downloadPdf = async () => {
+    
     const pdfDoc = await PDFDocument.create();
     pdfDoc.registerFontkit(fontkit);
     const customFontBytes = await fetch(abhayaLibre).then((res) =>
@@ -327,6 +328,72 @@ function CollectionDetails() {
       lineHeight: 14,
     });
 
+    console.log("ResponseQR:", responseQR);
+
+    if (typeof responseQR === "string" && responseQR.startsWith("data:image/")) {
+      console.log("responseQR is a Base64 image string.");
+  
+      // Usuń nagłówek Base64 (np. "data:image/jpeg;base64," lub "data:image/png;base64,")
+      const qrImageData = responseQR.replace(/^data:image\/[^;]+;base64,/, '');
+  
+      // Sprawdź, czy to JPEG lub PNG
+      let qrImage;
+      if (responseQR.startsWith("data:image/jpeg")) {
+        const qrImageBytes = Uint8Array.from(atob(qrImageData), (c) => c.charCodeAt(0));
+        qrImage = await pdfDoc.embedJpg(qrImageBytes);
+      } else if (responseQR.startsWith("data:image/png")) {
+        const qrImageBytes = Uint8Array.from(atob(qrImageData), (c) => c.charCodeAt(0));
+        qrImage = await pdfDoc.embedPng(qrImageBytes);
+      } else {
+        console.error("Unsupported image format.");
+        return;
+      }
+  
+      // Ustal rozmiary obrazu (np. 300x300)
+      const qrWidth = 150;
+      const qrHeight = 150;
+  
+      // Narysuj obrazek QR na stronie PDF (np. centrowanie na stronie)
+      page.drawImage(qrImage, {
+        x: 600 / 2 - qrWidth / 2, // centrowanie w poziomie
+        y: 180 - qrHeight, // pozycja powyżej tekstu opisu
+        width: qrWidth,
+        height: qrHeight,
+      });
+    } else {
+      console.error("responseQR is not a valid Base64 image string.");
+    }
+
+
+
+
+
+    const amountText = amount + " zł";
+    const amountFontSize = 12;
+    const amountWidth = customFont.widthOfTextAtSize(amountText, amountFontSize);
+    const amountX = (pageWidth - amountWidth) / 2; 
+    const amountY = 30; 
+    
+    page.drawText("Zeskanuj kod QR w aplikacji bankowej:", {
+      x: 20,
+      y: amountY+75, // Pozycja na dole strony
+      size: amountFontSize,
+      font: customFont,
+      color: rgb(0, 0, 0),
+      maxWidth: 560,
+      lineHeight: 14,
+    });
+
+    page.drawText(amountText, {
+      x: amountX,
+      y: amountY, 
+      size: amountFontSize,
+      font: customFont,
+      color: rgb(0, 0, 0),
+      maxWidth: 560,
+      lineHeight: 14,
+    });
+
     // Zapisz dokument PDF jako byte array
     const pdfBytes = await pdfDoc.save();
 
@@ -356,16 +423,18 @@ function CollectionDetails() {
 
   const [responseQR, setResponseQR] = useState();
 
-  const generateQrCode = async () => {
-    if (isNaN(amount) || amount <= 0) {
-      return ""; // Zwróć pusty string, jeśli kwota jest nieprawidłowa
+  const generateQrCode = async (inputAmount) => {
+    if (isNaN(inputAmount) || inputAmount <= 0) {
+      console.log("Nieprawidłowa kwota");
+      return "";
     }
+    console.log("Generuję kod QR dla kwoty:", inputAmount);
     try {
       const response = await axios.get("http://localhost:8081/generate-qr", {
         params: {
           name: "Jakub Karaś",
           ibanWithoutPL: "32102028920000510209352958",
-          amount: amount,
+          amount: inputAmount,
           unstructuredReference: collection.id,
           information: collection.collectionGoal,
         },
@@ -380,24 +449,24 @@ function CollectionDetails() {
 
   const handleSupportClick = () => {
     if (isActive) {
-      setShowSupportModal(true); // Otwórz modal wsparcia
-      generateQrCode();
+      setShowSupportModal(true); 
+      generateQrCode(10);
     }
   };
 
-  // Funkcja obsługująca zmianę kwoty wsparcia
-  const handleSupportAmountChange = (e) => {
-    const inputAmount = Math.floor(e.target.value); // Konwersja na liczbę całkowitą (bez przecinka)
 
-    // Sprawdzamy, czy kwota jest co najmniej 1 zł, jeśli nie, ustawiamy na 1
+  const handleSupportAmountChange = (e) => {
+    const inputAmount = Math.floor(e.target.value); 
+
+
     if (inputAmount < 1) {
       setAmount(1);
     } else {
+      console.log("Ustawiam kwotę na:", inputAmount);
       setAmount(inputAmount);
     }
 
-    // Generuj QR kod po ustawieniu kwoty
-    generateQrCode();
+    generateQrCode(inputAmount);
   };
 
   const [copyMessage, setCopyMessage] = useState("");
@@ -412,9 +481,11 @@ function CollectionDetails() {
     getCollection();
   }, []);
 
+
   useEffect(() => {
     if (collection) {
-      getCollectionCreator(); // Call this only when `collection` is available
+      getCollectionCreator();
+      generateQrCode(10);
     }
   }, [collection]);
 
@@ -486,7 +557,7 @@ function CollectionDetails() {
               className={isActive ? "udostpnij" : "udostpnij-disabled"}
               onClick={handleShareCollectionClick}
             >
-              Udostępnij 🔗
+              Pobierz
             </button>
             <button className="wroc-button" onClick={handlePowrotClick}>
               Powrót
@@ -499,25 +570,25 @@ function CollectionDetails() {
       {showModal && (
         <div className="share-modal-overlay" onClick={handleOverlayClick}>
           <div className="share-modal-content">
-            <h2>Udostępnij zbiórkę</h2>
-            <p>Udostępnianie zbiórki zyskują o wiele więcej wpłat</p>
+            <h2>Pobierz plakat A4</h2>
+            <p>Wydrukuj plakat i przypnij do słupa reklamowego lub tablicy </p>
             <hr className="share-divider" />
             <div className="share-buttons">
-              <button
+              {/* <button
                 className="share-button"
                 onClick={() => window.open(facebookShareUrl, "_blank")}
               >
                 Facebook
-              </button>
-              <button
+              </button> */}
+              {/* <button
                 className="share-button"
                 onClick={() => window.open(twitterShareUrl, "_blank")}
               >
                 Twitter
-              </button>
-              <button className="share-button" onClick={copyLink}>
+              </button> */}
+              {/* <button className="share-button" onClick={copyLink}>
                 {!copySuccess ? "Kopiuj link" : "Skopiowano"}
-              </button>
+              </button> */}
               <button className="share-button" onClick={downloadPdf}>
                 Pobierz PDF
               </button>

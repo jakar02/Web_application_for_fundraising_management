@@ -9,18 +9,25 @@ import {
   TableRow,
   TableSortLabel,
   Paper,
-  Switch
+  Switch,
+  Button,
+  TextField,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import "../styles/CollectionState.css";
 import axios from "axios";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 function CollectionState() {
   const navigate = useNavigate();
+  const [userFullName, setUserFullName] = useState("");
   const [collections, setCollections] = useState(null);
   const [order, setOrder] = useState("desc"); // Sortowanie rosnące/ malejące
   const [orderBy, setOrderBy] = useState("active"); // Domyślnie sortowanie po ID
   const token = localStorage.getItem("token");
-
+  const [collection, setCollection] = useState(null);
   // Pobranie kolekcji z API
   const getAllCollections = async () => {
     try {
@@ -33,9 +40,9 @@ function CollectionState() {
   };
 
   // Powrót do poprzedniej strony
-  function handlePreviousPageClick() {
-    navigate("/");
-  }
+  // function handlePreviousPageClick() {
+  //   navigate("/");
+  // }
 
   // Funkcja do sortowania
   const handleRequestSort = (property) => {
@@ -70,15 +77,15 @@ function CollectionState() {
     : [];
 
   // Funkcja do zakończenia zbiórki
-// Funkcja do obsługi zmiany stanu 'Aktywna' (Switch)
-const handleActiveChange = async (collectionId, active) => {
+  // Funkcja do obsługi zmiany stanu 'Aktywna' (Switch)
+  const handleActiveChange = async (collectionId, active) => {
     try {
       // Wyślij żądanie do API, aby zaktualizować stan 'active'
       await axios.post(
         "http://localhost:8081/auth/api/user_collections_update_active",
         null,
         {
-          params: { id: collectionId, newState: !active },  // Zmieniamy na odwrotny stan
+          params: { id: collectionId, newState: !active }, // Zmieniamy na odwrotny stan
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -91,36 +98,245 @@ const handleActiveChange = async (collectionId, active) => {
     }
   };
 
-    // Funkcja do obsługi zmiany stanu 'Przelano' (Switch)
-    const handleTransferChange = async (collectionId, transferred) => {
-        try {
-          // Wyślij żądanie do API, aby zaktualizować stan 'transferred'
-          await axios.post(
-            "http://localhost:8081/auth/api/update_transferred",
-            null,
-            {
-              params: { id: collectionId, newState: !transferred },  // Aktualizujemy odwrotnie
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          // Po aktualizacji odświeżamy listę
-          getAllCollections();
-        } catch (error) {
-          console.error("Błąd aktualizacji transferu:", error);
+  // Funkcja do obsługi zmiany stanu 'Przelano' (Switch)
+  const handleTransferChange = async (collectionId, transferred) => {
+    try {
+      // Wyślij żądanie do API, aby zaktualizować stan 'transferred'
+      await axios.post(
+        "http://localhost:8081/auth/api/update_transferred",
+        null,
+        {
+          params: { id: collectionId, newState: !transferred }, // Aktualizujemy odwrotnie
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      };
+      );
+      // Po aktualizacji odświeżamy listę
+      getAllCollections();
+    } catch (error) {
+      console.error("Błąd aktualizacji transferu:", error);
+    }
+  };
 
+  const goToCollection = (collection) => {
+    navigate(`/CollectionDetails/${collection.id}`);
+  };
+
+  const handleSupportOverlayClick = (e) => {
+    if (e.target.classList.contains("support-modal-overlay")) {
+      setShowSupportModal(false);
+    }
+  };
+
+  const [copyMessage, setCopyMessage] = useState("");
+
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text);
+    setCopyMessage("Skopiowano!");
+    setTimeout(() => setCopyMessage(""), 2000); // Resetuje wiadomość po 2 sekundach
+  };
+
+
+  const generateQrCode = async (collection) => {
+    // if (isNaN(amount) || amount <= 0) {
+    //   return ""; // Zwróć pusty string, jeśli kwota jest nieprawidłowa
+    // }
+    try {
+      const response = await axios.get("http://localhost:8081/generate-qr", {
+        params: {
+          name: "Jakub Karaś",
+          ibanWithoutPL: "32102028920000510209352958",
+          amount: collection.collectionCollectedAmount,
+          unstructuredReference: collection.id,
+          information: collection.collectionGoal,
+        },
+        responseType: "text", // Ensuring we expect a text-based response
+      });
+      // Directly setting the Base64 image in state
+      setResponseQR(response.data);
+    } catch (error) {
+      console.error("Błąd generowania kodu QR:", error);
+    }
+  };
+
+
+  const [showSupportModal, setShowSupportModal] = useState(false); 
+
+  const [responseQR, setResponseQR] = useState();
   // Pobranie zbiórek po załadowaniu komponentu
+
+
+  const handleSupportClick = (collection) => {
+    setCollection(collection);
+    getCollectionCreator(collection);
+    setShowSupportModal(true); // Otwórz modal wsparcia
+    generateQrCode(collection);
+  };
+
+  const getCollectionCreator = async (collection) => {
+    try {
+      const response = await axios.get("http://localhost:8081/userFullName", {
+        params: { id: collection.id },
+      });
+      setUserFullName(response.data);
+    } catch (error) {
+      console.error("Błąd pobierania nazwy usera tworzącego zbiórkę:", error);
+    }
+  };
+
   useEffect(() => {
     getAllCollections();
-
   }, []);
+
+
 
   return (
     <div>
       <h1 className="gorne-buttony-State">Stan zbiórek</h1>
+            {/* Modal wsparcia */}
+        {showSupportModal && (
+        <div
+          className="support-modal-overlay"
+          onClick={handleSupportOverlayClick} // Zamyka modal przy kliknięciu na overlay
+        >
+          <div className="support-modal">
+            {/* Nagłówki h4 i formularze wyśrodkowane do lewej */}
+            <h4 style={{ textAlign: "left" }}>
+              1. Wpisz kwotę i zeskanuj kod QR w aplikacji bankowej
+            </h4>
+            <div className="qr-code">
+              {responseQR && (
+                <div>
+                  <img
+                    src={responseQR}
+                    alt="QR Code"
+                    style={{ width: "200px", height: "200px" }}
+                  />
+                </div>
+              )}
+              <div
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "200px",
+                  marginBottom: "10px",
+                }}
+              >
+
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    fontSize: "20px",
+                    color: "gray",
+                    pointerEvents: "none",
+                  }}
+                >
+                  {collection.collectionCollectedAmount}zł
+                </span>
+              </div>
+            </div>
+
+            {/* Sekcja przelewu bankowego */}
+            <h4 style={{ textAlign: "left" }}>2. Przelew bankowy</h4>
+
+            {/* Numer konta */}
+            <Grid
+              container
+              spacing={2}
+              alignItems="center"
+              style={{ marginBottom: "10px" }}
+            >
+              <Grid item xs={9}>
+                <TextField
+                  label="Numer konta"
+                  value={collection.accountNumber}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                  variant="outlined"
+                  style={{ paddingRight: "8px" }} // Dodać odstęp wokół etykiety
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <Tooltip title="Kopiuj numer konta">
+                  <IconButton
+                    onClick={() =>
+                      handleCopy("32 1020 2892 0000 5102 0935 2958")
+                    }
+                  >
+                    <ContentCopyIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid>
+
+            {/* Tytuł przelewu */}
+            <Grid
+              container
+              spacing={2}
+              alignItems="center"
+              style={{ marginBottom: "10px" }}
+            >
+              <Grid item xs={9}>
+                <TextField
+                  label="Tytuł przelewu (id zbiórki)"
+                  value={"Przelew za zbiórkę: " + collection.collectionGoal}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                  variant="outlined"
+                  style={{ paddingRight: "8px" }}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <Tooltip title="Kopiuj tytuł przelewu">
+                  <IconButton
+                    onClick={() => handleCopy(collection.collectionGoal)}
+                  >
+                    <ContentCopyIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid>
+
+            {/* Odbiorca */}
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={9}>
+                <TextField
+                  label="Odbiorca"
+                  value={userFullName}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                  variant="outlined"
+                  style={{ paddingRight: "8px" }}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <Tooltip title="Kopiuj odbiorcę">
+                  <IconButton onClick={() => handleCopy("Jakub Karaś")}>
+                    <ContentCopyIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid>
+
+            {/* Wiadomość po skopiowaniu */}
+            {copyMessage && <p style={{ color: "blue" }}>{copyMessage}</p>}
+          </div>
+        </div>
+      )}
+
+
+
       <div className="temp">
         {collections ? (
           <TableContainer
@@ -129,8 +345,7 @@ const handleActiveChange = async (collectionId, active) => {
           >
             <Table>
               <TableHead>
-                <TableRow sx={{backgroundColor: "rgb(235, 232, 232)"}}>
-                    
+                <TableRow sx={{ backgroundColor: "rgb(235, 232, 232)" }}>
                   <TableCell>
                     <TableSortLabel
                       active={orderBy === "id"}
@@ -167,17 +382,30 @@ const handleActiveChange = async (collectionId, active) => {
                       onClick={() =>
                         handleRequestSort("collectionCollectedAmount")
                       }
+                      sx={{
+                        textTransform: "none",
+                        whiteSpace: "nowrap", // Zapobiega przenoszeniu tekstu do kolejnej linii
+                        overflow: "hidden", // Ukrywa nadmiar tekstu
+                        textOverflow: "ellipsis", // Dodaje "..." na końcu, jeśli tekst jest za długi
+                      }}
                     >
-                      Zebrano
+                      Zebrano [zł]
                     </TableSortLabel>
                   </TableCell>
                   <TableCell>
+                    
                     <TableSortLabel
                       active={orderBy === "collectionAmount"}
                       direction={orderBy === "collectionAmount" ? order : "asc"}
                       onClick={() => handleRequestSort("collectionAmount")}
+                      sx={{
+                        textTransform: "none",
+                        whiteSpace: "nowrap", // Zapobiega przenoszeniu tekstu do kolejnej linii
+                        overflow: "hidden", // Ukrywa nadmiar tekstu
+                        textOverflow: "ellipsis", // Dodaje "..." na końcu, jeśli tekst jest za długi
+                      }}
                     >
-                      Zbierana kwota
+                      Zbierana kwota [zł]
                     </TableSortLabel>
                   </TableCell>
                   <TableCell>
@@ -189,21 +417,23 @@ const handleActiveChange = async (collectionId, active) => {
                       Miasto
                     </TableSortLabel>
                   </TableCell>
-                  <TableCell>
+                  {/* <TableCell>
                     <TableSortLabel
                       active={orderBy === "accountNumber"}
                       direction={orderBy === "accountNumber" ? order : "asc"}
                       onClick={() => handleRequestSort("accountNumber")}
                     >
-                      Numer konta
+                      Dane do przelewu
                     </TableSortLabel>
+                  </TableCell> */}
+                  <TableCell>
+                    Dane do przelewu
                   </TableCell>
                   <TableCell>
                     <TableSortLabel
                       active={orderBy === "active"}
                       direction={orderBy === "active" ? order : "asc"}
                       onClick={() => handleRequestSort("active")}
-                      
                     >
                       Aktywna
                     </TableSortLabel>
@@ -224,14 +454,29 @@ const handleActiveChange = async (collectionId, active) => {
                 {sortedCollections.map((collection) => (
                   <TableRow key={collection.id}>
                     <TableCell>{collection.id}</TableCell>
-                    <TableCell>{collection.collectionGoal}</TableCell>
+                    <TableCell>
+                      <Button
+                        sx={{
+                          textTransform: "none",
+                          whiteSpace: "nowrap", // Zapobiega przenoszeniu tekstu do kolejnej linii
+                          overflow: "hidden", // Ukrywa nadmiar tekstu
+                          textOverflow: "ellipsis", // Dodaje "..." na końcu, jeśli tekst jest za długi
+                        }}
+                        onClick={() => goToCollection(collection)}
+                      >
+                        {collection.collectionGoal}
+                      </Button>
+                    </TableCell>
                     <TableCell>{collection.dateOfCreation}</TableCell>
-                    <TableCell>{collection.collectionCollectedAmount}</TableCell>
+                    <TableCell>
+                      {collection.collectionCollectedAmount}
+                    </TableCell>
                     <TableCell>{collection.collectionAmount}</TableCell>
                     <TableCell>{collection.city}</TableCell>
-                    <TableCell>{collection.accountNumber}</TableCell>
                     <TableCell>
-
+                      <Button onClick={() => handleSupportClick(collection)}> Pokaż</Button> 
+                    </TableCell>
+                    <TableCell>
                       <Switch
                         checked={collection.active}
                         onChange={() =>
@@ -245,11 +490,13 @@ const handleActiveChange = async (collectionId, active) => {
                       <Switch
                         checked={collection.transferred}
                         onChange={() =>
-                          handleTransferChange(collection.id, collection.transferred)
+                          handleTransferChange(
+                            collection.id,
+                            collection.transferred
+                          )
                         }
                       />
                     </TableCell>
-
                   </TableRow>
                 ))}
               </TableBody>
@@ -259,9 +506,9 @@ const handleActiveChange = async (collectionId, active) => {
           <p>Brak zbiórek</p>
         )}
       </div>
-      <button className="back-button" onClick={handlePreviousPageClick}>
+      {/* <button className="back-button" onClick={handlePreviousPageClick}>
         Powrót
-      </button>
+      </button> */}
     </div>
   );
 }
