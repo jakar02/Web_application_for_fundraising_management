@@ -15,6 +15,7 @@ import {
   Tooltip,
   IconButton,
 } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
 import Grid from "@mui/material/Grid";
 import "../styles/CollectionState.css";
 import axios from "axios";
@@ -22,6 +23,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 function CollectionState() {
   const navigate = useNavigate();
+  const [authenticated, setAuthenticated] = useState(false);
   const [userFullName, setUserFullName] = useState("");
   const [collections, setCollections] = useState(null);
   const [order, setOrder] = useState("desc"); // Sortowanie rosnące/ malejące
@@ -98,8 +100,44 @@ function CollectionState() {
     }
   };
 
+  const authenticatePage = async () => {
+    try {
+
+      const response = await axios.post(
+        "http://localhost:8081/auth/authorize",
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      console.log("Autoryzacja:", response.data);
+      if(response.data.status != true){
+        navigate("/");
+      }
+      setAuthenticated(true);
+    } catch (error) {
+      console.error("Błąd autoryzacji strony:", error);
+      navigate("/");
+    }
+  };
+
+  const handleEditClick = (whichZbiorkaSelected) => {
+    if (whichZbiorkaSelected != null) {
+      if (!whichZbiorkaSelected.active) {
+        alert("Nie można edytować zakończonej zbiórki!");
+      } else {
+        navigate("/CreateCollection", {
+          state: { sendCollection: whichZbiorkaSelected },
+        });
+      }
+    }
+  };
+
   // Funkcja do obsługi zmiany stanu 'Przelano' (Switch)
-  const handleTransferChange = async (collectionId, transferred) => {
+  const handleTransferChange = async (collectionId, transferred, active) => {
     try {
       // Wyślij żądanie do API, aby zaktualizować stan 'transferred'
       await axios.post(
@@ -114,6 +152,9 @@ function CollectionState() {
       );
       // Po aktualizacji odświeżamy listę
       getAllCollections();
+      if(active === true){
+        handleActiveChange(collectionId, active);
+      }
     } catch (error) {
       console.error("Błąd aktualizacji transferu:", error);
     }
@@ -137,7 +178,6 @@ function CollectionState() {
     setTimeout(() => setCopyMessage(""), 2000); // Resetuje wiadomość po 2 sekundach
   };
 
-
   const generateQrCode = async (collection) => {
     // if (isNaN(amount) || amount <= 0) {
     //   return ""; // Zwróć pusty string, jeśli kwota jest nieprawidłowa
@@ -160,12 +200,10 @@ function CollectionState() {
     }
   };
 
-
-  const [showSupportModal, setShowSupportModal] = useState(false); 
+  const [showSupportModal, setShowSupportModal] = useState(false);
 
   const [responseQR, setResponseQR] = useState();
   // Pobranie zbiórek po załadowaniu komponentu
-
 
   const handleSupportClick = (collection) => {
     setCollection(collection);
@@ -186,16 +224,18 @@ function CollectionState() {
   };
 
   useEffect(() => {
+    authenticatePage();
+  });
+
+  useEffect(() => {
     getAllCollections();
-  }, []);
-
-
+  }, [authenticated]);
 
   return (
     <div>
       <h1 className="gorne-buttony-State">Stan zbiórek</h1>
-            {/* Modal wsparcia */}
-        {showSupportModal && (
+      {/* Modal wsparcia */}
+      {showSupportModal && (
         <div
           className="support-modal-overlay"
           onClick={handleSupportOverlayClick} // Zamyka modal przy kliknięciu na overlay
@@ -225,7 +265,6 @@ function CollectionState() {
                   marginBottom: "10px",
                 }}
               >
-
                 <span
                   style={{
                     position: "absolute",
@@ -335,8 +374,6 @@ function CollectionState() {
         </div>
       )}
 
-
-
       <div className="temp">
         {collections ? (
           <TableContainer
@@ -393,7 +430,6 @@ function CollectionState() {
                     </TableSortLabel>
                   </TableCell>
                   <TableCell>
-                    
                     <TableSortLabel
                       active={orderBy === "collectionAmount"}
                       direction={orderBy === "collectionAmount" ? order : "asc"}
@@ -426,9 +462,7 @@ function CollectionState() {
                       Dane do przelewu
                     </TableSortLabel>
                   </TableCell> */}
-                  <TableCell>
-                    Dane do przelewu
-                  </TableCell>
+                  <TableCell>Dane do przelewu</TableCell>
                   <TableCell>
                     <TableSortLabel
                       active={orderBy === "active"}
@@ -466,6 +500,12 @@ function CollectionState() {
                       >
                         {collection.collectionGoal}
                       </Button>
+                      <IconButton
+                        onClick={() => handleEditClick(collection)}
+                        sx={{ ml: 1 }} // Dodaje mały margines po lewej stronie przycisku
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
                     </TableCell>
                     <TableCell>{collection.dateOfCreation}</TableCell>
                     <TableCell>
@@ -474,7 +514,10 @@ function CollectionState() {
                     <TableCell>{collection.collectionAmount}</TableCell>
                     <TableCell>{collection.city}</TableCell>
                     <TableCell>
-                      <Button onClick={() => handleSupportClick(collection)}> Pokaż</Button> 
+                      <Button onClick={() => handleSupportClick(collection)}>
+                        {" "}
+                        Pokaż
+                      </Button>
                     </TableCell>
                     <TableCell>
                       <Switch
@@ -492,7 +535,8 @@ function CollectionState() {
                         onChange={() =>
                           handleTransferChange(
                             collection.id,
-                            collection.transferred
+                            collection.transferred,
+                            collection.active
                           )
                         }
                       />

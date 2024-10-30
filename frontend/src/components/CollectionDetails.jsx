@@ -328,10 +328,10 @@ function CollectionDetails() {
       lineHeight: 14,
     });
 
-    console.log("ResponseQR:", responseQR);
+    //console.log("ResponseQR:", responseQR);
 
     if (typeof responseQR === "string" && responseQR.startsWith("data:image/")) {
-      console.log("responseQR is a Base64 image string.");
+      //console.log("responseQR is a Base64 image string.");
   
       // Usuń nagłówek Base64 (np. "data:image/jpeg;base64," lub "data:image/png;base64,")
       const qrImageData = responseQR.replace(/^data:image\/[^;]+;base64,/, '');
@@ -425,10 +425,10 @@ function CollectionDetails() {
 
   const generateQrCode = async (inputAmount) => {
     if (isNaN(inputAmount) || inputAmount <= 0) {
-      console.log("Nieprawidłowa kwota");
+      //console.log("Nieprawidłowa kwota");
       return "";
     }
-    console.log("Generuję kod QR dla kwoty:", inputAmount);
+    //console.log("Generuję kod QR dla kwoty:", inputAmount);
     try {
       const response = await axios.get("http://localhost:8081/generate-qr", {
         params: {
@@ -454,6 +454,7 @@ function CollectionDetails() {
     }
   };
 
+  
 
   const handleSupportAmountChange = (e) => {
     const inputAmount = Math.floor(e.target.value); 
@@ -462,7 +463,7 @@ function CollectionDetails() {
     if (inputAmount < 1) {
       setAmount(1);
     } else {
-      console.log("Ustawiam kwotę na:", inputAmount);
+      //console.log("Ustawiam kwotę na:", inputAmount);
       setAmount(inputAmount);
     }
 

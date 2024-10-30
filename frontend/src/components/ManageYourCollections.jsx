@@ -10,22 +10,23 @@ function ManageCollections() {
   const navigate = useNavigate();
   const [collections, setCollections] = useState([]);
   const token = localStorage.getItem("token");
+  const [authenticated, setAuthenticated] = useState(false);
 
-  function handleAnulujClick() {
+  function handleBackClick() {
     navigate("/");
   }
 
   const [whichZbiorkaSelected, setWhichZbiorkaSelected] = useState(null);
 
-  const handleZbiorkaClick = (collection) => {
+  const handleCollectionClick = (collection) => {
     setWhichZbiorkaSelected(collection);
   };
 
-  const handleZbiorkaDoubleClick = (collection) => {
+  const handleCollectionDoubleClick = (collection) => {
     navigate(`/CollectionDetails/${collection.id}`, { state: { collection } });
   };
 
-  const handleEdytujClick = () => {
+  const handleEditClick = () => {
     if (whichZbiorkaSelected != null) {
       if (!whichZbiorkaSelected.active) {
         alert("Nie można edytować zakończonej zbiórki!");
@@ -37,7 +38,31 @@ function ManageCollections() {
     }
   };
 
-  const handleZakonczClick = async () => {
+  const authenticatePage = async () => {
+    try {
+
+      const response = await axios.post(
+        "http://localhost:8081/auth/authorize",
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      console.log("Autoryzacja:", response.data);
+      if(response.data.status != true){
+        navigate("/");
+      }
+      setAuthenticated(true);
+    } catch (error) {
+      console.error("Błąd autoryzacji strony:", error);
+      navigate("/");
+    }
+  };
+
+  const handleFinishClick = async () => {
     if (whichZbiorkaSelected != null) {
       try {
         await axios.post(
@@ -88,8 +113,12 @@ function ManageCollections() {
   };
 
   useEffect(() => {
-    showCollections();
+    authenticatePage();
   }, []);
+
+  useEffect(() => {
+    showCollections();
+  }, [authenticated]);
 
   return (
     <div>
@@ -101,8 +130,8 @@ function ManageCollections() {
               {collections.map((collection, index) => (
                 <div
                   className="main-page-content"
-                  onClick={() => handleZbiorkaClick(collection)}
-                  onDoubleClick={() => handleZbiorkaDoubleClick(collection)}
+                  onClick={() => handleCollectionClick(collection)}
+                  onDoubleClick={() => handleCollectionDoubleClick(collection)}
                   key={index}
                 >
                   <div
@@ -176,16 +205,16 @@ function ManageCollections() {
                 : "Wybierz zbiórkę"}
             </p>
             <div className="button-container-3">
-              <button className="button-edytuj3" onClick={handleEdytujClick}>
+              <button className="button-edytuj3" onClick={handleEditClick}>
                 Edytuj
               </button>
               {/* <button className="button-raport3" onClick={handleRaportClick}>
                 Generuj raport
               </button> */}
-              <button className="button-zakoncz3" onClick={handleZakonczClick}>
+              <button className="button-zakoncz3" onClick={handleFinishClick}>
                 Zakończ zbiórkę
               </button>
-              <button className="button-anuluj3" onClick={handleAnulujClick}>
+              <button className="button-anuluj3" onClick={handleBackClick}>
                 Powrót
               </button>
             </div>

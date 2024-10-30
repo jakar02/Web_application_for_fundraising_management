@@ -3,11 +3,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { useState, useRef, useEffect } from "react";
 import InputAdornment from "@mui/material/InputAdornment";
-
+import axios from "axios";
 
 function CreateCollection() {
   const navigate = useNavigate();
   const location = useLocation();
+  const token = localStorage.getItem("token");
+  const [authenticated, setAuthenticated] = useState(false);
   const{ sendCollection } = location.state ?? {};
 
   const [collectionGoal, setCollectionGoal] = useState("");
@@ -92,12 +94,40 @@ function CreateCollection() {
   };
 
 
+  const authenticatePage = async () => {
+    try {
+
+      const response = await axios.post(
+        "http://localhost:8081/auth/authorize",
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      console.log("Autoryzacja:", response.data);
+      if(response.data.status != true){
+        navigate("/");
+      }
+      setAuthenticated(true);
+    } catch (error) {
+      console.error("Błąd autoryzacji strony:", error);
+      navigate("/");
+    }
+  };
+
+  useEffect(() => {
+    authenticatePage();
+  }, []);
+
   useEffect(() => {
     if (sendCollection) {
       setCollectionGoal(sendCollection.collectionGoal);
       setCollectionAmount(sendCollection.collectionAmount);
     }
-  }, []);
+  }, [authenticated]);
 
 
 

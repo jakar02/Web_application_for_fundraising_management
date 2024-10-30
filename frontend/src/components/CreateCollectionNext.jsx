@@ -14,6 +14,8 @@ function CreateCollectionNext() {
   const [description, setDescription] = useState("");
   const [city, setCity] = useState("");
   const [date, setDate] = useState("");
+  const [authenticated, setAuthenticated] = useState(false);
+  const token = localStorage.getItem("token");
 
   const accountNumberRef = useRef(null);
   const descriptionRef = useRef(null);
@@ -182,6 +184,34 @@ function CreateCollectionNext() {
     }
   };
 
+  const authenticatePage = async () => {
+    try {
+
+      const response = await axios.post(
+        "http://localhost:8081/auth/authorize",
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      console.log("Autoryzacja:", response.data);
+      if(response.data.status != true){
+        navigate("/");
+      }
+      setAuthenticated(true);
+    } catch (error) {
+      console.error("Błąd autoryzacji strony:", error);
+      navigate("/");
+    }
+  };
+
+  useEffect(() => {
+    authenticatePage();
+  }, []);
+
   useEffect(() => {
     if (sendCollection.accountNumber) {
       setAccountNumber(sendCollection.accountNumber || "");
@@ -212,7 +242,7 @@ function CreateCollectionNext() {
     } else {
       setSelectedFiles([]);
     }
-  }, [sendCollection]);
+  }, [sendCollection, authenticated]);
 
   return (
     <div className="stworz-zbiorke-all">

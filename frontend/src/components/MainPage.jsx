@@ -72,7 +72,7 @@ function MainPage() {
       const { jwt } = response.data;
       localStorage.setItem("token", jwt);
       localStorage.setItem("role", response.data.role);
-      console.log("Role: ", response.data.role);
+      //console.log("Role: ", response.data.role);
       localStorage.setItem("isLogged", true);
       setIsLoggedIn(true);
       setShowModal(0);
@@ -129,7 +129,7 @@ function MainPage() {
   };
 
   const handleCollectionStateClick = () => {
-    console.log(collections)
+    //console.log(collections)
     navigate(`/CollectionState/`, {state: {collections}} );
   };
 
@@ -235,7 +235,7 @@ function MainPage() {
   const fetchAccountState = async () => {
     try {
       await axios.get("http://localhost:8081/account/082e7fe0-5a7f-42fa-a294-39d943ca53a0/transactions");
-      console.log("Fetching account state");
+      //console.log("Fetching account state");
     } catch (error) {
       console.error("Błąd pobierania:", error);
     }
