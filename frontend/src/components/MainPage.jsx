@@ -28,8 +28,7 @@ function MainPage() {
     localStorage.getItem("isLogged") === "true" 
   );
   const [searchValue, setSearchValue] = useState("");
-  //const [sortValue, setSortValue] = useState("");
-  const [sortValue, setSortValue] = useState('najnowsze');
+  const [sortValue, setSortValue] = useState("");
 
   // State for login status
   const [collections, setCollections] = useState([]);
@@ -57,7 +56,7 @@ function MainPage() {
   const handleLoginInModalClick = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8081/auth/signin",
+        "http://localhost:8081/signin",
         {
           email: email,
           password: password,
@@ -88,7 +87,7 @@ function MainPage() {
   const handleRegisterInModalClick = async () => {
     try {
       await axios.post(
-        "http://localhost:8081/auth/signup",
+        "http://localhost:8081/signup",
         {
           fullName: fullName,
           email: emailRegister,
@@ -208,30 +207,6 @@ function MainPage() {
     setSortValue(event.target.value);
   };
 
-  useEffect (() => {
-    if (sortValue === "najnowsze") {
-      setFilteredCollections(collections.sort((a, b) => a.dateOfCreation - b.dateOfCreation));
-    } else if (sortValue === "najstarsze") {
-      setFilteredCollections(collections.sort((a, b) => b.dateOfCreation - a.dateOfCreation));
-    // } else if (sortValue === "najpopularniejsze") {
-    //   setFilteredCollections(collections.sort((a, b) => b.collectionCollectedAmount - a.collectionCollectedAmount));
-    // } else if (sortValue === "najmniej popularne") {
-    //   setFilteredCollections(collections.sort((a, b) => a.collectionCollectedAmount - b.collectionCollectedAmount));
-    } else if (sortValue === "brakujaca kwota malejaco") {
-      setFilteredCollections(collections.sort((a, b) => b.collectionAmount - b.collectionCollectedAmount - (a.collectionAmount - a.collectionCollectedAmount) ));
-    } else if (sortValue === "brakujaca kwota rosnaco") {
-      setFilteredCollections(collections.sort((a, b) => a.collectionAmount - a.collectionCollectedAmount - (b.collectionAmount - b.collectionCollectedAmount) ));
-  }
-},[sortValue]);
-
-
-
-  const calculateProgress = (collection) => {
-    return (
-      (collection.collectionCollectedAmount / collection.collectionAmount) * 100
-    );
-  };
-
   const fetchAccountState = async () => {
     try {
       await axios.get("http://localhost:8081/account/082e7fe0-5a7f-42fa-a294-39d943ca53a0/transactions");
@@ -241,10 +216,35 @@ function MainPage() {
     }
   };
 
+  const calculateProgress = (collection) => {
+    return (
+      (collection.collectionCollectedAmount / collection.collectionAmount) * 100
+    );
+  };
+
+  useEffect (() => {
+    if (sortValue === "najnowsze") {
+      setFilteredCollections(collections.sort((a, b) => a.dateOfCreation - b.dateOfCreation));
+    } else if (sortValue === "najstarsze") {
+      setFilteredCollections(collections.sort((a, b) => b.dateOfCreation - a.dateOfCreation));
+    } else if (sortValue === "brakujaca kwota malejaco") {
+      setFilteredCollections(collections.sort((a, b) => b.collectionAmount - b.collectionCollectedAmount - (a.collectionAmount - a.collectionCollectedAmount) ));
+    } else if (sortValue === "brakujaca kwota rosnaco") {
+      setFilteredCollections(collections.sort((a, b) => a.collectionAmount - a.collectionCollectedAmount - (b.collectionAmount - b.collectionCollectedAmount) ));
+  }
+},[sortValue]);
+
+
+
+
+
+
 useEffect(() => {
   fetchAccountState(); 
   showCollections();   
 }, []);
+
+
 
 
 
@@ -271,6 +271,7 @@ useEffect(() => {
       collection.description.toLowerCase().includes(searchValue.toLowerCase())
     );
     setFilteredCollections(filtered);
+    setSortValue("najnowsze");
   }, [searchValue, collections]);
 
 

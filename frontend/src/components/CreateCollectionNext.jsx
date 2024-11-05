@@ -112,7 +112,6 @@ function CreateCollectionNext() {
   };
 
   const handleUpdateCollectionClick = async () => {
-    const token = localStorage.getItem("token");
 
     const formData = new FormData();
     formData.append(

@@ -33,7 +33,10 @@ function CollectionState() {
   // Pobranie kolekcji z API
   const getAllCollections = async () => {
     try {
-      const response = await axios.get("http://localhost:8081/all_collections");
+      const response = await axios.get("http://localhost:8081/auth/all_collections", {
+        headers: {
+          Authorization: `Bearer ${token}`} // Dodaj nagłówek autoryzacji
+      });
       console.log("Poprawnie pobrano zbiorki:", response.data);
       setCollections(response.data);
     } catch (error) {
