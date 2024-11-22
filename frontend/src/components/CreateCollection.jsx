@@ -98,7 +98,7 @@ function CreateCollection() {
     try {
 
       const response = await axios.post(
-        "http://localhost:8081/auth/authorize",
+        "http://localhost:8081/auth/api/authorize",
         null,
         {
           headers: {

@@ -8,7 +8,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { PDFDocument, rgb } from "pdf-lib"; // Importujemy pdf-lib
+import { PDFDocument, rgb } from "pdf-lib"; 
 import abhayaLibre from "../assets/abhaya-libre/AbhayaLibre-Regular.ttf";
 import fontkit from "@pdf-lib/fontkit";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -17,26 +17,12 @@ import axios from "axios";
 import { TextField, Tooltip } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Helmet } from "react-helmet";
-// import { QRCodeSVG } from "qrcode.react";
-//import QRCode from 'qrcode-svg';
-
-// import HomeIcon from "@mui/icons-material/Home";
 
 function CollectionDetails() {
-  //const token = localStorage.getItem("token");
+
   const navigate = useNavigate();
-  //const location = useLocation();
   const { id } = useParams();
-  // const { collection } = location.state || {}; // Pobranie danych z state
-  // const [title, setTitle] = useState("");
   const [isActive, setIsActive] = useState(false);
-  //const [description, setDescription] = useState("");
-  // const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-  //   window.location.href
-  // )}`;
-  // const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-  //   window.location.href
-  // )}&text=${encodeURIComponent("Wspieram zbiórkę "+ title)}`;
 
   // const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
   //   "Wspieraj zbiórkę: " +
@@ -48,11 +34,10 @@ function CollectionDetails() {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  // const [copySuccess, setCopySuccess] = useState(false);
   const [userFullName, setUserFullName] = useState("");
   const [collection, setCollection] = useState(null);
 
-  const [showSupportModal, setShowSupportModal] = useState(false); // Nowy stan dla modal wsparcia
+  const [showSupportModal, setShowSupportModal] = useState(false); 
   const [amount, setAmount] = useState(10);
 
   const handlePowrotClick = () => {
@@ -81,7 +66,6 @@ function CollectionDetails() {
       });
 
       setCollection(response.data);
-      // setTitle(response.data.collectionGoal);
       setIsActive(response.data.active);
     } catch (error) {
       console.error("Błąd pobierania zbiorki", error);
@@ -251,7 +235,6 @@ function CollectionDetails() {
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains("share-modal-overlay")) {
       setShowModal(false);
-      // setCopySuccess(false);
     }
   };
 
@@ -261,10 +244,6 @@ function CollectionDetails() {
     }
   };
 
-  // const copyLink = () => {
-  //   navigator.clipboard.writeText(window.location.href);
-  //   setCopySuccess(true);
-  // };
 
   const downloadPdf = async () => {
     
@@ -276,32 +255,28 @@ function CollectionDetails() {
     const customFont = await pdfDoc.embedFont(customFontBytes);
     const page = pdfDoc.addPage([600, 800]);
 
-    // Embed the JPEG image
     const imageData = collection.images[0].imageData;
     const imageBytes = Uint8Array.from(atob(imageData), (c) => c.charCodeAt(0));
     const image = await pdfDoc.embedJpg(imageBytes);
 
-    // Get image dimensions and maintain the aspect ratio
-    const imageWidth = 560; // Fixed width for the image
+    const imageWidth = 560; 
     const imageHeight = (image.height / image.width) * imageWidth;
 
-    // Draw the image with the calculated height to maintain aspect ratio
     page.drawImage(image, {
-      x: 600 / 2 - imageWidth / 2, // Center the image on the page
-      y: 800 - imageHeight - 70, // Position it above the description text
+      x: 600 / 2 - imageWidth / 2, 
+      y: 800 - imageHeight - 70, 
       width: imageWidth,
       height: imageHeight,
     });
 
-    // Calculate text width and position to center it
+
     const titleText = collection.collectionGoal;
     const titleFontSize = 30;
     const titleWidth = customFont.widthOfTextAtSize(titleText, titleFontSize);
-    const pageWidth = 600; // Page width
-    const titleX = (pageWidth - titleWidth) / 2; // Center horizontally
-    const titleY = 800 - 40; // Position the title vertically
+    const pageWidth = 600; 
+    const titleX = (pageWidth - titleWidth) / 2; 
+    const titleY = 800 - 40;
 
-    // Draw the title text
     page.drawText(titleText, {
       x: titleX,
       y: titleY,
@@ -317,10 +292,10 @@ function CollectionDetails() {
       font: customFont,
       color: rgb(0, 0, 0),
     });
-    // Adjust text position based on the image's position and size
+
     page.drawText(collection.description, {
       x: 20,
-      y: 800 - imageHeight - 140, // Position the text below the image
+      y: 800 - imageHeight - 140, 
       size: 12,
       font: customFont,
       color: rgb(0, 0, 0),
@@ -328,15 +303,10 @@ function CollectionDetails() {
       lineHeight: 14,
     });
 
-    //console.log("ResponseQR:", responseQR);
 
     if (typeof responseQR === "string" && responseQR.startsWith("data:image/")) {
-      //console.log("responseQR is a Base64 image string.");
-  
-      // Usuń nagłówek Base64 (np. "data:image/jpeg;base64," lub "data:image/png;base64,")
       const qrImageData = responseQR.replace(/^data:image\/[^;]+;base64,/, '');
   
-      // Sprawdź, czy to JPEG lub PNG
       let qrImage;
       if (responseQR.startsWith("data:image/jpeg")) {
         const qrImageBytes = Uint8Array.from(atob(qrImageData), (c) => c.charCodeAt(0));
@@ -349,24 +319,18 @@ function CollectionDetails() {
         return;
       }
   
-      // Ustal rozmiary obrazu (np. 300x300)
       const qrWidth = 150;
       const qrHeight = 150;
   
-      // Narysuj obrazek QR na stronie PDF (np. centrowanie na stronie)
       page.drawImage(qrImage, {
-        x: 600 / 2 - qrWidth / 2, // centrowanie w poziomie
-        y: 180 - qrHeight, // pozycja powyżej tekstu opisu
+        x: 600 / 2 - qrWidth / 2, 
+        y: 180 - qrHeight,
         width: qrWidth,
         height: qrHeight,
       });
     } else {
       console.error("responseQR is not a valid Base64 image string.");
     }
-
-
-
-
 
     const amountText = amount + " zł";
     const amountFontSize = 12;
@@ -376,7 +340,7 @@ function CollectionDetails() {
     
     page.drawText("Zeskanuj kod QR w aplikacji bankowej:", {
       x: 20,
-      y: amountY+75, // Pozycja na dole strony
+      y: amountY+75,
       size: amountFontSize,
       font: customFont,
       color: rgb(0, 0, 0),
@@ -394,25 +358,21 @@ function CollectionDetails() {
       lineHeight: 14,
     });
 
-    // Zapisz dokument PDF jako byte array
     const pdfBytes = await pdfDoc.save();
 
-    // Utwórz link do pobrania
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = collection.collectionGoal + ".pdf";
 
-    // Kliknij link, aby pobrać plik
     link.click();
-
-    // Usuń link po pobraniu
     URL.revokeObjectURL(link.href);
   };
 
+
   const getCollectionCreator = async () => {
     try {
-      const response = await axios.get("http://localhost:8081/userFullName", {
+      const response = await axios.get("http://localhost:8081/user_FullName", {
         params: { id: collection.id },
       });
       setUserFullName(response.data);
@@ -421,14 +381,17 @@ function CollectionDetails() {
     }
   };
 
+
   const [responseQR, setResponseQR] = useState();
+
 
   const generateQrCode = async (inputAmount) => {
     if (isNaN(inputAmount) || inputAmount <= 0) {
       //console.log("Nieprawidłowa kwota");
       return "";
     }
-    //console.log("Generuję kod QR dla kwoty:", inputAmount);
+
+
     try {
       const response = await axios.get("http://localhost:8081/generate-qr", {
         params: {
@@ -438,14 +401,18 @@ function CollectionDetails() {
           unstructuredReference: collection.id,
           information: collection.collectionGoal,
         },
-        responseType: "text", // Ensuring we expect a text-based response
+        responseType: "text", 
       });
-      // Directly setting the Base64 image in state
       setResponseQR(response.data);
     } catch (error) {
       console.error("Błąd generowania kodu QR:", error);
     }
   };
+
+
+
+
+
 
   const handleSupportClick = () => {
     if (isActive) {
@@ -458,15 +425,11 @@ function CollectionDetails() {
 
   const handleSupportAmountChange = (e) => {
     const inputAmount = Math.floor(e.target.value); 
-
-
     if (inputAmount < 1) {
       setAmount(1);
     } else {
-      //console.log("Ustawiam kwotę na:", inputAmount);
       setAmount(inputAmount);
     }
-
     generateQrCode(inputAmount);
   };
 
@@ -475,8 +438,10 @@ function CollectionDetails() {
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
     setCopyMessage("Skopiowano!");
-    setTimeout(() => setCopyMessage(""), 2000); // Resetuje wiadomość po 2 sekundach
+    setTimeout(() => setCopyMessage(""), 2000);
   };
+
+
 
   useEffect(() => {
     getCollection();
@@ -489,6 +454,7 @@ function CollectionDetails() {
       generateQrCode(10);
     }
   }, [collection]);
+
 
   return (
     <div className={`szczegoly-main`}>
@@ -577,13 +543,7 @@ function CollectionDetails() {
             <div className="share-buttons">
               {/* <button
                 className="share-button"
-                onClick={() => window.open(facebookShareUrl, "_blank")}
-              >
-                Facebook
-              </button> */}
-              {/* <button
-                className="share-button"
-                onClick={() => window.open(twitterShareUrl, "_blank")}
+                onClick={shareOnTwitter}
               >
                 Twitter
               </button> */}

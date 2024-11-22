@@ -33,7 +33,7 @@ function CollectionState() {
   // Pobranie kolekcji z API
   const getAllCollections = async () => {
     try {
-      const response = await axios.get("http://localhost:8081/auth/all_collections", {
+      const response = await axios.get("http://localhost:8081/auth/api/all_collections", {
         headers: {
           Authorization: `Bearer ${token}`} // Dodaj nagłówek autoryzacji
       });
@@ -107,7 +107,7 @@ function CollectionState() {
     try {
 
       const response = await axios.post(
-        "http://localhost:8081/auth/authorize",
+        "http://localhost:8081/auth/api/authorize",
         null,
         {
           headers: {
@@ -160,6 +160,36 @@ function CollectionState() {
       }
     } catch (error) {
       console.error("Błąd aktualizacji transferu:", error);
+    }
+  };
+
+
+  const handlePostedOnTwitterChange = async (collectionSelected) => {
+    console.log("Próba");
+    if (collectionSelected === null || collectionSelected.active === false) {
+      alert("Nie można publikować zakończonej zbiórki!");
+      return;
+    } else if (collectionSelected.postedOnTwitter === true) {
+      alert("Zbiórka została już opublikowana na Twitterze!");
+      return;
+    } else {
+      try {
+        const response = await axios.post(
+          "http://localhost:8081/auth/api/twitter/tweet",
+          null,
+          {
+            params: { id: collectionSelected.id },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        alert("Zbiórka została opublikowana na Twitterze!");
+        getAllCollections();
+        console.log(response.data);
+      } catch (error) {
+        console.error("Błąd udostępniania na Twitterze:", error);
+      }
     }
   };
 
@@ -217,7 +247,7 @@ function CollectionState() {
 
   const getCollectionCreator = async (collection) => {
     try {
-      const response = await axios.get("http://localhost:8081/userFullName", {
+      const response = await axios.get("http://localhost:8081/user_FullName", {
         params: { id: collection.id },
       });
       setUserFullName(response.data);
@@ -444,7 +474,7 @@ function CollectionState() {
                         textOverflow: "ellipsis", // Dodaje "..." na końcu, jeśli tekst jest za długi
                       }}
                     >
-                      Zbierana kwota [zł]
+                      Cel [zł]
                     </TableSortLabel>
                   </TableCell>
                   <TableCell>
@@ -456,15 +486,14 @@ function CollectionState() {
                       Miasto
                     </TableSortLabel>
                   </TableCell>
-                  {/* <TableCell>
+
+                  <TableCell>
                     <TableSortLabel
-                      active={orderBy === "accountNumber"}
-                      direction={orderBy === "accountNumber" ? order : "asc"}
-                      onClick={() => handleRequestSort("accountNumber")}
                     >
-                      Dane do przelewu
+                     Twitter
                     </TableSortLabel>
-                  </TableCell> */}
+                  </TableCell>
+
                   <TableCell>Dane do przelewu</TableCell>
                   <TableCell>
                     <TableSortLabel
@@ -516,6 +545,13 @@ function CollectionState() {
                     </TableCell>
                     <TableCell>{collection.collectionAmount}</TableCell>
                     <TableCell>{collection.city}</TableCell>
+                    <TableCell><Switch
+                        checked={collection.postedOnTwitter}
+                        onChange={() =>
+                          handlePostedOnTwitterChange(collection)
+                        }
+                      />
+                      </TableCell>
                     <TableCell>
                       <Button onClick={() => handleSupportClick(collection)}>
                         {" "}
@@ -530,9 +566,7 @@ function CollectionState() {
                         }
                       />
                     </TableCell>
-                    {/* <TableCell>{collection.active ? "Tak" : "Nie"}</TableCell> */}
                     <TableCell>
-                      {/* Suwak (Switch) do zmiany stanu 'Przelano' */}
                       <Switch
                         checked={collection.transferred}
                         onChange={() =>

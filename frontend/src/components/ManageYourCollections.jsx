@@ -16,10 +16,10 @@ function ManageCollections() {
     navigate("/");
   }
 
-  const [whichZbiorkaSelected, setWhichZbiorkaSelected] = useState(null);
+  const [collectionSelected, setCollectionSelected] = useState(null);
 
   const handleCollectionClick = (collection) => {
-    setWhichZbiorkaSelected(collection);
+    setCollectionSelected(collection);
   };
 
   const handleCollectionDoubleClick = (collection) => {
@@ -27,12 +27,12 @@ function ManageCollections() {
   };
 
   const handleEditClick = () => {
-    if (whichZbiorkaSelected != null) {
-      if (!whichZbiorkaSelected.active) {
+    if (collectionSelected != null) {
+      if (!collectionSelected.active) {
         alert("Nie można edytować zakończonej zbiórki!");
       } else {
         navigate("/CreateCollection", {
-          state: { sendCollection: whichZbiorkaSelected },
+          state: { sendCollection: collectionSelected },
         });
       }
     }
@@ -40,9 +40,8 @@ function ManageCollections() {
 
   const authenticatePage = async () => {
     try {
-
       const response = await axios.post(
-        "http://localhost:8081/auth/authorize",
+        "http://localhost:8081/auth/api/authorize",
         null,
         {
           headers: {
@@ -50,9 +49,9 @@ function ManageCollections() {
           },
         }
       );
-      
+
       console.log("Autoryzacja:", response.data);
-      if(response.data.status != true){
+      if (response.data.status != true) {
         navigate("/");
       }
       setAuthenticated(true);
@@ -63,13 +62,13 @@ function ManageCollections() {
   };
 
   const handleFinishClick = async () => {
-    if (whichZbiorkaSelected != null) {
+    if (collectionSelected != null) {
       try {
         await axios.post(
-          "http://localhost:8081/auth/api/user_collections_end",
+          "http://localhost:8081/auth/api/user_collection_end",
           null,
           {
-            params: { id: whichZbiorkaSelected.id },
+            params: { id: collectionSelected.id },
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -78,21 +77,15 @@ function ManageCollections() {
       } catch (error) {
         console.error("Błąd zakończenia zbiórki:", error);
       }
-      setWhichZbiorkaSelected(null);
+      setCollectionSelected(null);
       showCollections();
     }
   };
 
-  // const handleRaportClick = () => {
-  //   if (whichZbiorkaSelected != null) {
-  //     console.log("Wygenerowano raport dla zbiórki: " + whichZbiorkaSelected);
-  //   }
-  // };
-
   const showCollections = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8081/auth/api/user_collections_get",
+        "http://localhost:8081/auth/api/user_collections",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -110,6 +103,34 @@ function ManageCollections() {
     return (
       (collection.collectionCollectedAmount / collection.collectionAmount) * 100
     );
+  };
+
+  const handleTwitterPostClick = async () => {
+    console.log("Próba");
+    if (collectionSelected === null || collectionSelected.active === false) {
+      alert("Nie można publikować zakończonej zbiórki!");
+      return;
+    } else if (collectionSelected.postedOnTwitter === true) {
+      alert("Zbiórka została już opublikowana na Twitterze!");
+      return;
+    } else {
+      try {
+        const response = await axios.post(
+          "http://localhost:8081/auth/api/twitter/tweet",
+          null,
+          {
+            params: { id: collectionSelected.id },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }, 
+          }
+        );
+        alert("Zbiórka została opublikowana na Twitterze!");
+        console.log(response.data);
+      } catch (error) {
+        console.error("Błąd udostępniania na Twitterze:", error);
+      }
+    }
   };
 
   useEffect(() => {
@@ -136,7 +157,7 @@ function ManageCollections() {
                 >
                   <div
                     className={
-                      whichZbiorkaSelected !== collection
+                      collectionSelected !== collection
                         ? "collection-frame2"
                         : "collection-frame2-selected"
                     }
@@ -153,16 +174,21 @@ function ManageCollections() {
                       {collection.description}
                     </p>
                     <div className="collection-fundsWithCity">
-                <p className="collection-funds">
-                  {collection.collectionCollectedAmount} z {collection.collectionAmount} zł
-                </p>
-                <p className="collection-city">
-                  <LocationOnIcon
-                    sx={{ fontSize: 18, marginRight: "2px", color: "gray" }} // Zmniejszony odstęp
-                  />
-                  {collection.city}
-                </p>
-              </div>
+                      <p className="collection-funds">
+                        {collection.collectionCollectedAmount} z{" "}
+                        {collection.collectionAmount} zł
+                      </p>
+                      <p className="collection-city">
+                        <LocationOnIcon
+                          sx={{
+                            fontSize: 18,
+                            marginRight: "2px",
+                            color: "gray",
+                          }} // Zmniejszony odstęp
+                        />
+                        {collection.city}
+                      </p>
+                    </div>
                     <Box
                       sx={{
                         marginBottom: "50px",
@@ -200,18 +226,36 @@ function ManageCollections() {
 
           <div className="right-column2">
             <p className="collection-title2">
-              {whichZbiorkaSelected != null
-                ? `Wybrano: ${whichZbiorkaSelected.collectionGoal}`
+              {collectionSelected != null
+                ? `Wybrano: ${collectionSelected.collectionGoal}`
                 : "Wybierz zbiórkę"}
             </p>
             <div className="button-container-3">
-              <button className="button-edytuj3" onClick={handleEditClick}>
+              <button
+                className={
+                  collectionSelected != null && collectionSelected.active
+                    ? "button-edytuj3"
+                    : "button-edytuj3-disabled"
+                }
+                onClick={handleEditClick}
+              >
                 Edytuj
               </button>
-              {/* <button className="button-raport3" onClick={handleRaportClick}>
-                Generuj raport
-              </button> */}
-              <button className="button-zakoncz3" onClick={handleFinishClick}>
+
+              <button
+                className={
+                  collectionSelected != null &&
+                  !collectionSelected.postedOnTwitter &&
+                  collectionSelected.active
+                    ? "button-twitter3"
+                    : "button-twitter3-disabled"
+                }
+                onClick={handleTwitterPostClick}
+              >
+                Opublikuj na Twitterze
+              </button>
+
+              <button className={(collectionSelected != null && collectionSelected.active) ? "button-zakoncz3" : "button-zakoncz3-disabled"} onClick={handleFinishClick}>
                 Zakończ zbiórkę
               </button>
               <button className="button-anuluj3" onClick={handleBackClick}>
