@@ -15,7 +15,6 @@ import {
 
 function MainPage() {
   const navigate = useNavigate();
-  // State for modal visibility
   const [showModal, setShowModal] = useState(0); //0 - nie pokazuj, 1 - logowanie, 2 - rejestracja
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,11 +29,9 @@ function MainPage() {
   const [searchValue, setSearchValue] = useState("");
   const [sortValue, setSortValue] = useState("");
 
-  // State for login status
   const [collections, setCollections] = useState([]);
   const [filteredCollections, setFilteredCollections] = useState([]);
 
-  // Refs for login fields
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const fullNameRef = useRef(null);
@@ -237,8 +234,6 @@ function MainPage() {
 
 
 
-
-
 useEffect(() => {
   fetchAccountState(); 
   showCollections();   
@@ -247,9 +242,8 @@ useEffect(() => {
 
 
 
-
   useEffect(() => {
-    let sortedCollections = [...collections]; // Kopia tablicy
+    let sortedCollections = [...collections]; 
   
     if (sortValue === "najnowsze") {
       sortedCollections.sort((a, b) => new Date(b.dateOfCreation) - new Date(a.dateOfCreation));
@@ -261,7 +255,7 @@ useEffect(() => {
       sortedCollections.sort((a, b) => (a.collectionAmount - a.collectionCollectedAmount) - (b.collectionAmount - b.collectionCollectedAmount));
     }
   
-    setFilteredCollections(sortedCollections); // Aktualizacja stanu po sortowaniu
+    setFilteredCollections(sortedCollections); 
   }, [sortValue, collections]);
   
 
@@ -310,7 +304,6 @@ useEffect(() => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          //height: "100vh", // Opcjonalne, aby wycentrować również pionowo
         }}
       >
         <TextField
@@ -348,8 +341,6 @@ useEffect(() => {
           >
             <MenuItem value="najnowsze">Najnowsze</MenuItem>
             <MenuItem value="najstarsze">Najstarsze</MenuItem>
-            {/* <MenuItem value="najpopularniejsze">Najpopularniejsze</MenuItem>
-            <MenuItem value="najmniej popularne">Najmniej popularne</MenuItem> */}
             <MenuItem value="brakujaca kwota malejaco">
               Brakująca kwota malejąco
             </MenuItem>
@@ -387,7 +378,7 @@ useEffect(() => {
                 </p>
                 <p className="collection-city">
                   <LocationOnIcon
-                    sx={{ fontSize: 18, marginRight: "2px", color: "gray" }} // Zmniejszony odstęp
+                    sx={{ fontSize: 18, marginRight: "2px", color: "gray" }} 
                   />
                   {collection.city}
                 </p>
@@ -405,7 +396,7 @@ useEffect(() => {
                   value={calculateProgress(collection)}
                   sx={{
                     height: "10px",
-                    backgroundColor: "#d3d3d3", // Tło paska (szary)
+                    backgroundColor: "#d3d3d3", 
                     "& .MuiLinearProgress-bar": {
                       backgroundColor: "rgb(20, 131, 20)",
                     },
@@ -505,7 +496,6 @@ useEffect(() => {
         </div>
       )}
 
-      {/* <footer>All rights reserved.</footer> */}
     </div>
   );
 }

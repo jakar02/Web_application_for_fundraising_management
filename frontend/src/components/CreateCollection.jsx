@@ -18,8 +18,6 @@ function CreateCollection() {
   const goalRef = useRef(null);
   const amountRef = useRef(null);
 
-  //const partialCollection = { collectionGoal, collectionAmount };
-
   function handleAnulujClick() {
     navigate("/");
   }
@@ -88,7 +86,7 @@ function CreateCollection() {
     if (!isNaN(roundedValue)) {
       setCollectionAmount(roundedValue.toString());
     } else {
-      setCollectionAmount(''); // lub inna odpowiednia wartość
+      setCollectionAmount('');
     }
 
   };
@@ -96,7 +94,6 @@ function CreateCollection() {
 
   const authenticatePage = async () => {
     try {
-
       const response = await axios.post(
         "http://localhost:8081/auth/api/authorize",
         null,
@@ -164,33 +161,31 @@ function CreateCollection() {
         fullWidth
         inputProps={{
           style: {
-            fontSize: "50px", // Rozmiar tekstu w inp
-            height: "70px", // Ustaw wysokość dla inputa, standardowa dla `outlined`
-            padding: "12px 14px", // Padding wewnątrz pola
+            fontSize: "50px", 
+            height: "70px", 
+            padding: "12px 14px",
           },
         }}
         sx={{
           backgroundColor: "white",
-          // Dostosuj wysokość tekstowego inputa
           "& .MuiInputBase-input": {
             fontSize: "18px",
             padding: "12px 14px",
           },
-          // Dostosuj wysokość label
           "& .MuiInputLabel-root": {
             fontSize: "16px",
-            top: "-8px", // Przesuwa etykietę w górę
-            transform: "translateY(0)", // Resetuje przekształcenie
+            top: "-8px", 
+            transform: "translateY(0)", 
           },
           "& .MuiInputLabel-shrink": {
-            top: "-8px", // Ustawienie dla etykiety, gdy jest w stanie "shrink"
-            left: "14px", // Ustawienie dla etykiety, gdy jest w stanie "shrink"
-            transform: "translateY(0)", // Resetuje przekształcenie
-            fontSize: "12px", // Opcjonalne dostosowanie rozmiaru czcionki, gdy etykieta jest w stanie "shrink"
+            top: "-8px", 
+            left: "14px", 
+            transform: "translateY(0)", 
+            fontSize: "12px",
           },
         }}
         InputLabelProps={{
-          shrink: true, // Ustawia, aby etykieta była zawsze widoczna
+          shrink: true,
         }}
         value={collectionAmount}
         onChange={(e) => handleSetCollectionAmount(e)}

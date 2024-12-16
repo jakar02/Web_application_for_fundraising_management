@@ -1,5 +1,5 @@
 .szczegoly-main {
-  min-height: 100vh; /* Ustawia minimalną wysokość na pełne okno przeglądarki */
+  min-height: 100vh; 
   height: 100vh;
   background-color: rgb(249, 249, 249);
   border-radius: 10px;
@@ -27,7 +27,7 @@
   align-items: center;
   padding: 0px;
   border-bottom: 5px solid transparent;
-  justify-content: center; /* Wyśrodkowanie nagłówka */
+  justify-content: center;
   text-align: center;
   margin: 0px;
   height: 70px;
@@ -50,7 +50,7 @@
 
 .gorne-buttony4 > .home-button {
   position: absolute;
-  left: 44px; /* Odstęp od lewej krawędzi */
+  left: 44px;
 }
 
 .gorne-buttony4 > h1 {
@@ -64,10 +64,10 @@
   color: rgb(249, 249, 249);
   content: "";
   position: absolute;
-  bottom: -5px; /* Wysokość marginesu */
+  bottom: -5px; 
   left: 0;
   width: 100%;
-  height: 5px; /* Wysokość marginesu */
+  height: 5px;
   background: linear-gradient(
     to right,
     hsl(15, 100%, 78%),
@@ -84,12 +84,12 @@
   position: fixed;
   padding-left: 10px;
   padding-right: 10px;
-  background-color: #ffcccc; /* Kolor tła np. czerwony, symbolizujący brak aktywności */
-  border: 1px solid #ff0000; /* Czerwony obrys */
-  color: #ff0000; /* Kolor tekstu */
+  background-color: #ffcccc;
+  border: 1px solid #ff0000; 
+  color: #ff0000; 
   text-align: center;
   border-radius: 5px;
-  top: 160px; /* Odległość od górnej krawędzi */
+  top: 160px; 
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 18px;
@@ -265,11 +265,6 @@
   margin-bottom: 10px;
 }
 
-.share-modal-content input {
-  /* padding: 5px; */
-  /* margin-bottom: 10px; */
-}
-
 .share-modal-content button {
   padding: 10px 20px;
   margin-top: 10px;
@@ -312,8 +307,7 @@
 .collection-description9 {
   font-size: 26px;
   display: -webkit-box;
-
-  text-overflow: ellipsis; /* Add ellipsis */
+  text-overflow: ellipsis; 
   margin-left: 0px;
   margin-right: 0px;
   margin-bottom: 10px;
@@ -331,7 +325,6 @@
 
 .collection-authorWithCity .MuiSvgIcon-root {
   font-size: 18px;
-  /* margin-right: 5px; */
 }
 
 .collection-authorWithCity .collection-city2 {
@@ -419,6 +412,3 @@
     font-size: 1em;
   }
 }
-
-
-

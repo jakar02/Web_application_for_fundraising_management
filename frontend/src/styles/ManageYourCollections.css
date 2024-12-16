@@ -2,17 +2,17 @@
   display: flex;
   align-items: center;
   padding: 0px;
-  border-bottom: 5px solid transparent; /* Ustawiamy wysokość marginesu dolnego jako obramowanie */
+  border-bottom: 5px solid transparent; 
   position: relative;
   justify-content: center;
   text-align: center;
   margin: 0px;
   height: 70px;
   color: rgb(249, 249, 249);
-  position: fixed; /* Ustawienie elementu na stałe w jednym miejscu */
-  top: 0; /* Ustawia go na samej górze strony */
-  left: 0; /* Ustawia go na samej lewej stronie */
-  width: 100%; /* Element zajmuje całą szerokość ekranu */
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
 
   background-image: linear-gradient(
     to right,
@@ -29,10 +29,10 @@
 .gorne-buttony2::after {
   content: "";
   position: absolute;
-  bottom: -5px; /* Wysokość marginesu */
+  bottom: -5px; 
   left: 0;
   width: 100%;
-  height: 5px; /* Wysokość marginesu */
+  height: 5px; 
   background: linear-gradient(
     to right,
     hsl(15, 100%, 78%),
@@ -46,18 +46,15 @@
 
 
 
-
-
 .page-container2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0; /* Remove margin */
+  margin: 0;
   padding: 20px;
-  /* width: 100%; */
+
 }
 
-/* Content container styles */
 .content-container {
   display: flex;
   width: 100%;
@@ -66,19 +63,16 @@
 
 
 
-
-/* Left column styles */
 .left-column2 {
   flex: 3;
   margin-right: 320px;
   margin-top: 80px;
-  /* width: calc(100% - 460px);  */
 }
 
-/* Right column styles */
+
 .right-column2 {
   height: 290px;
-  flex: none; /* Usunięcie wpływu flexboxa */
+  flex: none; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -87,10 +81,10 @@
   border-radius: 5px;
   background-color: hsl(0, 0%, 100%);
   border: 1px solid #8c8c8c;
-  position: fixed; /* Zmiana na absolute */
-  top: 140px; /* Dystans od górnej krawędzi strony */
-  right: 20px; /* Ustawienie od prawej krawędzi */
-  width: 300px; /* Ustawienie stałej szerokości */
+  position: fixed; 
+  top: 140px; 
+  right: 20px; 
+  width: 300px; 
 
 }
 
@@ -98,7 +92,7 @@
 
 .main-page-grid3 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 items per row */
+  grid-template-columns: repeat(2, 1fr); 
   gap: 20px;
 }
 
@@ -113,9 +107,9 @@
   border: 1px solid #888787;
   margin: 0px;
   border-radius: 7px;
-  width: 100%; /* Take full width of grid cell */
+  width: 100%; 
   
-  height: 520px; /* Adjust as needed to make all frames equal height */
+  height: 520px; 
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -129,8 +123,8 @@
   border: 1px solid #888787;
   margin: 0px;
   border-radius: 7px;
-  width: 100%; /* Take full width of grid cell */
-  height: 520px; /* Adjust as needed to make all frames equal height */
+  width: 100%; 
+  height: 520px; 
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -157,10 +151,6 @@
   margin-top: -1px; 
   margin-left: 10;
   color: white;
-/* 
-  display: -webkit-box;
-  -webkit-line-clamp: 1; */
-  /* -webkit-box-orient: vertical; */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; 
@@ -179,16 +169,14 @@
   font-size: 16px;
   margin-bottom: 10px;
   display: -webkit-box;
-  -webkit-line-clamp: 5; /* Limit to 2 lines */
+  -webkit-line-clamp: 5; 
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis; /* Add ellipsis */
-  flex-grow: 1; /* Allow the description to take up remaining space */
+  text-overflow: ellipsis; 
+  flex-grow: 1; 
 }
 
 
-
-/* Button container styles */
 .button-container-3 {
   display: flex;
   flex-direction: column;
@@ -196,12 +184,13 @@
   gap: 10px;
 }
 
+
 .collection-active{
   background-color: hsl(113, 29%, 49%);
   border-bottom-right-radius: 7px;
   border-bottom-left-radius: 7px;
-  width: 100%; /* Take full width of grid cell */
-  height: 30px; /* Adjust as needed to make all frames equal height */
+  width: 100%; 
+  height: 30px; 
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -215,8 +204,8 @@
   background-color: hsl(0, 73%, 39%);
   border-bottom-right-radius: 7px;
   border-bottom-left-radius: 7px;
-  width: 100%; /* Take full width of grid cell */
-  height: 30px; /* Adjust as needed to make all frames equal height */
+  width: 100%; 
+  height: 30px; 
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -228,8 +217,8 @@
 
 .collection-fundsWithCity {
   display: flex;
-  justify-content: space-between; /* Ustawia jedno po lewej, drugie po prawej */
-  align-items: center; /* Wyrównuje w pionie */
+  justify-content: space-between; 
+  align-items: center; 
   font-size: 18px;
   font-weight: bold;
   color: rgb(112, 112, 112);
@@ -240,16 +229,15 @@
 }
 
 .collection-funds {
-  text-align: left; /* Wyrównanie do lewej */
+  text-align: left; 
 }
 
 .collection-city {
   display: flex;
-  align-items: center; /* Umożliwia wyrównanie ikony i tekstu w pionie */
-  text-align: right; /* Wyrównanie do prawej */
+  align-items: center; 
+  text-align: right; 
 }
 
-/* Individual button styles */
 .button-edytuj3,
 .button-zakoncz3,
 .button-twitter3,
@@ -269,7 +257,7 @@
 }
 
 .button-anuluj3 {
-  background-color: hsla(167, 59%, 35%, 0.888); /* Grey */
+  background-color: hsla(167, 59%, 35%, 0.888); 
   color: white;
 }
 
@@ -295,4 +283,3 @@
 .button-anuluj3:hover {
   background-color: hsla(167, 59%, 25%, 0.888);
 }
-

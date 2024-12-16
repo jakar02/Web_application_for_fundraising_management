@@ -24,12 +24,6 @@ function CollectionDetails() {
   const { id } = useParams();
   const [isActive, setIsActive] = useState(false);
 
-  // const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-  //   "Wspieraj zbiórkę: " +
-  //     title +
-  //     "! Sprawdź szczegóły: \n" +
-  //     window.location.href
-  // )}`;
 
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -412,8 +406,6 @@ function CollectionDetails() {
 
 
 
-
-
   const handleSupportClick = () => {
     if (isActive) {
       setShowSupportModal(true); 
@@ -481,14 +473,12 @@ function CollectionDetails() {
       <div className="gorne-buttony4">
         <h1>{collection ? collection.collectionGoal : "Loading..."}</h1>
       </div>
-      {/* Wyświetlenie napisu "Zbiórka jest nieaktywna" nad ramką */}
       {collection && !isActive && (
         <div className="inactive-message">
           <h3>Zbiórka jest nieaktywna</h3>
         </div>
       )}
       {collection ? manageImagesGrid() : <p>Loading...</p>}
-      {/* Check if collection is available */}
       <div className="right-container09">
         {collection ? (
           <>
@@ -541,15 +531,6 @@ function CollectionDetails() {
             <p>Wydrukuj plakat i przypnij do słupa reklamowego lub tablicy </p>
             <hr className="share-divider" />
             <div className="share-buttons">
-              {/* <button
-                className="share-button"
-                onClick={shareOnTwitter}
-              >
-                Twitter
-              </button> */}
-              {/* <button className="share-button" onClick={copyLink}>
-                {!copySuccess ? "Kopiuj link" : "Skopiowano"}
-              </button> */}
               <button className="share-button" onClick={downloadPdf}>
                 Pobierz PDF
               </button>
@@ -561,10 +542,9 @@ function CollectionDetails() {
       {showSupportModal && (
         <div
           className="support-modal-overlay"
-          onClick={handleSupportOverlayClick} // Zamyka modal przy kliknięciu na overlay
+          onClick={handleSupportOverlayClick} 
         >
           <div className="support-modal">
-            {/* Nagłówki h4 i formularze wyśrodkowane do lewej */}
             <h4 style={{ textAlign: "left" }}>
               1. Wpisz kwotę i zeskanuj kod QR w aplikacji bankowej
             </h4>
@@ -615,10 +595,8 @@ function CollectionDetails() {
               </div>
             </div>
 
-            {/* Sekcja przelewu bankowego */}
             <h4 style={{ textAlign: "left" }}>2. Przelew bankowy</h4>
 
-            {/* Numer konta */}
             <Grid
               container
               spacing={2}
@@ -634,7 +612,7 @@ function CollectionDetails() {
                   }}
                   fullWidth
                   variant="outlined"
-                  style={{ paddingRight: "8px" }} // Dodać odstęp wokół etykiety
+                  style={{ paddingRight: "8px" }} 
                 />
               </Grid>
               <Grid item xs={3}>
@@ -650,7 +628,6 @@ function CollectionDetails() {
               </Grid>
             </Grid>
 
-            {/* Tytuł przelewu */}
             <Grid
               container
               spacing={2}
@@ -680,7 +657,6 @@ function CollectionDetails() {
               </Grid>
             </Grid>
 
-            {/* Odbiorca */}
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={9}>
                 <TextField
@@ -703,7 +679,6 @@ function CollectionDetails() {
               </Grid>
             </Grid>
 
-            {/* Wiadomość po skopiowaniu */}
             {copyMessage && <p style={{ color: "blue" }}>{copyMessage}</p>}
           </div>
         </div>

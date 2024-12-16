@@ -26,16 +26,16 @@ function CollectionState() {
   const [authenticated, setAuthenticated] = useState(false);
   const [userFullName, setUserFullName] = useState("");
   const [collections, setCollections] = useState(null);
-  const [order, setOrder] = useState("desc"); // Sortowanie rosnące/ malejące
-  const [orderBy, setOrderBy] = useState("active"); // Domyślnie sortowanie po ID
+  const [order, setOrder] = useState("desc"); 
+  const [orderBy, setOrderBy] = useState("active"); 
   const token = localStorage.getItem("token");
   const [collection, setCollection] = useState(null);
-  // Pobranie kolekcji z API
+
   const getAllCollections = async () => {
     try {
       const response = await axios.get("http://localhost:8081/auth/api/all_collections", {
         headers: {
-          Authorization: `Bearer ${token}`} // Dodaj nagłówek autoryzacji
+          Authorization: `Bearer ${token}`} 
       });
       console.log("Poprawnie pobrano zbiorki:", response.data);
       setCollections(response.data);
@@ -44,19 +44,13 @@ function CollectionState() {
     }
   };
 
-  // Powrót do poprzedniej strony
-  // function handlePreviousPageClick() {
-  //   navigate("/");
-  // }
 
-  // Funkcja do sortowania
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
-  // Funkcja sortująca kolekcje
   const sortCollections = (collections, comparator) => {
     return collections.slice().sort(comparator);
   };
@@ -81,22 +75,19 @@ function CollectionState() {
     ? sortCollections(collections, getComparator(order, orderBy))
     : [];
 
-  // Funkcja do zakończenia zbiórki
-  // Funkcja do obsługi zmiany stanu 'Aktywna' (Switch)
+
   const handleActiveChange = async (collectionId, active) => {
     try {
-      // Wyślij żądanie do API, aby zaktualizować stan 'active'
       await axios.post(
         "http://localhost:8081/auth/api/user_collections_update_active",
         null,
         {
-          params: { id: collectionId, newState: !active }, // Zmieniamy na odwrotny stan
+          params: { id: collectionId, newState: !active }, 
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      // Po aktualizacji odświeżamy listę
       getAllCollections();
     } catch (error) {
       console.error("Błąd aktualizacji stanu aktywności:", error);
@@ -139,21 +130,19 @@ function CollectionState() {
     }
   };
 
-  // Funkcja do obsługi zmiany stanu 'Przelano' (Switch)
   const handleTransferChange = async (collectionId, transferred, active) => {
     try {
-      // Wyślij żądanie do API, aby zaktualizować stan 'transferred'
+
       await axios.post(
         "http://localhost:8081/auth/api/update_transferred",
         null,
         {
-          params: { id: collectionId, newState: !transferred }, // Aktualizujemy odwrotnie
+          params: { id: collectionId, newState: !transferred }, 
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      // Po aktualizacji odświeżamy listę
       getAllCollections();
       if(active === true){
         handleActiveChange(collectionId, active);
@@ -208,7 +197,7 @@ function CollectionState() {
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
     setCopyMessage("Skopiowano!");
-    setTimeout(() => setCopyMessage(""), 2000); // Resetuje wiadomość po 2 sekundach
+    setTimeout(() => setCopyMessage(""), 2000); 
   };
 
   const generateQrCode = async (collection) => {
@@ -224,9 +213,8 @@ function CollectionState() {
           unstructuredReference: collection.id,
           information: collection.collectionGoal,
         },
-        responseType: "text", // Ensuring we expect a text-based response
+        responseType: "text", 
       });
-      // Directly setting the Base64 image in state
       setResponseQR(response.data);
     } catch (error) {
       console.error("Błąd generowania kodu QR:", error);
@@ -236,12 +224,11 @@ function CollectionState() {
   const [showSupportModal, setShowSupportModal] = useState(false);
 
   const [responseQR, setResponseQR] = useState();
-  // Pobranie zbiórek po załadowaniu komponentu
 
   const handleSupportClick = (collection) => {
     setCollection(collection);
     getCollectionCreator(collection);
-    setShowSupportModal(true); // Otwórz modal wsparcia
+    setShowSupportModal(true);
     generateQrCode(collection);
   };
 
@@ -271,10 +258,10 @@ function CollectionState() {
       {showSupportModal && (
         <div
           className="support-modal-overlay"
-          onClick={handleSupportOverlayClick} // Zamyka modal przy kliknięciu na overlay
+          onClick={handleSupportOverlayClick} 
         >
           <div className="support-modal">
-            {/* Nagłówki h4 i formularze wyśrodkowane do lewej */}
+
             <h4 style={{ textAlign: "left" }}>
               1. Wpisz kwotę i zeskanuj kod QR w aplikacji bankowej
             </h4>
@@ -313,10 +300,8 @@ function CollectionState() {
               </div>
             </div>
 
-            {/* Sekcja przelewu bankowego */}
             <h4 style={{ textAlign: "left" }}>2. Przelew bankowy</h4>
 
-            {/* Numer konta */}
             <Grid
               container
               spacing={2}
@@ -332,7 +317,7 @@ function CollectionState() {
                   }}
                   fullWidth
                   variant="outlined"
-                  style={{ paddingRight: "8px" }} // Dodać odstęp wokół etykiety
+                  style={{ paddingRight: "8px" }}
                 />
               </Grid>
               <Grid item xs={3}>
@@ -348,7 +333,6 @@ function CollectionState() {
               </Grid>
             </Grid>
 
-            {/* Tytuł przelewu */}
             <Grid
               container
               spacing={2}
@@ -378,7 +362,6 @@ function CollectionState() {
               </Grid>
             </Grid>
 
-            {/* Odbiorca */}
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={9}>
                 <TextField
@@ -401,7 +384,6 @@ function CollectionState() {
               </Grid>
             </Grid>
 
-            {/* Wiadomość po skopiowaniu */}
             {copyMessage && <p style={{ color: "blue" }}>{copyMessage}</p>}
           </div>
         </div>
@@ -454,9 +436,9 @@ function CollectionState() {
                       }
                       sx={{
                         textTransform: "none",
-                        whiteSpace: "nowrap", // Zapobiega przenoszeniu tekstu do kolejnej linii
-                        overflow: "hidden", // Ukrywa nadmiar tekstu
-                        textOverflow: "ellipsis", // Dodaje "..." na końcu, jeśli tekst jest za długi
+                        whiteSpace: "nowrap", 
+                        overflow: "hidden", 
+                        textOverflow: "ellipsis", 
                       }}
                     >
                       Zebrano [zł]
@@ -469,9 +451,9 @@ function CollectionState() {
                       onClick={() => handleRequestSort("collectionAmount")}
                       sx={{
                         textTransform: "none",
-                        whiteSpace: "nowrap", // Zapobiega przenoszeniu tekstu do kolejnej linii
-                        overflow: "hidden", // Ukrywa nadmiar tekstu
-                        textOverflow: "ellipsis", // Dodaje "..." na końcu, jeśli tekst jest za długi
+                        whiteSpace: "nowrap",
+                        overflow: "hidden", 
+                        textOverflow: "ellipsis", 
                       }}
                     >
                       Cel [zł]
@@ -513,7 +495,6 @@ function CollectionState() {
                       Wypłacono
                     </TableSortLabel>
                   </TableCell>
-                  {/* <TableCell>Zakończ zbiórkę</TableCell> */}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -524,9 +505,9 @@ function CollectionState() {
                       <Button
                         sx={{
                           textTransform: "none",
-                          whiteSpace: "nowrap", // Zapobiega przenoszeniu tekstu do kolejnej linii
-                          overflow: "hidden", // Ukrywa nadmiar tekstu
-                          textOverflow: "ellipsis", // Dodaje "..." na końcu, jeśli tekst jest za długi
+                          whiteSpace: "nowrap",
+                          overflow: "hidden", 
+                          textOverflow: "ellipsis",
                         }}
                         onClick={() => goToCollection(collection)}
                       >
@@ -534,7 +515,7 @@ function CollectionState() {
                       </Button>
                       <IconButton
                         onClick={() => handleEditClick(collection)}
-                        sx={{ ml: 1 }} // Dodaje mały margines po lewej stronie przycisku
+                        sx={{ ml: 1 }}
                       >
                         <EditIcon fontSize="small" />
                       </IconButton>
@@ -587,9 +568,6 @@ function CollectionState() {
           <p>Brak zbiórek</p>
         )}
       </div>
-      {/* <button className="back-button" onClick={handlePreviousPageClick}>
-        Powrót
-      </button> */}
     </div>
   );
 }

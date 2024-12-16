@@ -2,17 +2,17 @@
   display: flex;
   align-items: center;
   padding: 0px;
-  border-bottom: 5px solid transparent; /* Ustawiamy wysokość marginesu dolnego jako obramowanie */
+  border-bottom: 5px solid transparent; 
   position: relative;
   justify-content: center;
   text-align: center;
   margin: 0px;
   height: 70px;
   color: rgb(249, 249, 249);
-  position: fixed; /* Ustawienie elementu na stałe w jednym miejscu */
-  top: 0; /* Ustawia go na samej górze strony */
-  left: 0; /* Ustawia go na samej lewej stronie */
-  width: 100%; /* Element zajmuje całą szerokość ekranu */
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
 
   background-image: linear-gradient(
     to right,
@@ -29,10 +29,10 @@
 .gorne-buttony3::after {
   content: "";
   position: absolute;
-  bottom: -5px; /* Wysokość marginesu */
+  bottom: -5px; 
   left: 0;
   width: 100%;
-  height: 5px; /* Wysokość marginesu */
+  height: 5px;
   background: linear-gradient(
     to right,
     hsl(15, 100%, 78%),
@@ -59,9 +59,6 @@
 }
 
 
-
-/* .cel-input,
-.kwota-input, */
 .kto-input,
 .data-input,
 .opis-input,
@@ -124,16 +121,16 @@
 
 .button-container {
   display: flex;
-  justify-content: space-between; /* Space between buttons */
+  justify-content: space-between; 
   width: 100%;
-  margin-top: 20px; /* Space above the button container */
+  margin-top: 20px; 
 }
 
 .button-dalej,
 .button-anuluj,
 .button-stworz-zbiorke,
 .button-szukaj-po-celu {
-  width: 48%; /* Adjust width to fit within the container */
+  width: 48%; 
 }
 
 .button-dalej:hover,
@@ -192,11 +189,11 @@ p {
 }
 
 .page-info {
-  margin-top: 20px; /* Space above the page info text */
-  font-size: 14px; /* Font size for the page info text */
-  color: #555; /* Color for the page info text */
-  text-align: center; /* Center the text */
-  width: 100%; /* Ensure it fits within the container */
+  margin-top: 20px; 
+  font-size: 14px; 
+  color: #555; 
+  text-align: center;
+  width: 100%;
 }
 
 .image-upload-btn {
@@ -218,16 +215,15 @@ p {
   background-color: hsla(167, 59%, 25%, 0.888);
 }
 
-/* Ukrycie oryginalnego inputa dla zdjęcia */
 .image-input {
   display: none;
 }
 
 .file-item {
-  cursor: pointer; /* Ustawia kursor na łapkę */
-  transition: text-decoration 0.2s ease-in-out; /* Dodaje płynne przejście dla efektu przekreślenia */
+  cursor: pointer; 
+  transition: text-decoration 0.2s ease-in-out; 
 }
 
 .file-item:hover {
-  text-decoration: line-through; /* Przekreśla tekst po najechaniu */
+  text-decoration: line-through; 
 }

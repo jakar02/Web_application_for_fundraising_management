@@ -61,9 +61,6 @@ function CreateCollectionNext() {
     });
   }
 
-  // const handleChange = (event) => {
-  //   setDate(event.target.value);
-  // };
 
   const handleCreateCollectionClick = async () => {
     const token = localStorage.getItem("token");
@@ -250,7 +247,7 @@ function CreateCollectionNext() {
       </div>
 
     <InputMask
-      mask="99 9999 9999 9999 9999 9999 9999 9999" // Adjust to match the account number format
+      mask="99 9999 9999 9999 9999 9999 9999 9999" // 26 cyfr
       value={accountNumber}
       onChange={(e) => setAccountNumber(e.target.value)}
       maskChar=""

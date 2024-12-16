@@ -93,7 +93,7 @@ function ManageCollections() {
       const sortedCollections = response.data.sort((a, b) => {
         return a.active === b.active ? 0 : a.active ? -1 : 1;
       });
-      setCollections(sortedCollections); // Zapisz posortowane zbiorki
+      setCollections(sortedCollections);
     } catch (error) {
       console.error("Błąd pobierania zbiorek uzytkownika:", error);
     }
@@ -184,7 +184,7 @@ function ManageCollections() {
                             fontSize: 18,
                             marginRight: "2px",
                             color: "gray",
-                          }} // Zmniejszony odstęp
+                          }} 
                         />
                         {collection.city}
                       </p>
@@ -201,7 +201,7 @@ function ManageCollections() {
                         value={calculateProgress(collection)}
                         sx={{
                           height: "10px",
-                          backgroundColor: "#d3d3d3", // Tło paska (szary)
+                          backgroundColor: "#d3d3d3", 
                           "& .MuiLinearProgress-bar": {
                             backgroundColor: "rgb(20, 131, 20)",
                           },
