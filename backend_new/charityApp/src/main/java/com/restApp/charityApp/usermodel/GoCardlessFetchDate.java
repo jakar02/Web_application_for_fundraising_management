@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-@Table(name = "last_go_cardless_fetch_date")
-public class LastGoCardlessFetchDate {
+@Table(name = "go_cardless_fetch_date")
+public class GoCardlessFetchDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

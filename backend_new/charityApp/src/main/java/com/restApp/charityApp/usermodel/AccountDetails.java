@@ -1,17 +1,22 @@
 package com.restApp.charityApp.usermodel;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "account_details")
-public class BankDetails {
+public class AccountDetails {
 
     @Id
     @Column(name = "transaction_id")
@@ -34,10 +39,10 @@ public class BankDetails {
     private String transactionAmount;
 
     @Column(name = "booking_date")
-    private Date bookingDate;
+    private LocalDate bookingDate;
 
     @Column(name = "value_date")
-    private Date valueDate;
+    private LocalDate valueDate;
 
     @Column(name = "remmitance_information_unstructured")
     private String remittanceInformationUnstructured;

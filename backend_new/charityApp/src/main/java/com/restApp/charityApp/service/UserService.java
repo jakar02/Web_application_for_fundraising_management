@@ -3,7 +3,6 @@ package com.restApp.charityApp.service;
 import com.restApp.charityApp.repository.UserCollectionRepository;
 import com.restApp.charityApp.repository.UserRepository;
 import com.restApp.charityApp.usermodel.User;
-import com.restApp.charityApp.usermodel.UserCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,13 +15,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImplementation implements  UserDetailsService {
+public class UserService implements  UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserCollectionRepository userCollectionRepository;
 
     @Autowired
-    public UserServiceImplementation(UserRepository userRepository, UserCollectionRepository userCollectionRepository) {
+    public UserService(UserRepository userRepository, UserCollectionRepository userCollectionRepository) {
         this.userRepository = userRepository;
         this.userCollectionRepository = userCollectionRepository;
     }

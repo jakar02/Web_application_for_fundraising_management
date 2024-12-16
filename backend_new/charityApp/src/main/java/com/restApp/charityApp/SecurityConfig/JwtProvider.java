@@ -1,2 +1,97 @@
-package com.restApp.charityApp.SecurityConfig;public class JwtProvider {
+package com.restApp.charityApp.SecurityConfig;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.crypto.SecretKey;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+public class JwtProvider {
+    static SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
+
+    public static String generateToken(Authentication auth) {
+        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+        String roles = populateAuthorities(authorities);
+        @SuppressWarnings("deprecation")
+        String jwt = Jwts.builder()
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime()+86400000))
+                .claim("email", auth.getName())
+                .claim( "authorities",roles)
+                .signWith(key)
+                .compact();
+        System.out.println("Token for parsing in JwtProvider: " + jwt);
+        return jwt;
+
+    }
+
+    private static String populateAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        Set<String> auths = new HashSet<>();
+        for(GrantedAuthority authority: authorities) {
+            auths.add(authority.getAuthority());
+        }
+        return String.join(",",auths);
+    }
+
+
+    @SuppressWarnings("deprecation")
+    public static String getEmailFromJwtToken(String jwt) {
+        jwt = jwt.substring(7); // Assuming "Bearer " is removed from the token
+        try {
+            //Claims claims=Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
+            Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
+            String email = String.valueOf(claims.get("email"));
+            System.out.println("Email extracted from JWT: " + claims);
+            return email;
+        } catch (Exception e) {
+            System.err.println("Error extracting email from JWT: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Authentication validateToken(String jwt) {
+        try {
+            if (jwt.startsWith("Bearer ")) {
+                jwt = jwt.substring(7);
+            }
+
+            // Nowe podejście z parserBuilder()
+            Jws<Claims> claimsJws = Jwts.parser()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(jwt);
+            Claims claims = claimsJws.getBody();
+
+            String email = claims.get("email", String.class);
+            String roles = claims.get("authorities", String.class);
+            Set<GrantedAuthority> authorities = new HashSet<>();
+
+            if (roles != null) {
+                for (String role : roles.split(",")) {
+                    authorities.add(() -> role);
+                }
+            }
+
+            UserDetails userDetails = new org.springframework.security.core.userdetails.User(email, "", authorities);
+            return new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+
+        } catch (JwtException | IllegalArgumentException e) {
+            System.err.println("Token validation failed: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 }
