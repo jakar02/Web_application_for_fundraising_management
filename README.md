@@ -1,0 +1,2 @@
+Celem tego projektu jest stworzenie kompleksowej aplikacji internetowej, która umożliwi skuteczne zarządzanie zbiórkami. Aplikacja ta będzie pełnić rolę platformy, na której organizacje charytatywne oraz osoby prywatne mogą tworzyć, promować i zarządzać zbiórkami
+na różnorodne cele. Główną zaletą tego narzędzia będzie ułatwienie procesu zbierania funduszy dla potrzebujących poprzez zapewnienie przejrzystej, łatwej w użyciu i bezpiecznej platformy.
