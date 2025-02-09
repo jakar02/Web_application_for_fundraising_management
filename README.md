@@ -1,4 +1,3 @@
-Celem tego projektu jest stworzenie kompleksowej aplikacji internetowej, która umożliwi skuteczne zarządzanie zbiórkami. Aplikacja ta będzie pełnić rolę platformy, na której organizacje charytatywne oraz osoby prywatne mogą tworzyć, promować i zarządzać zbiórkami na różnorodne cele. Główną zaletą tego narzędzia będzie ułatwienie procesu zbierania funduszy dla potrzebujących poprzez zapewnienie przejrzystej, łatwej w użyciu i bezpiecznej platformy.
 ![strona_glowna](https://github.com/user-attachments/assets/36b611b7-65b9-4e58-88c5-a3fe4030c741)
 ![rowerzysta_dol](https://github.com/user-attachments/assets/4f4dfdb6-97c6-47ef-a0d7-7684b5730e6a)
 ![stworz1](https://github.com/user-attachments/assets/df498b79-8119-462c-a40b-42348bdcc562)
